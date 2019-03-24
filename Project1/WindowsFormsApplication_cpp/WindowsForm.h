@@ -1,7 +1,12 @@
 #pragma once
-#include"DataManager.h"
-#include"DotNetUtilities.h"
+#include "DataManager.h"
+#include "DotNetUtilities.h"
 #include <stack>
+
+#include <stdlib.h>
+#include <string.h>
+#include <msclr/marshal_cppstd.h>
+
 
 namespace WindowsFormsApplication_cpp {
 
@@ -321,15 +326,23 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			{
 				dimFlag = 0;
 				foundFlag = 0;
-				Va.Name = "";
-				Vb.Name = "";
-				//unsigned int j, k;
-				if (userCommand[i] == "+")
+				Va = Vector();
+				Vb = Vector();
+				if (userCommand[i] == "+" || userCommand[i] == "-" || userCommand[i] == "*")
 				{
+					std::string temp;
+					double scalar;
 					//find vector that need to calculate
 					//透過for迴圈，從向量資料中找出對應變數
 					for (unsigned int j = 0; j < vectors.size(); j++)
 					{
+						System::String^ Temp = userCommand[i - 2];
+						temp = msclr::interop::marshal_as<std::string>(Temp);
+						if (temp[0] != '$')
+						{
+							scalar = strtod(temp.c_str(), NULL);
+							break;
+						}
 						//若變數名稱與指令變數名稱符合
 						if (userCommand[i - 2] == gcnew String(vectors[j].Name.c_str()))
 						{
@@ -341,6 +354,13 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 
 					for (unsigned int k = 0; k < vectors.size(); k++)
 					{
+						System::String^ Temp = userCommand[i - 1];
+						temp = msclr::interop::marshal_as<std::string>(Temp);
+						if (temp[0] != '$')
+						{
+							scalar = strtod(temp.c_str(), NULL);
+							break;
+						}
 						//若變數名稱與指令變數名稱符合
 						if (userCommand[i - 1] == gcnew String(vectors[k].Name.c_str()))
 						{
@@ -349,6 +369,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						}
 					}
 
+					//從算式stack中獲得運算子
 					if (Vb.Name == "" && !calStack.empty())
 					{
 						Vb = calStack.top();
@@ -362,19 +383,51 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					}
 
 					//found check
-					if (Va.Name != "" && Vb.Name != "")
+					if (!Va.Data.empty() && !Vb.Data.empty())
 						foundFlag = 1;
-						
+					else if (Va.Data.empty() && Vb.Data.empty()) break;
+
 					//dimesion check
 					if (Va.dimCheck(Vb)) {
 						dimFlag = 1;	
-						//call addition
-						Output->Text += "Addition called" + Environment::NewLine; /*debug*/
-						ans = Va + Vb;
+						
+						if (userCommand[i] == "+")
+						{
+							//call Addition
+							Output->Text += "Addition called" + Environment::NewLine; /*debug*/
+							ans = Va + Vb;
+						}
+						else if (userCommand[i] == "-")
+						{
+							//call Subtraction
+							Output->Text += "Subtraction called" + Environment::NewLine; /*debug*/
+							ans = Va - Vb;
+						}
+						else if (userCommand[i] == "*")
+						{
+							//call dot
+							Output->Text += "Dot called" + Environment::NewLine; /*debug*/
+							ans = Va * Vb;
+						}
 						//push into calStack
 						calStack.push(ans);
 					}
-					else break;
+					else
+					{
+						if (Va.Data.empty() || Vb.Data.empty())
+						{
+							dimFlag = 1;
+							foundFlag = 1;
+							//call scalar
+							Output->Text += "Scalar called" + Environment::NewLine; /*debug*/
+							if (Va.Data.empty())
+								ans = scalar * Vb;
+							else ans = scalar * Va;
+							//push into calStack
+							calStack.push(ans);
+						}
+						break;
+					}
 				}
 			}
 			

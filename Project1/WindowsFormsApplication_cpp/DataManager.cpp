@@ -107,6 +107,11 @@ Vector::Vector(std::vector<double> data): Data(data)
 {
 }
 
+Vector::Vector(double scalar)
+{
+	Data.push_back(scalar);
+}
+
 Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data)
 {
 }
@@ -120,4 +125,40 @@ const Vector  Vector::operator+(const Vector& Vb)
 		ans[i] = this->Data[i] + Vb.Data[i];
 	}
 	return Vector("ans",ans);
+}
+
+const Vector Vector::operator-(const Vector & Vb)
+{
+	std::vector<double> ans;
+	ans.resize(Vb.Data.size());
+	for (int i = 0; i < Vb.Data.size(); i++)
+	{
+		ans[i] = this->Data[i] - Vb.Data[i];
+	}
+	return Vector("ans", ans);
+}
+
+const double Vector::operator*(const Vector & Vb)
+{
+	//dot
+	int ans = 0;
+	for (int i = 0; i < Vb.Data.size(); i++)
+	{
+		ans += this->Data[i] * Vb.Data[i];
+	}
+	return ans;
+}
+
+const Vector operator*(const Vector & Va, const Vector & Vb)
+{
+	std::vector<double> ans;
+	//scalar
+	for (int i = 0; i < Va.Data.size(); i++)
+	{
+		for (int j = 0; j < Vb.Data.size(); j++)
+		{
+			ans.push_back(Va.Data[i] * Vb.Data[j]);
+		}
+	}
+	return Vector("ans", ans);
 }

@@ -12,8 +12,12 @@ struct Vector
 	bool dimCheck(Vector Vb);
 	Vector();
 	Vector(std::vector<double> data);
+	Vector(double scalar);
 	Vector(std::string name, std::vector<double> data);
 	const Vector operator + (const Vector& Vb);
+	const Vector operator - (const Vector& Vb);
+	const double operator * (const Vector& Vb);
+	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 };
 //定義控管資料class
 class DataManager
