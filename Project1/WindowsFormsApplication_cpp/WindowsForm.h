@@ -11,6 +11,14 @@ namespace WindowsFormsApplication_cpp {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+	int priority(char op) {
+		switch (op) {
+		case '+': case '-': return 1;
+		case '*': case '/': return 2;
+		default:            return 0;
+		}
+	}
+
 	/// <summary>
 	/// WindowsForm 的摘要
 	/// </summary>
@@ -283,7 +291,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 		//字串比較，若指令為"print"的情況
 		if (userCommand[0] == "print")
 		{
-			//定意輸出暫存
+			//定義輸出暫存
 			String^ outputTemp = "";
 			//透過for迴圈，從向量資料中找出對應變數
 			for (unsigned int i = 0; i < vectors.size();i++)
@@ -307,6 +315,111 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					break;
 				}
 			}
+		}
+		// 運算式指令
+		else if (userCommand[0] == "cal")
+		{
+			//若運算式中有空格先合併成無空格版
+			for (int i = 2; i < userCommand->Length; i++)
+			{
+				userCommand[1] += userCommand[i];
+			}
+			//將無空格版處理成空格版
+			//定義輸出暫存
+			String^ infixTemp = "";
+			int begin = 0;
+			for (int i = 0; i < userCommand[1]->Length; i++)
+			{
+				if (userCommand[1][i] == '(' || 
+					userCommand[1][i] == ')' || 
+					userCommand[1][i] == '+' || 
+					userCommand[1][i] == '-' || 
+					userCommand[1][i] == '*')
+				{
+					if (i - 1 >= 0)
+					{
+						infixTemp += userCommand[1]->Substring(begin, (i - 1 - begin + 1));
+						infixTemp += " ";
+					}
+					infixTemp += userCommand[1]->Substring(i, 1);
+					infixTemp += " ";
+					begin = i+1;
+				}
+				else if (i == userCommand[1]->Length - 1)
+				{
+					infixTemp += userCommand[1]->Substring(begin, (i - begin + 1));
+					infixTemp += " ";
+				}
+			}
+			//將處理完的字串依空白作切割
+			array<String^> ^infixFormula = infixTemp->Split(' ');
+			String^ stack = " ";
+
+			String^ postfix = "";
+			int top = 0;
+			for (int i = 0; i < infixFormula->Length; i++)
+			{
+				
+				if (infixFormula[i] == "(")
+				{
+					// 運算子堆疊 
+					stack = stack->Insert(++top, infixFormula[i]);
+				}
+				else if (infixFormula[i] == "+" ||
+					infixFormula[i] == "-" ||
+					infixFormula[i] == "*")
+				{
+					while (priority(stack[top]) >= priority(infixFormula[i][0])) 
+					{
+						postfix += stack[top--];
+					}
+					stack = stack->Insert(++top, infixFormula[i]); // 存入堆疊 
+				}
+				else if (infixFormula[i] == ")")
+				{
+					while (stack[top] != '(') { // 遇 ) 輸出至 ( 
+						postfix += stack[top--];
+					}
+					top--;  // 不輸出 ( 
+				}
+				else
+				{
+					// 運算元直接輸出 
+					postfix += infixFormula[i];
+				}
+			}
+			while (top > 0) {
+				postfix += stack[top--];
+			}
+
+			//將無空格版處理成空格版
+			//定義輸出暫存
+			String^ postfixTemp = "";
+			begin = 0;
+			for (int i = 0; i < postfix->Length; i++)
+			{
+				if (postfix[i] == '+' ||
+					postfix[i] == '-' ||
+					postfix[i] == '*')
+				{
+					if (i - 1 >= 0)
+					{
+						postfixTemp += postfix->Substring(begin, (i - 1 - begin + 1));
+						postfixTemp += " ";
+					}
+					postfixTemp += postfix->Substring(i, 1);
+					postfixTemp += " ";
+					begin = i + 1;
+				}
+				else if (i == postfix->Length - 1)
+				{
+					postfixTemp += postfix->Substring(begin, (i - begin + 1));
+					postfixTemp += " ";
+				}
+			}
+			//將處理完的字串依空白作切割
+			array<String^> ^postfixFormula = postfixTemp->Split(' ');
+
 		}
 		//反之則判斷找不到指令
 		else
@@ -364,3 +477,4 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 }
 };
 }
+
