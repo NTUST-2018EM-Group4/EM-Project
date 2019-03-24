@@ -321,6 +321,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			{
 				dimFlag = 0;
 				foundFlag = 0;
+				Va.Name = "";
+				Vb.Name = "";
 				//unsigned int j, k;
 				if (userCommand[i] == "+")
 				{

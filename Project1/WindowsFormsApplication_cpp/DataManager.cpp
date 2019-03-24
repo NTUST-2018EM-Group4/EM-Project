@@ -119,5 +119,5 @@ const Vector  Vector::operator+(const Vector& Vb)
 	{
 		ans[i] = this->Data[i] + Vb.Data[i];
 	}
-	return Vector(ans);
+	return Vector("ans",ans);
 }
