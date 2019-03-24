@@ -8,6 +8,12 @@ struct Vector
 {
 	std::string Name;
 	std::vector<double> Data;
+
+	bool dimCheck(Vector Vb);
+	Vector();
+	Vector(std::vector<double> data);
+	Vector(std::string name, std::vector<double> data);
+	const Vector operator + (const Vector& Vb);
 };
 //定義控管資料class
 class DataManager

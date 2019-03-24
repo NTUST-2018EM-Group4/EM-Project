@@ -87,3 +87,37 @@ void DataManager::SetFileName(std::string fileName)
 	FileName = fileName;
 }
 
+
+bool Vector::dimCheck(Vector Vb)
+{
+	
+	if (this->Data.size() == Vb.Data.size()) 
+	{
+		return true;
+	}
+	return false;
+}
+
+Vector::Vector() :Name("")
+{
+	Data.resize(0);
+}
+
+Vector::Vector(std::vector<double> data): Data(data)
+{
+}
+
+Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data)
+{
+}
+
+const Vector  Vector::operator+(const Vector& Vb)
+{
+	std::vector<double> ans;
+	ans.resize(Vb.Data.size());
+	for (int i = 0; i < Vb.Data.size(); i++)
+	{
+		ans[i] = this->Data[i] + Vb.Data[i];
+	}
+	return Vector(ans);
+}

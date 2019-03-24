@@ -1,6 +1,7 @@
 #pragma once
 #include"DataManager.h"
 #include"DotNetUtilities.h"
+#include <stack>
 
 namespace WindowsFormsApplication_cpp {
 
@@ -302,10 +303,103 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					}
 					//將輸出格式存入暫存，並且換行
 					outputTemp += "]" + Environment::NewLine;
-					//輸出暫存資訊
+					//輸出暫存資訊 
 					Output->Text += gcnew String(vectors[i].Name.c_str()) +" = "+ outputTemp;
 					break;
 				}
+			}
+		}
+		else if (userCommand[0] == "cal")	 
+		{
+			//運算式
+
+			//cal
+			Vector ans, Va, Vb;
+			std::stack<Vector> calStack;
+			bool dimFlag, foundFlag;
+			for (int i = 1; i < userCommand->Length; i++)
+			{
+				dimFlag = 0;
+				foundFlag = 0;
+				//unsigned int j, k;
+				if (userCommand[i] == "+")
+				{
+					//find vector that need to calculate
+					//透過for迴圈，從向量資料中找出對應變數
+					for (unsigned int j = 0; j < vectors.size(); j++)
+					{
+						//若變數名稱與指令變數名稱符合
+						if (userCommand[i - 2] == gcnew String(vectors[j].Name.c_str()))
+						{
+							Va = vectors[j];
+							break;
+						}
+						
+					}
+
+					for (unsigned int k = 0; k < vectors.size(); k++)
+					{
+						//若變數名稱與指令變數名稱符合
+						if (userCommand[i - 1] == gcnew String(vectors[k].Name.c_str()))
+						{
+							Vb = vectors[k];
+							break;
+						}
+					}
+
+					if (Vb.Name == "" && !calStack.empty())
+					{
+						Vb = calStack.top();
+						calStack.pop();
+					}
+
+					if (Va.Name == "" && !calStack.empty())
+					{
+						Va = calStack.top();
+						calStack.pop();
+					}
+
+					//found check
+					if (Va.Name != "" && Vb.Name != "")
+						foundFlag = 1;
+						
+					//dimesion check
+					if (Va.dimCheck(Vb)) {
+						dimFlag = 1;	
+						//call addition
+						Output->Text += "Addition called" + Environment::NewLine; /*debug*/
+						ans = Va + Vb;
+						//push into calStack
+						calStack.push(ans);
+					}
+					else break;
+				}
+			}
+			
+			if (!foundFlag)
+				Output->Text += "-Vector not found-" + Environment::NewLine;
+			else if (!dimFlag)
+				Output->Text += "-Dimension not same-" + Environment::NewLine;
+			else
+			{
+				//格式無誤，輸出結果
+
+				String^ outputTemp;
+				//將輸出格式存入暫存
+				outputTemp += "[";
+				//將輸出資料存入暫存
+				ans = calStack.top();
+				calStack.pop();
+				for (unsigned int j = 0; j < ans.Data.size(); j++)
+				{
+					outputTemp += ans.Data[j].ToString();
+					if (j != ans.Data.size() - 1)
+						outputTemp += ",";
+				}
+				//將輸出格式存入暫存，並且換行
+				outputTemp += "]" + Environment::NewLine;
+				//輸出暫存資訊 
+				Output->Text += gcnew String("formula = " + outputTemp);
 			}
 		}
 		//反之則判斷找不到指令
