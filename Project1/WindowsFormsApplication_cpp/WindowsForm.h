@@ -3,9 +3,6 @@
 #include "DotNetUtilities.h"
 #include <stack>
 
-#include <stdlib.h>
-#include <string.h>
-#include <msclr/marshal_cppstd.h>
 
 
 namespace WindowsFormsApplication_cpp {
@@ -416,6 +413,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			//將處理完的字串依空白作切割
 			array<String^> ^postfixFormula = postfix->Split(' ');
 			
+			Output->Text += "postfix = " + postfix + Environment::NewLine;	/*debug*/
+
 			Vector ans, Va, Vb;
 			std::stack<Vector> calStack;
 			bool dimFlag, foundFlag;
@@ -434,7 +433,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					for (unsigned int j = 0; j < vectors.size(); j++)
 					{
 						System::String^ Temp = postfixFormula[i - 2];
-						temp = msclr::interop::marshal_as<std::string>(Temp);
+						//temp = msclr::interop::marshal_as<std::string>(Temp);
+						MarshalString(Temp, temp);
 						if (temp[0] != '$')
 						{
 							scalar = strtod(temp.c_str(), NULL);
@@ -452,7 +452,8 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					for (unsigned int k = 0; k < vectors.size(); k++)
 					{
 						System::String^ Temp = postfixFormula[i - 1];
-						temp = msclr::interop::marshal_as<std::string>(Temp);
+						//temp = msclr::interop::marshal_as<std::string>(Temp);
+						MarshalString(Temp, temp);
 						if (temp[0] != '$')
 						{
 							scalar = strtod(temp.c_str(), NULL);
@@ -511,15 +512,32 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					}
 					else
 					{
-						if (Va.Data.empty() || Vb.Data.empty())
+						if (Va.Data.empty() || Vb.Data.empty() || \
+							(!Va.Data.empty() && !Vb.Data.empty()))
 						{
+							if (Va.Data.empty() && postfixFormula[i - 2][0] == '$' || \
+								Vb.Data.empty() && postfixFormula[i - 1][0] == '$')
+								continue;
 							dimFlag = 1;
 							foundFlag = 1;
 							//call scalar
 							Output->Text += "Scalar called" + Environment::NewLine; /*debug*/
-							if (Va.Data.empty())
+							/*if (Va.Data.empty())
 								ans = scalar * Vb;
-							else ans = scalar * Va;
+							else if (Va.Data.empty())
+								ans = scalar * Va;*/
+							if (Va.Data.size() < Vb.Data.size())
+							{
+								if (!Va.Data.empty())
+									scalar = Va.Data[0];
+								ans = scalar * Vb;
+							}
+							else
+							{
+								if (!Vb.Data.empty())
+									scalar = Vb.Data[0];
+								ans = scalar * Va;
+							}
 							//push into calStack
 							calStack.push(ans);
 						}
@@ -551,7 +569,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				//將輸出格式存入暫存，並且換行
 				outputTemp += "]" + Environment::NewLine;
 				//輸出暫存資訊 
-				Output->Text += gcnew String("formula = " + outputTemp);
+				Output->Text += gcnew String("formula = " + outputTemp) + Environment::NewLine;
 			}
 		}
 		//反之則判斷找不到指令
