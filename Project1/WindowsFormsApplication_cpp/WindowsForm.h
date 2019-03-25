@@ -17,6 +17,14 @@ namespace WindowsFormsApplication_cpp {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+	int priority(char op) {
+		switch (op) {
+		case '+': case '-': return 1;
+		case '*': case '/': return 2;
+		default:            return 0;
+		}
+	}
+
 	/// <summary>
 	/// WindowsForm 的摘要
 	/// </summary>
@@ -289,7 +297,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 		//字串比較，若指令為"print"的情況
 		if (userCommand[0] == "print")
 		{
-			//定意輸出暫存
+			//定義輸出暫存
 			String^ outputTemp = "";
 			//透過for迴圈，從向量資料中找出對應變數
 			for (unsigned int i = 0; i < vectors.size();i++)
@@ -314,21 +322,110 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				}
 			}
 		}
+
 		else if (userCommand[0] == "cal")	 
 		{
-			//運算式
+			//infix to postfix
+			
+			//若運算式中有空格先合併成無空格版
+			for (int i = 2; i < userCommand->Length; i++)
+			{
+				userCommand[1] += userCommand[i];
+			}
+			//將無空格版處理成空格版
+			//定義輸出暫存
+			String^ infixTemp = "";
+			int begin = 0;
+			for (int i = 0; i < userCommand[1]->Length; i++)
+			{
+				if (userCommand[1][i] == '(' ||
+					userCommand[1][i] == ')' ||
+					userCommand[1][i] == '+' ||
+					userCommand[1][i] == '-' ||
+					userCommand[1][i] == '*')
+				{
+					if (i - 1 >= 0)
+					{
+						infixTemp += userCommand[1]->Substring(begin, (i - 1 - begin + 1));
+						infixTemp += " ";
+					}
+					infixTemp += userCommand[1]->Substring(i, 1);
+					infixTemp += " ";
+					begin = i + 1;
+				}
+				else if (i == userCommand[1]->Length - 1)
+				{
+					infixTemp += userCommand[1]->Substring(begin, (i - begin + 1));
+					infixTemp += " ";
+				}
+			}
+			//去除最後一個空格
+			if (infixTemp[infixTemp->Length - 1] == ' ')
+			{
+				infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
+			}
+			//將處理完的字串依空白作切割
+			array<String^> ^infixFormula = infixTemp->Split(' ');
+			String^ stack = " ";
 
-			//cal
+			String^ postfix = "";
+			int top = 0;
+			for (int i = 0; i < infixFormula->Length; i++)
+			{
+
+				if (infixFormula[i] == "(")
+				{
+					// 運算子堆疊 
+					stack = stack->Insert(++top, infixFormula[i]);
+				}
+				else if (infixFormula[i] == "+" ||
+					infixFormula[i] == "-" ||
+					infixFormula[i] == "*")
+				{
+					while (priority(stack[top]) >= priority(infixFormula[i][0]))
+					{
+						postfix += stack[top--];
+						postfix += " ";
+					}
+					stack = stack->Insert(++top, infixFormula[i]); // 存入堆疊 
+				}
+				else if (infixFormula[i] == ")")
+				{
+					while (stack[top] != '(') { // 遇 ) 輸出至 ( 
+						postfix += stack[top--];
+						postfix += " ";
+					}
+					top--;  // 不輸出 ( 
+				}
+				else
+				{
+					// 運算元直接輸出 
+					postfix += infixFormula[i];
+					postfix += " ";
+				}
+			}
+			while (top > 0) {
+				postfix += stack[top--];
+				postfix += " ";
+			}
+			//去除最後一個空格
+			if (postfix[postfix->Length - 1] == ' ')
+			{
+				postfix = postfix->Remove(postfix->Length - 1, 1);
+			}
+			//將處理完的字串依空白作切割
+			array<String^> ^postfixFormula = postfix->Split(' ');
+			
 			Vector ans, Va, Vb;
 			std::stack<Vector> calStack;
 			bool dimFlag, foundFlag;
-			for (int i = 1; i < userCommand->Length; i++)
+			for (int i = 0; i < postfixFormula->Length; i++)
 			{
 				dimFlag = 0;
 				foundFlag = 0;
 				Va = Vector();
 				Vb = Vector();
-				if (userCommand[i] == "+" || userCommand[i] == "-" || userCommand[i] == "*")
+				if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
 				{
 					std::string temp;
 					double scalar;
@@ -336,7 +433,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					//透過for迴圈，從向量資料中找出對應變數
 					for (unsigned int j = 0; j < vectors.size(); j++)
 					{
-						System::String^ Temp = userCommand[i - 2];
+						System::String^ Temp = postfixFormula[i - 2];
 						temp = msclr::interop::marshal_as<std::string>(Temp);
 						if (temp[0] != '$')
 						{
@@ -344,7 +441,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 							break;
 						}
 						//若變數名稱與指令變數名稱符合
-						if (userCommand[i - 2] == gcnew String(vectors[j].Name.c_str()))
+						if (postfixFormula[i - 2] == gcnew String(vectors[j].Name.c_str()))
 						{
 							Va = vectors[j];
 							break;
@@ -354,7 +451,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 
 					for (unsigned int k = 0; k < vectors.size(); k++)
 					{
-						System::String^ Temp = userCommand[i - 1];
+						System::String^ Temp = postfixFormula[i - 1];
 						temp = msclr::interop::marshal_as<std::string>(Temp);
 						if (temp[0] != '$')
 						{
@@ -362,7 +459,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 							break;
 						}
 						//若變數名稱與指令變數名稱符合
-						if (userCommand[i - 1] == gcnew String(vectors[k].Name.c_str()))
+						if (postfixFormula[i - 1] == gcnew String(vectors[k].Name.c_str()))
 						{
 							Vb = vectors[k];
 							break;
@@ -391,19 +488,19 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					if (Va.dimCheck(Vb)) {
 						dimFlag = 1;	
 						
-						if (userCommand[i] == "+")
+						if (postfixFormula[i] == "+")
 						{
 							//call Addition
 							Output->Text += "Addition called" + Environment::NewLine; /*debug*/
 							ans = Va + Vb;
 						}
-						else if (userCommand[i] == "-")
+						else if (postfixFormula[i] == "-")
 						{
 							//call Subtraction
 							Output->Text += "Subtraction called" + Environment::NewLine; /*debug*/
 							ans = Va - Vb;
 						}
-						else if (userCommand[i] == "*")
+						else if (postfixFormula[i] == "*")
 						{
 							//call dot
 							Output->Text += "Dot called" + Environment::NewLine; /*debug*/
@@ -513,3 +610,4 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 }
 };
 }
+
