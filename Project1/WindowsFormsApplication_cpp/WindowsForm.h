@@ -411,14 +411,19 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				postfix = postfix->Remove(postfix->Length - 1, 1);
 			}
 			//將處理完的字串依空白作切割
-			array<String^> ^postfixFormula = postfix->Split(' ');
+			array<String^> ^t = postfix->Split(' ');
 			
+			Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^> ();
+			for (int i = 0; i < t->Length; i++) {
+				postfixFormula->Add(t[i]);
+			}
+
 			Output->Text += "postfix = " + postfix + Environment::NewLine;	/*debug*/
 
 			Vector ans, Va, Vb;
 			std::stack<Vector> calStack;
 			bool dimFlag, foundFlag;
-			for (int i = 0; i < postfixFormula->Length; i++)
+			for (int i = 0; i < postfixFormula->Count; i++)
 			{
 				dimFlag = 0;
 				foundFlag = 0;
@@ -433,7 +438,6 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					for (unsigned int j = 0; j < vectors.size(); j++)
 					{
 						System::String^ Temp = postfixFormula[i - 2];
-						//temp = msclr::interop::marshal_as<std::string>(Temp);
 						MarshalString(Temp, temp);
 						if (temp[0] != '$')
 						{
@@ -444,6 +448,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						if (postfixFormula[i - 2] == gcnew String(vectors[j].Name.c_str()))
 						{
 							Va = vectors[j];
+
 							break;
 						}
 						
@@ -452,7 +457,6 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					for (unsigned int k = 0; k < vectors.size(); k++)
 					{
 						System::String^ Temp = postfixFormula[i - 1];
-						//temp = msclr::interop::marshal_as<std::string>(Temp);
 						MarshalString(Temp, temp);
 						if (temp[0] != '$')
 						{
@@ -487,7 +491,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 
 					//dimesion check
 					if (Va.dimCheck(Vb)) {
-						dimFlag = 1;	
+						dimFlag = 1;
 						
 						if (postfixFormula[i] == "+")
 						{
@@ -522,10 +526,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 							foundFlag = 1;
 							//call scalar
 							Output->Text += "Scalar called" + Environment::NewLine; /*debug*/
-							/*if (Va.Data.empty())
-								ans = scalar * Vb;
-							else if (Va.Data.empty())
-								ans = scalar * Va;*/
+							
 							if (Va.Data.size() < Vb.Data.size())
 							{
 								if (!Va.Data.empty())
