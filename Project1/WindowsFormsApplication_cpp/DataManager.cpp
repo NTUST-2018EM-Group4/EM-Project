@@ -129,6 +129,17 @@ const double Vector::Norm()
 	return ans;
 }
 
+const Vector Vector::Normal()
+{
+	double norm = this->Norm();
+	std::vector<double> ans(this->Data.size());
+	for (int i = 0; i < this->Data.size(); i++)
+	{
+		ans[i] = this->Data[i] / norm;
+	}
+	return Vector("ans", ans);
+}
+
 const Vector  Vector::operator+(const Vector& Vb)
 {
 	std::vector<double> ans;

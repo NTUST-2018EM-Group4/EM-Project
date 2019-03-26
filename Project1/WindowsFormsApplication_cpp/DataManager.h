@@ -22,6 +22,7 @@ struct Vector
 
 	bool dimCheck(Vector Vb);
 	const double Norm();
+	const Vector Normal();
 };
 
 //Defined Struct Matrix

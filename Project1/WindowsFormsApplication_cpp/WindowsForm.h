@@ -635,7 +635,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				}
 				if (foundFlag)
 				{
-					//todo
+					Vector ans = Va.Normal();
+					Output->Text += "Normal(" + userCommand[2] + ") = ";
+					//call print
 				}
 			}
 			else
