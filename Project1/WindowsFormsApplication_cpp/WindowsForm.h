@@ -595,6 +595,10 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				Output->Text += gcnew String("formula = " + outputTemp) + Environment::NewLine;
 			}
 		}
+		else if (userCommand[0] == "func")
+		{
+			//todo
+		}
 		//反之則判斷找不到指令
 		else
 		{
