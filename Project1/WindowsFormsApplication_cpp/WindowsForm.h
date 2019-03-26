@@ -1,9 +1,8 @@
 #pragma once
+#define DEBUG
 #include "DataManager.h"
 #include "DotNetUtilities.h"
 #include <stack>
-
-
 
 namespace WindowsFormsApplication_cpp {
 
@@ -410,15 +409,23 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			{
 				postfix = postfix->Remove(postfix->Length - 1, 1);
 			}
-			//將處理完的字串依空白作切割
-			array<String^> ^t = postfix->Split(' ');
+			//將處理完的字串(postfix)依空白作切割存到array
+			array<String^> ^postfixArray = postfix->Split(' ');
 			
+			//將array(postfixArray)轉成List
 			Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^> ();
-			for (int i = 0; i < t->Length; i++) {
-				postfixFormula->Add(t[i]);
+			for (int i = 0; i < postfixArray->Length; i++) 
+			{
+				//Avoid " " bug
+				if (postfixArray[i] != "")
+				{
+					postfixFormula->Add(postfixArray[i]);
+				}
 			}
 
-			Output->Text += "postfix = " + postfix + Environment::NewLine;	/*debug*/
+#ifdef DEBUG
+			Output->Text += "postfix = " + postfix + Environment::NewLine;
+#endif // DEBUG
 
 			Vector ans, Va, Vb;
 			std::stack<Vector> calStack;
