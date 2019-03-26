@@ -133,9 +133,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
 			this->SuspendLayout();
-			// 
+			//
 			// menuStrip2
-			// 
+			//
 			this->menuStrip2->ImageScalingSize = System::Drawing::Size(20, 20);
 			this->menuStrip2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
 				this->loadVectorToolStripMenuItem,
@@ -147,33 +147,33 @@ namespace WindowsFormsApplication_cpp {
 			this->menuStrip2->Size = System::Drawing::Size(879, 27);
 			this->menuStrip2->TabIndex = 1;
 			this->menuStrip2->Text = L"menuStrip2";
-			// 
+			//
 			// loadVectorToolStripMenuItem
-			// 
+			//
 			this->loadVectorToolStripMenuItem->Name = L"loadVectorToolStripMenuItem";
 			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(105, 23);
 			this->loadVectorToolStripMenuItem->Text = L"Load Vector";
 			this->loadVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadVectorToolStripMenuItem_Click);
-			// 
+			//
 			// loadMatrixToolStripMenuItem
-			// 
+			//
 			this->loadMatrixToolStripMenuItem->Name = L"loadMatrixToolStripMenuItem";
 			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(104, 23);
 			this->loadMatrixToolStripMenuItem->Text = L"Load Matrix";
 			this->loadMatrixToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadMatrixToolStripMenuItem_Click);
-			// 
+			//
 			// openFileDialog1
-			// 
+			//
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &WindowsForm::openFileDialog1_FileOk);
-			// 
+			//
 			// openFileDialog2
-			// 
+			//
 			this->openFileDialog2->FileName = L"openFileDialog1";
 			this->openFileDialog2->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &WindowsForm::openFileDialog2_FileOk);
-			// 
+			//
 			// groupBox2
-			// 
+			//
 			this->groupBox2->Controls->Add(this->Output);
 			this->groupBox2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox2->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -184,9 +184,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox2->TabIndex = 5;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Output";
-			// 
+			//
 			// Output
-			// 
+			//
 			this->Output->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->Output->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -197,9 +197,9 @@ namespace WindowsFormsApplication_cpp {
 			this->Output->ReadOnly = true;
 			this->Output->Size = System::Drawing::Size(867, 124);
 			this->Output->TabIndex = 1;
-			// 
+			//
 			// groupBox1
-			// 
+			//
 			this->groupBox1->Controls->Add(this->Input);
 			this->groupBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold));
@@ -209,9 +209,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox1->TabIndex = 4;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Input";
-			// 
+			//
 			// Input
-			// 
+			//
 			this->Input->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->Input->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -222,9 +222,9 @@ namespace WindowsFormsApplication_cpp {
 			this->Input->Size = System::Drawing::Size(867, 46);
 			this->Input->TabIndex = 1;
 			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
-			// 
+			//
 			// VectorList
-			// 
+			//
 			this->VectorList->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->VectorList->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -235,9 +235,9 @@ namespace WindowsFormsApplication_cpp {
 			this->VectorList->Name = L"VectorList";
 			this->VectorList->Size = System::Drawing::Size(867, 124);
 			this->VectorList->TabIndex = 3;
-			// 
+			//
 			// MatrixList
-			// 
+			//
 			this->MatrixList->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->MatrixList->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -248,9 +248,9 @@ namespace WindowsFormsApplication_cpp {
 			this->MatrixList->Name = L"MatrixList";
 			this->MatrixList->Size = System::Drawing::Size(867, 125);
 			this->MatrixList->TabIndex = 0;
-			// 
+			//
 			// tableLayoutPanel1
-			// 
+			//
 			this->tableLayoutPanel1->ColumnCount = 1;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				100)));
@@ -269,9 +269,9 @@ namespace WindowsFormsApplication_cpp {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 28.57143F)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(879, 547);
 			this->tableLayoutPanel1->TabIndex = 2;
-			// 
+			//
 			// groupBox3
-			// 
+			//
 			this->groupBox3->Controls->Add(this->VectorList);
 			this->groupBox3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -282,9 +282,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox3->TabIndex = 6;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Vector";
-			// 
+			//
 			// groupBox4
-			// 
+			//
 			this->groupBox4->Controls->Add(this->MatrixList);
 			this->groupBox4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox4->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -295,9 +295,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox4->TabIndex = 7;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Matrix";
-			// 
+			//
 			// WindowsForm
-			// 
+			//
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(879, 574);
@@ -344,18 +344,18 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			MarshalString(userCommand[1], nameTemp);
 			int index = findVector(nameTemp, vectors);
 			if (index != -1)
-			{	
+			{
 				outputTemp = printVector(outputTemp, vectors[index]);
 				Output->Text += gcnew String(vectors[index].Name.c_str()) + " = " + outputTemp;
 			}
 			else
-				Output->Text += "-Vector not found-" + Environment::NewLine;		
+				Output->Text += "-Vector not found-" + Environment::NewLine;
 		}
 
-		else if (userCommand[0] == "cal")	 
+		else if (userCommand[0] == "cal")
 		{
 			//infix to postfix
-			
+
 			//若運算式中有空格先合併成無空格版
 			for (int i = 2; i < userCommand->Length; i++)
 			{
@@ -404,7 +404,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 
 				if (infixFormula[i] == "(")
 				{
-					// 運算子堆疊 
+					// 運算子堆疊
 					stack = stack->Insert(++top, infixFormula[i]);
 				}
 				else if (infixFormula[i] == "+" ||
@@ -416,19 +416,19 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						postfix += stack[top--];
 						postfix += " ";
 					}
-					stack = stack->Insert(++top, infixFormula[i]); // 存入堆疊 
+					stack = stack->Insert(++top, infixFormula[i]); // 存入堆疊
 				}
 				else if (infixFormula[i] == ")")
 				{
-					while (stack[top] != '(') { // 遇 ) 輸出至 ( 
+					while (stack[top] != '(') { // 遇 ) 輸出至 (
 						postfix += stack[top--];
 						postfix += " ";
 					}
-					top--;  // 不輸出 ( 
+					top--;  // 不輸出 (
 				}
 				else
 				{
-					// 運算元直接輸出 
+					// 運算元直接輸出
 					postfix += infixFormula[i];
 					postfix += " ";
 				}
@@ -444,10 +444,10 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			}
 			//將處理完的字串(postfix)依空白作切割存到array
 			array<String^> ^postfixArray = postfix->Split(' ');
-			
+
 			//將array(postfixArray)轉成List
 			Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^> ();
-			for (int i = 0; i < postfixArray->Length; i++) 
+			for (int i = 0; i < postfixArray->Length; i++)
 			{
 				//Avoid " " bug
 				if (postfixArray[i] != "")
@@ -473,18 +473,18 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				{
 					std::string temp;
 					double scalar;
-					
+
 					//check scalar or not
 					System::String^ Temp = postfixFormula[i - 2];
 					MarshalString(Temp, temp);
 					if (temp[0] != '$')
 						scalar = strtod(temp.c_str(), NULL);
-					
+
 					Temp = postfixFormula[i - 1];
 					MarshalString(Temp, temp);
 					if (temp[0] != '$')
 						scalar = strtod(temp.c_str(), NULL);
-					
+
 					//find vector to calculate
 					std::string nameTemp;
 					MarshalString(postfixFormula[i - 2], nameTemp);
@@ -518,7 +518,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					//dimesion check
 					if (Va.dimCheck(Vb)) {
 						dimFlag = 1;
-						
+
 						if (postfixFormula[i] == "+")
 						{
 							//call Addition
@@ -545,7 +545,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						}
 						//push into calStack
 						calStack.push(ans);
-						
+
 						postfixFormula->RemoveAt(i - 2);
 						postfixFormula->RemoveAt(i - 2);
 						i -= 2;
@@ -587,7 +587,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 					}
 				}
 			}
-			
+
 			if (!foundFlag)
 				Output->Text += "-Vector not found-" + Environment::NewLine;
 			else if (!dimFlag)
@@ -601,17 +601,20 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				ans = calStack.top();
 				calStack.pop();
 				outputTemp = printVector(outputTemp, ans);
-				//輸出暫存資訊 
+				//輸出暫存資訊
 				Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
 			}
 		}
+
 		else if (userCommand[0] == "func")
 		{
 			Vector Va, Vb;
 			bool foundFlag = 0;
-			if ((userCommand[1] == "Norm\(" || userCommand[1] == "Normal(") \
-				&& userCommand[3] == ")")	//unary
+			if (userCommand[1] == "Norm\(" && userCommand[3] == ")")
 			{
+#ifdef DEBUG
+				Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
 				for (unsigned int i = 0; i < vectors.size(); i++)
 				{
 					if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
@@ -621,24 +624,31 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						break;
 					}
 				}
-
 				if (foundFlag)
 				{
-					if (userCommand[1] == "Norm\(")
-					{
+					double ans = Va.Norm();
+					Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
+				}
+			}
+			else if (userCommand[1] == "Normal(" && userCommand[3] == ")")
+			{
 #ifdef DEBUG
-						Output->Text += "Norm called" + Environment::NewLine;
+				Output->Text += "Normalization called" + Environment::NewLine;
 #endif // DEBUG
-						double ans = Va.Norm();
-						Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
-					}
-					else if (userCommand[1] == "Normal(")
+				for (unsigned int i = 0; i < vectors.size(); i++)
+				{
+					if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
 					{
-#ifdef DEBUG
-						Output->Text += "Normalization called" + Environment::NewLine;
-#endif // DEBUG
-						Vector ans;
+						Va = vectors[i];
+						foundFlag = 1;
+						break;
 					}
+				}
+				if (foundFlag)
+				{
+					Vector ans = Va.Normal();
+					Output->Text += "Normal(" + userCommand[2] + ") = ";
+					//call print
 				}
 			}
 			else
@@ -663,7 +673,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 	}
 
 }
-private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) 
+private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e)
 {
 	//在Dialog按下OK便會進入此函式
 	//字串轉制string^ to string
@@ -675,7 +685,7 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 	if (dataManager->LoadVectorData())
 	{
 		//將VectorList中項目先做清除
-		VectorList->Items->Clear();	
+		VectorList->Items->Clear();
 		//取得所有向量資料
 		std::vector<Vector> vectors = dataManager->GetVectors();
 
@@ -702,19 +712,16 @@ private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::Co
 	}
 }
 
-private: System::Void loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+private: System::Void loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 {
 	//開啟Dialog
 	openFileDialog1->ShowDialog();
 }
 
-private: 
+private:
 	System::Void loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	System::Void openFileDialog2_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
 
 
 };
 }
-
-
-

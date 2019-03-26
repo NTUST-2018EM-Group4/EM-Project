@@ -10,7 +10,7 @@ struct Vector
 	std::string Name;
 	std::vector<double> Data;
 
-	bool dimCheck(Vector Vb);
+	
 	Vector();
 	Vector(std::vector<double> data);
 	Vector(double scalar);
@@ -19,6 +19,10 @@ struct Vector
 	const Vector operator - (const Vector& Vb);
 	const double operator * (const Vector& Vb);
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
+
+	bool dimCheck(Vector Vb);
+	const double Norm();
+	const Vector Normal();
 };
 
 //Defined Struct Matrix

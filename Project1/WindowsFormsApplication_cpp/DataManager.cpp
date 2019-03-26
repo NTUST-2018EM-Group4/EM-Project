@@ -1,4 +1,5 @@
 #include"DataManager.h"
+#include <math.h>
 
 DataManager::DataManager()
 {
@@ -26,7 +27,7 @@ bool DataManager::LoadVectorData()
 		std::string tempSring;
 		//從檔案讀取字串，解析掉向量總數
 		fin >> tempSring;
-		
+
 		//執行讀檔迴圈，並在讀到檔案結尾時結束
 		while (!fin.eof())
 		{
@@ -65,7 +66,7 @@ bool DataManager::LoadVectorData()
 				//將向量資料存入暫存
 				tempVectorData.push_back(value);
 			}
-			
+
 		}
 		//讀入輸入檔案中最後一個向量資訊
 		Vector tempVector;
@@ -156,15 +157,6 @@ void DataManager::SetFileName(std::string fileName)
 }
 
 
-bool Vector::dimCheck(Vector Vb)
-{
-	if (this->Data.size() == Vb.Data.size()) 
-	{
-		return true;
-	}
-	return false;
-}
-
 Vector::Vector() :Name("")
 {
 	Data.resize(0);
@@ -178,6 +170,37 @@ Vector::Vector(double scalar)
 }
 
 Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
+
+bool Vector::dimCheck(Vector Vb)
+{
+	if (this->Data.size() == Vb.Data.size())
+	{
+		return true;
+	}
+	return false;
+}
+
+const double Vector::Norm()
+{
+	double ans = 0;
+	for (int i = 0;i < this->Data.size(); i++)
+	{
+		ans += pow(this->Data[i], 2.0);
+	}
+	ans = sqrt(ans);
+	return ans;
+}
+
+const Vector Vector::Normal()
+{
+	double norm = this->Norm();
+	std::vector<double> ans(this->Data.size());
+	for (int i = 0; i < this->Data.size(); i++)
+	{
+		ans[i] = this->Data[i] / norm;
+	}
+	return Vector("ans", ans);
+}
 
 const Vector  Vector::operator+(const Vector& Vb)
 {
@@ -201,9 +224,10 @@ const Vector Vector::operator-(const Vector & Vb)
 	return Vector("ans", ans);
 }
 
+//dot
 const double Vector::operator*(const Vector & Vb)
 {
-	//dot
+
 	double ans = 0;
 	for (int i = 0; i < Vb.Data.size(); i++)
 	{
@@ -212,10 +236,11 @@ const double Vector::operator*(const Vector & Vb)
 	return ans;
 }
 
+//scalar
 const Vector operator*(const Vector & Va, const Vector & Vb)
 {
 	std::vector<double> ans;
-	//scalar
+
 	for (int i = 0; i < Va.Data.size(); i++)
 	{
 		for (int j = 0; j < Vb.Data.size(); j++)
