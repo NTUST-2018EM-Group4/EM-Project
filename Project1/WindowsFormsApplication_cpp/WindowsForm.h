@@ -21,6 +21,34 @@ namespace WindowsFormsApplication_cpp {
 		}
 	}
 
+	String^ printVector(String^ s , const Vector& v)
+	{
+		s += "[";
+		for (int i = 0; i < v.Data.size(); i++)
+		{
+			s += v.Data[i].ToString();
+			if (i != v.Data.size() - 1)
+				s += ",";
+		}
+		s += "]" + Environment::NewLine;
+		return s;
+	}
+
+	int findVector( std::string name, const std::vector<Vector>& v)
+	{
+		std::string temp;
+		//MarshalString(name, temp);
+
+		//透過for迴圈，從向量資料中找出對應變數
+		for (unsigned int i = 0; i < v.size(); i++)
+		{
+			//若變數名稱與指令變數名稱符合
+			if (name == v[i].Name)
+				return i;
+		}
+		return -1;
+	}
+
 	/// <summary>
 	/// WindowsForm 的摘要
 	/// </summary>
@@ -295,28 +323,16 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 		{
 			//定義輸出暫存
 			String^ outputTemp = "";
-			//透過for迴圈，從向量資料中找出對應變數
-			for (unsigned int i = 0; i < vectors.size();i++)
-			{
-				//若變數名稱與指令變數名稱符合
-				if (userCommand[1] == gcnew String(vectors[i].Name.c_str()))
-				{
-					//將輸出格式存入暫存
-					outputTemp += "[";
-					//將輸出資料存入暫存
-					for (unsigned int j = 0; j<vectors[i].Data.size(); j++)
-					{
-						outputTemp += vectors[i].Data[j].ToString();
-						if (j != vectors[i].Data.size() - 1)
-							outputTemp += ",";
-					}
-					//將輸出格式存入暫存，並且換行
-					outputTemp += "]" + Environment::NewLine;
-					//輸出暫存資訊 
-					Output->Text += gcnew String(vectors[i].Name.c_str()) +" = "+ outputTemp;
-					break;
-				}
+			std::string nameTemp;
+			MarshalString(userCommand[1], nameTemp);
+			int index = findVector(nameTemp, vectors);
+			if (index != -1)
+			{	
+				outputTemp = printVector(outputTemp, vectors[index]);
+				Output->Text += gcnew String(vectors[index].Name.c_str()) + " = " + outputTemp;
 			}
+			else
+				Output->Text += "-Vector not found-" + Environment::NewLine;		
 		}
 
 		else if (userCommand[0] == "cal")	 
@@ -440,43 +456,29 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				{
 					std::string temp;
 					double scalar;
-					//find vector that need to calculate
-					//透過for迴圈，從向量資料中找出對應變數
-					for (unsigned int j = 0; j < vectors.size(); j++)
-					{
-						System::String^ Temp = postfixFormula[i - 2];
-						MarshalString(Temp, temp);
-						if (temp[0] != '$')
-						{
-							scalar = strtod(temp.c_str(), NULL);
-							break;
-						}
-						//若變數名稱與指令變數名稱符合
-						if (postfixFormula[i - 2] == gcnew String(vectors[j].Name.c_str()))
-						{
-							Va = vectors[j];
+					
+					//check scalar or not
+					System::String^ Temp = postfixFormula[i - 2];
+					MarshalString(Temp, temp);
+					if (temp[0] != '$')
+						scalar = strtod(temp.c_str(), NULL);
+					
+					Temp = postfixFormula[i - 1];
+					MarshalString(Temp, temp);
+					if (temp[0] != '$')
+						scalar = strtod(temp.c_str(), NULL);
+					
+					//find vector to calculate
+					std::string nameTemp;
+					MarshalString(postfixFormula[i - 2], nameTemp);
+					int index = findVector(nameTemp, vectors);
+					if (index != -1)
+						Va = vectors[index];
 
-							break;
-						}
-						
-					}
-
-					for (unsigned int k = 0; k < vectors.size(); k++)
-					{
-						System::String^ Temp = postfixFormula[i - 1];
-						MarshalString(Temp, temp);
-						if (temp[0] != '$')
-						{
-							scalar = strtod(temp.c_str(), NULL);
-							break;
-						}
-						//若變數名稱與指令變數名稱符合
-						if (postfixFormula[i - 1] == gcnew String(vectors[k].Name.c_str()))
-						{
-							Vb = vectors[k];
-							break;
-						}
-					}
+					MarshalString(postfixFormula[i - 1], nameTemp);
+					index = findVector(nameTemp, vectors);
+					if (index != -1)
+						Vb = vectors[index];
 
 					//從算式stack中獲得運算子
 					if (Vb.Name == "" && !calStack.empty())
@@ -578,22 +580,55 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				//格式無誤，輸出結果
 
 				String^ outputTemp;
-				//將輸出格式存入暫存
-				outputTemp += "[";
 				//將輸出資料存入暫存
 				ans = calStack.top();
 				calStack.pop();
-				for (unsigned int j = 0; j < ans.Data.size(); j++)
-				{
-					outputTemp += ans.Data[j].ToString();
-					if (j != ans.Data.size() - 1)
-						outputTemp += ",";
-				}
-				//將輸出格式存入暫存，並且換行
-				outputTemp += "]" + Environment::NewLine;
+				outputTemp = printVector(outputTemp, ans);
 				//輸出暫存資訊 
-				Output->Text += gcnew String("formula = " + outputTemp) + Environment::NewLine;
+				Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
 			}
+		}
+		else if (userCommand[0] == "func")
+		{
+			Vector Va, Vb;
+			bool foundFlag = 0;
+			if ((userCommand[1] == "Norm\(" || userCommand[1] == "Normal(") \
+				&& userCommand[3] == ")")	//unary
+			{
+				for (unsigned int i = 0; i < vectors.size(); i++)
+				{
+					if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+					{
+						Va = vectors[i];
+						foundFlag = 1;
+						break;
+					}
+				}
+
+				if (foundFlag)
+				{
+					if (userCommand[1] == "Norm\(")
+					{
+#ifdef DEBUG
+						Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
+						double ans = Va.Norm();
+						Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
+					}
+					else if (userCommand[1] == "Normal(")
+					{
+#ifdef DEBUG
+						Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+						Vector ans;
+					}
+				}
+			}
+			else
+				Output->Text += "-Function not found-" + Environment::NewLine;
+
+			if (!foundFlag)
+				Output->Text += "-Vector not found-" + Environment::NewLine;
 		}
 		//反之則判斷找不到指令
 		else
