@@ -25,10 +25,11 @@ struct Vector
 struct Matrix
 {
 	std::string Name;
-	std::vector<std::vector<double>> Data;
+	std::vector<Vector> Data;
 
 	Matrix();
-	Matrix(std::vector<std::vector<double>> data);
+	Matrix(std::vector<Vector> data);
+	Matrix(std::string name, std::vector<Vector> data);
 };
 
 //定義控管資料class
@@ -59,6 +60,7 @@ public:
 	bool LoadMatrixData();
 	//Get Matrix Data
 	std::vector<Matrix> GetMatrices();
+
 	//設置檔案路徑名稱
 	void SetFileName(std::string fileName);
 };
