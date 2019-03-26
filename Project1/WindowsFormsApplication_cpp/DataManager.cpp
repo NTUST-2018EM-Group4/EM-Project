@@ -3,6 +3,7 @@
 DataManager::DataManager()
 {
 	VectorVariableIndex = 0;
+	MatrixVariableIndex = 0;
 }
 
 bool DataManager::LoadVectorData()
@@ -77,10 +78,77 @@ bool DataManager::LoadVectorData()
 		return true;
 	}
 }
+bool DataManager::LoadMatrixData()
+{
+	std::fstream fin;
+
+	//開啟檔案，傳入open函數的參數有兩個，欲開起的檔案名稱，開啟檔案的模式參數(這邊std::ios::in為讀取(輸入)狀態)
+	fin.open(FileName, std::ios::in);
+
+	//讀取失敗回傳false
+	if (!fin)
+	{
+		return false;
+	}
+	else
+	{
+		//定義讀取檔案字串暫存變數
+		std::string tempSring;
+		//從檔案讀取字串，解析掉Matrix總數(目前沒用到)
+		fin >> tempSring;
+
+		//執行讀檔迴圈，並在讀到檔案結尾時結束
+		while (!fin.eof())
+		{
+			//從檔案讀取字串
+			fin >> tempSring;
+
+			//解析到Matrix標記"M"
+			if (tempSring == "M")
+			{
+				Matrix tempMatrix;
+
+				int row, col;
+				// store row & column dim
+				fin >> row >> col;
+				for (int i = 0; i < row; i++)
+				{
+					// to store row data as Vector
+					Vector tempRowData;
+					for (int j = 0; j < col; j++)
+					{
+						double tempValue;
+						fin >> tempValue;
+						tempRowData.Data.push_back(tempValue);
+					}
+					// add in tempMatrix Data
+					tempMatrix.Data.push_back(tempRowData);
+					// avoid duplicate data bug
+					tempRowData.Data.clear();
+				}
+				// set Matrix name as $m[Index]
+				tempMatrix.Name = "$m" + std::to_string(MatrixVariableIndex);
+				// add to Matrix List of DataManager
+				Matrices.push_back(tempMatrix);
+				// Index ++
+				MatrixVariableIndex++;
+				// clean temp data to avoid bug
+				tempMatrix.Data.clear();
+				tempMatrix.Name = "";
+			}
+		}
+		//讀取成功回傳false
+		return true;
+	}
+}
 
 std::vector<Vector> DataManager::GetVectors()
 {
 	return Vectors;
+}
+std::vector<Matrix> DataManager::GetMatrices()
+{
+	return Matrices;
 }
 void DataManager::SetFileName(std::string fileName)
 {
@@ -90,7 +158,6 @@ void DataManager::SetFileName(std::string fileName)
 
 bool Vector::dimCheck(Vector Vb)
 {
-	
 	if (this->Data.size() == Vb.Data.size()) 
 	{
 		return true;
@@ -103,18 +170,14 @@ Vector::Vector() :Name("")
 	Data.resize(0);
 }
 
-Vector::Vector(std::vector<double> data): Data(data)
-{
-}
+Vector::Vector(std::vector<double> data) : Data(data) {}
 
 Vector::Vector(double scalar)
 {
 	Data.push_back(scalar);
 }
 
-Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data)
-{
-}
+Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
 
 const Vector  Vector::operator+(const Vector& Vb)
 {
@@ -162,3 +225,12 @@ const Vector operator*(const Vector & Va, const Vector & Vb)
 	}
 	return Vector("ans", ans);
 }
+
+Matrix::Matrix() :Name("")
+{
+	Data.resize(0);
+}
+
+Matrix::Matrix(std::vector<Vector> data) : Data(data) {}
+
+Matrix::Matrix(std::string name, std::vector<Vector> data) : Name(name), Data(data) {}
