@@ -296,7 +296,7 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 			//定義輸出暫存
 			String^ outputTemp = "";
 			//透過for迴圈，從向量資料中找出對應變數
-			for (unsigned int i = 0; i < vectors.size();i++)
+			for (unsigned int i = 0; i < vectors.size(); i++)
 			{
 				//若變數名稱與指令變數名稱符合
 				if (userCommand[1] == gcnew String(vectors[i].Name.c_str()))
@@ -592,12 +592,57 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 				//將輸出格式存入暫存，並且換行
 				outputTemp += "]" + Environment::NewLine;
 				//輸出暫存資訊 
-				Output->Text += gcnew String("formula = " + outputTemp) + Environment::NewLine;
+				Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
 			}
 		}
 		else if (userCommand[0] == "func")
 		{
-			//todo
+			Vector Va, Vb;
+			bool foundFlag = 0;
+			if (userCommand[1] == "Norm\(" && userCommand[3] == ")")
+			{
+#ifdef DEBUG
+				Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
+				for (unsigned int i = 0; i < vectors.size(); i++)
+				{
+					if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+					{
+						Va = vectors[i];
+						foundFlag = 1;
+						break;
+					}
+				}
+				if (foundFlag)
+				{
+					double ans = Va.Norm();
+					Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
+				}
+			}
+			else if (userCommand[1] == "Normal(" && userCommand[3] == ")")
+			{
+#ifdef DEBUG
+				Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+				for (unsigned int i = 0; i < vectors.size(); i++)
+				{
+					if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+					{
+						Va = vectors[i];
+						foundFlag = 1;
+						break;
+					}
+				}
+				if (foundFlag)
+				{
+					//todo
+				}
+			}
+			else
+				Output->Text += "-Function not found-" + Environment::NewLine;
+
+			if (!foundFlag)
+				Output->Text += "-Vector not found-" + Environment::NewLine;
 		}
 		//反之則判斷找不到指令
 		else
