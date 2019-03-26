@@ -503,23 +503,34 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 						if (postfixFormula[i] == "+")
 						{
 							//call Addition
-							Output->Text += "Addition called" + Environment::NewLine; /*debug*/
+#ifdef DEBUG
+							Output->Text += "Addition called" + Environment::NewLine;
+#endif // DEBUG
 							ans = Va + Vb;
 						}
 						else if (postfixFormula[i] == "-")
 						{
 							//call Subtraction
-							Output->Text += "Subtraction called" + Environment::NewLine; /*debug*/
+#ifdef DEBUG
+							Output->Text += "Subtraction called" + Environment::NewLine;
+#endif // DEBUG
 							ans = Va - Vb;
 						}
 						else if (postfixFormula[i] == "*")
 						{
 							//call dot
-							Output->Text += "Dot called" + Environment::NewLine; /*debug*/
+#ifdef DEBUG
+							Output->Text += "Dot called" + Environment::NewLine;
+#endif // DEBUG
 							ans = Va * Vb;
 						}
 						//push into calStack
 						calStack.push(ans);
+						
+						postfixFormula->RemoveAt(i - 2);
+						postfixFormula->RemoveAt(i - 2);
+						i -= 2;
+
 					}
 					else
 					{
@@ -532,8 +543,9 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 							dimFlag = 1;
 							foundFlag = 1;
 							//call scalar
-							Output->Text += "Scalar called" + Environment::NewLine; /*debug*/
-							
+#ifdef DEBUG
+							Output->Text += "Scalar called" + Environment::NewLine;
+#endif // DEBUG
 							if (Va.Data.size() < Vb.Data.size())
 							{
 								if (!Va.Data.empty())
@@ -548,8 +560,11 @@ private: System::Void Input_TextChanged(System::Object^  sender, System::EventAr
 							}
 							//push into calStack
 							calStack.push(ans);
+							postfixFormula->RemoveAt(i - 2);
+							postfixFormula->RemoveAt(i - 2);
+							i -= 2;
 						}
-						break;
+						else break;
 					}
 				}
 			}

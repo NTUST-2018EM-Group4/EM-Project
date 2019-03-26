@@ -141,7 +141,7 @@ const Vector Vector::operator-(const Vector & Vb)
 const double Vector::operator*(const Vector & Vb)
 {
 	//dot
-	int ans = 0;
+	double ans = 0;
 	for (int i = 0; i < Vb.Data.size(); i++)
 	{
 		ans += this->Data[i] * Vb.Data[i];
