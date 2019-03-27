@@ -1,4 +1,7 @@
 #include "WindowsForm.h"
+#include <stack>
+
+
 using namespace System;
 using namespace System::Windows::Forms;
 [STAThread]
@@ -433,6 +436,7 @@ namespace WindowsFormsApplication_cpp
 				if ((userCommand[1] == "Norm(" || userCommand[1] == "Normal(")\
 					&& userCommand[3] == ")")	//unary "funcName( $v )"
 				{
+					dimFlag = 1;
 					MarshalString(userCommand[2], nameTemp);
 					int index = findVector(nameTemp, vectors);
 					if (index != -1)
@@ -458,7 +462,7 @@ namespace WindowsFormsApplication_cpp
 						}
 					}
 				}
-				if ((userCommand[1] == "isOrthogonal(" || 1) \
+				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "angle(" || 1) \
 					&& userCommand[3] == "," && userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
@@ -481,6 +485,14 @@ namespace WindowsFormsApplication_cpp
 								String^ outputTemp = ((Va * Vb) == 0) ? "Yes" : "No";
 								Output->Text += outputTemp + Environment::NewLine;
 
+							}
+							else if (userCommand[1] == "Angle(")
+							{
+#ifdef DEBUG
+								Output->Text = "Angle called" + Environment::NewLine;
+#endif // DEBUG
+								double ans = Va.Angle(Vb);
+								Output->Text += "theta = " + ans + Environment::NewLine;
 							}
 						}
 					}

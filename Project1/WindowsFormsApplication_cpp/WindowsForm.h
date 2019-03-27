@@ -2,7 +2,6 @@
 #define DEBUG
 #include "DataManager.h"
 #include "DotNetUtilities.h"
-#include <stack>
 
 namespace WindowsFormsApplication_cpp {
 

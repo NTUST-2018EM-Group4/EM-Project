@@ -1,5 +1,6 @@
 #include"DataManager.h"
-#include <math.h>
+#include <cmath>
+#define PI 3.1415926535897936384626
 
 DataManager::DataManager()
 {
@@ -171,7 +172,7 @@ Vector::Vector(double scalar)
 
 Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
 
-bool Vector::dimCheck(Vector Vb)
+bool Vector::dimCheck(Vector& Vb)
 {
 	if (this->Data.size() == Vb.Data.size())
 	{
@@ -200,6 +201,15 @@ const Vector Vector::Normal()
 		ans[i] = this->Data[i] / norm;
 	}
 	return Vector("ans", ans);
+}
+
+const double Vector::Angle(Vector& Vb)
+{
+	double cosTheta, theta = 0;
+	cosTheta = (*this * Vb) / (this->Norm() * Vb.Norm());
+	theta = acos(cosTheta);
+	theta *= (PI / 180);
+	return theta;
 }
 
 const Vector  Vector::operator+(const Vector& Vb)
