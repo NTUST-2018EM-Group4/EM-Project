@@ -21,11 +21,11 @@ struct Vector
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 
 	bool dimCheck(const Vector& Vb);
-	const double Norm();
+	const double Norm() const;
 	const Vector Normal();
-	const double Angle( Vector& Vb);
-	const double Com( Vector& Vb);
-	const Vector Proj( Vector& Vb);
+	const double Angle(const Vector& Vb);
+	const double Com(const Vector& Vb);
+	const Vector Proj(const Vector& Vb);
 };
 
 //Defined Struct Matrix

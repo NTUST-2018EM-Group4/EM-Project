@@ -181,7 +181,7 @@ bool Vector::dimCheck(const Vector& Vb)
 	return false;
 }
 
-const double Vector::Norm()
+const double Vector::Norm() const
 {
 	double ans = 0;
 	for (int i = 0;i < this->Data.size(); i++)
@@ -203,7 +203,7 @@ const Vector Vector::Normal()
 	return Vector("ans", ans);
 }
 
-const double Vector::Angle( Vector& Vb)
+const double Vector::Angle(const Vector& Vb)
 {
 	double cosTheta, theta = 0;
 	cosTheta = (*this * Vb) / (this->Norm() * Vb.Norm());
@@ -212,17 +212,17 @@ const double Vector::Angle( Vector& Vb)
 	return theta;
 }
 
-const double Vector::Com( Vector& Vb)
+const double Vector::Com(const Vector& Vb)
 {
 	double ans;
 	ans = (*this * Vb) / Vb.Norm();
 	return ans;
 }
 
-const Vector Vector::Proj( Vector & Vb)
+const Vector Vector::Proj(const Vector & Vb)
 {
-	Vector ans, unit;
-	unit = unit * (1 / Vb.Norm());
+	Vector ans, unit(Vb.Data.size());
+	unit = Vb * (1 / Vb.Norm());
 	ans = this->Com(Vb) * unit;
 	return ans;
 }

@@ -29,6 +29,7 @@ namespace WindowsFormsApplication_cpp
 		s += "[";
 		for (int i = 0; i < v.Data.size(); i++)
 		{
+			/*不知道怎麼限制6位*/
 			s += v.Data[i].ToString();
 			if (i != v.Data.size() - 1)
 				s += ", ";
@@ -505,12 +506,16 @@ namespace WindowsFormsApplication_cpp
 								Output->Text += ans + Environment::NewLine;
 							}
 							else if (userCommand[1] == "Proj(")
-							{	/***bug***/
+							{
 #ifdef DEBUG
 								Output->Text += "Proj call" + Environment::NewLine;
 #endif // DEBUG
 								Vector ans = Va.Proj(Vb);
-								String^ outputTemp = printVector(outputTemp, ans);
+								String^ outputTemp = "";
+								for (int i = 1; i <= 5; i++)
+									outputTemp += userCommand[i];
+								outputTemp += " = ";
+								outputTemp = printVector(outputTemp, ans);
 								Output->Text += outputTemp + Environment::NewLine;
 							}
 						}
