@@ -155,12 +155,13 @@ namespace WindowsFormsApplication_cpp
 		{
 			//將使用者輸入字串(在userInput中)，依空白作切割
 			array<String^> ^userCommand = userInput->Split(' ');
+			std::string nameTemp;
 			//字串比較，若指令為"print"的情況
 			if (userCommand[0] == "print")
 			{
 				//定義輸出暫存
 				String^ outputTemp = "";
-				std::string nameTemp;
+
 				MarshalString(userCommand[1], nameTemp);
 				int index = findVector(nameTemp, vectors);
 				if (index != -1)
@@ -306,7 +307,6 @@ namespace WindowsFormsApplication_cpp
 							scalar = strtod(temp.c_str(), NULL);
 
 						//find vector to calculate
-						std::string nameTemp;
 						MarshalString(postfixFormula[i - 2], nameTemp);
 						int index = findVector(nameTemp, vectors);
 						if (index != -1)
@@ -429,17 +429,16 @@ namespace WindowsFormsApplication_cpp
 			else if (userCommand[0] == "func")
 			{
 				Vector Va, Vb;
-				bool foundFlag = 0;
+				bool foundFlag = 0, funcFound = 1, dimFlag = 0;
 				if ((userCommand[1] == "Norm(" || userCommand[1] == "Normal(")\
-					&& userCommand[3] == ")")	//unary
+					&& userCommand[3] == ")")	//unary "funcName( $v )"
 				{
-					std::string nameTemp;
 					MarshalString(userCommand[2], nameTemp);
 					int index = findVector(nameTemp, vectors);
 					if (index != -1)
 					{
-						Va = vectors[index];
 						foundFlag = 1;
+						Va = vectors[index];
 						if (userCommand[1] == "Norm(")
 						{
 #ifdef DEBUG
@@ -459,11 +458,42 @@ namespace WindowsFormsApplication_cpp
 						}
 					}
 				}
-				else
-					Output->Text += "-Function not found-" + Environment::NewLine;
+				if ((userCommand[1] == "isOrthogonal(" || 1) \
+					&& userCommand[3] == "," && userCommand[5] == ")")	//binary "funcName( $va , $vb )"
+				{
+					MarshalString(userCommand[2], nameTemp);
+					int indexA = findVector(nameTemp, vectors);
+					MarshalString(userCommand[4], nameTemp);
+					int indexB = findVector(nameTemp, vectors);
+					if (indexA != -1 && indexB != -1)
+					{
+						foundFlag = 1;
+						Va = vectors[indexA];
+						Vb = vectors[indexB];
+						if (Va.dimCheck(Vb))	//dinmension check
+						{
+							dimFlag = 1;
+							if (userCommand[1] == "isOrthogonal(")
+							{
+#ifdef DEBUG
+								Output->Text += "isOrthogonal called" + Environment::NewLine;
+#endif // DEBUG
+								String^ outputTemp = ((Va * Vb) == 0) ? "Yes" : "No";
+								Output->Text += outputTemp + Environment::NewLine;
 
-				if (!foundFlag)
+							}
+						}
+					}
+				}
+				else
+				{
+					funcFound = 0;
+					Output->Text += "-Function not found-" + Environment::NewLine;
+				}
+				if (funcFound && !foundFlag)
 					Output->Text += "-Vector not found-" + Environment::NewLine;
+				else if (funcFound && !dimFlag)
+					Output->Text += "-dimension not same-" + Environment::NewLine;
 			}
 			//反之則判斷找不到指令
 			else
