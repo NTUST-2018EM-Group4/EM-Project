@@ -463,10 +463,10 @@ namespace WindowsFormsApplication_cpp
 						}
 					}
 				}
-				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle(" \
-					|| userCommand[1] == "Com(" || userCommand[1] == "Proj(") \
-					|| userCommand[1] == "Cross(" \
-					&& userCommand[3] == "," && userCommand[5] == ")")	//binary "funcName( $va , $vb )"
+				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle("	\
+					|| userCommand[1] == "Com("		|| userCommand[1] == "Proj(")			\
+					|| userCommand[1] == "Cross("	|| userCommand[1] == "isParallel("		\
+					&& userCommand[3] == ","		&& userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
 					int indexA = findVector(nameTemp, vectors);
@@ -536,7 +536,16 @@ namespace WindowsFormsApplication_cpp
 								}
 								else
 									Output->Text += "-Dimension error-" + Environment::NewLine;
-
+							}
+							else if (userCommand[1] == "isParallel(")
+							{
+								String^ outputTemp;
+								double angle = Va.Angle(Vb);
+								if (angle == 0 || angle == 180)
+									outputTemp = "Yes";
+								else
+									outputTemp = "No";
+								Output->Text += outputTemp + Environment::NewLine;
 							}
 						}
 					}
