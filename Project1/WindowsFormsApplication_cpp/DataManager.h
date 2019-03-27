@@ -26,6 +26,7 @@ struct Vector
 	const double Angle(const Vector& Vb);
 	const double Com(const Vector& Vb);
 	const Vector Proj(const Vector& Vb);
+	const Vector Cross(const Vector& Vb);
 };
 
 //Defined Struct Matrix

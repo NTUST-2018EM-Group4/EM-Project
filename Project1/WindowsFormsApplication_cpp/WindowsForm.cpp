@@ -426,7 +426,7 @@ namespace WindowsFormsApplication_cpp
 					calStack.pop();
 					outputTemp = printVector(outputTemp, ans);
 					//輸出暫存資訊
-					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
+					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
 				}
 			}
 
@@ -459,12 +459,13 @@ namespace WindowsFormsApplication_cpp
 #endif // DEBUG
 							Vector ans = Va.Normal();
 							String^ outputTemp = printVector(outputTemp, ans);
-							Output->Text += "Normal(" + userCommand[2] + ") = " + outputTemp + Environment::NewLine;
+							Output->Text += "Normal(" + userCommand[2] + ") = " + outputTemp;
 						}
 					}
 				}
-				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "angle(" \
+				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle(" \
 					|| userCommand[1] == "Com(" || userCommand[1] == "Proj(") \
+					|| userCommand[1] == "Cross(" \
 					&& userCommand[3] == "," && userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
@@ -491,7 +492,7 @@ namespace WindowsFormsApplication_cpp
 							else if (userCommand[1] == "Angle(")
 							{
 #ifdef DEBUG
-								Output->Text = "Angle called" + Environment::NewLine;
+								Output->Text += "Angle called" + Environment::NewLine;
 #endif // DEBUG
 								double ans = Va.Angle(Vb);
 								Output->Text += "theta = " + ans + Environment::NewLine;
@@ -516,7 +517,26 @@ namespace WindowsFormsApplication_cpp
 									outputTemp += userCommand[i];
 								outputTemp += " = ";
 								outputTemp = printVector(outputTemp, ans);
-								Output->Text += outputTemp + Environment::NewLine;
+								Output->Text += outputTemp;
+							}
+							else if (userCommand[1] == "Cross(")
+							{
+								if (Va.Data.size() == 3)
+								{
+#ifdef DEBUG
+									Output->Text += "Cross call" + Environment::NewLine;
+#endif // DEBUG
+									Vector ans = Va.Cross(Vb);
+									String^ outputTemp = "";
+									for (int i = 1; i <= 5; i++)
+										outputTemp += userCommand[i];
+									outputTemp += " = ";
+									outputTemp = printVector(outputTemp, ans);
+									Output->Text += outputTemp;
+								}
+								else
+									Output->Text += "-Dimension error-" + Environment::NewLine;
+
 							}
 						}
 					}

@@ -221,10 +221,21 @@ const double Vector::Com(const Vector& Vb)
 
 const Vector Vector::Proj(const Vector & Vb)
 {
-	Vector ans, unit(Vb.Data.size());
+	Vector ans, unit;
 	unit = Vb * (1 / Vb.Norm());
 	ans = this->Com(Vb) * unit;
 	return ans;
+}
+
+const Vector Vector::Cross(const Vector & Vb)
+{
+	std::vector<double> ans(3);
+	for (int i = 0; i < 3; i++)
+	{
+		ans[i] = this->Data[(i + 1) % 3] * Vb.Data[(i + 2) % 3] \
+			- Vb.Data[(i + 1) % 3] * this->Data[(i + 2) % 3];
+	}
+	return Vector("ans", ans);
 }
 
 const Vector  Vector::operator+(const Vector& Vb)
