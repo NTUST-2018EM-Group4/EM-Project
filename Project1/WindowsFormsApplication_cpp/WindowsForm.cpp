@@ -462,7 +462,8 @@ namespace WindowsFormsApplication_cpp
 						}
 					}
 				}
-				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "angle(" || 1) \
+				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "angle(" \
+					|| userCommand[1] == "Com(" || userCommand[1] == "Proj(") \
 					&& userCommand[3] == "," && userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
@@ -493,6 +494,24 @@ namespace WindowsFormsApplication_cpp
 #endif // DEBUG
 								double ans = Va.Angle(Vb);
 								Output->Text += "theta = " + ans + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Com(")
+							{
+#ifdef DEBUG
+								Output->Text += "Com called" + Environment::NewLine;
+#endif // DEBUG
+
+								double ans = Va.Com(Vb);
+								Output->Text += ans + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Proj(")
+							{	/***bug***/
+#ifdef DEBUG
+								Output->Text += "Proj call" + Environment::NewLine;
+#endif // DEBUG
+								Vector ans = Va.Proj(Vb);
+								String^ outputTemp = printVector(outputTemp, ans);
+								Output->Text += outputTemp + Environment::NewLine;
 							}
 						}
 					}

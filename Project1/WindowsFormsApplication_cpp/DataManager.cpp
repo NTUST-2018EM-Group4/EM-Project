@@ -172,7 +172,7 @@ Vector::Vector(double scalar)
 
 Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
 
-bool Vector::dimCheck(Vector& Vb)
+bool Vector::dimCheck(const Vector& Vb)
 {
 	if (this->Data.size() == Vb.Data.size())
 	{
@@ -203,13 +203,28 @@ const Vector Vector::Normal()
 	return Vector("ans", ans);
 }
 
-const double Vector::Angle(Vector& Vb)
+const double Vector::Angle( Vector& Vb)
 {
 	double cosTheta, theta = 0;
 	cosTheta = (*this * Vb) / (this->Norm() * Vb.Norm());
 	theta = acos(cosTheta);
-	theta *= (PI / 180);
+	theta *= (180 / PI);
 	return theta;
+}
+
+const double Vector::Com( Vector& Vb)
+{
+	double ans;
+	ans = (*this * Vb) / Vb.Norm();
+	return ans;
+}
+
+const Vector Vector::Proj( Vector & Vb)
+{
+	Vector ans, unit;
+	unit = unit * (1 / Vb.Norm());
+	ans = this->Com(Vb) * unit;
+	return ans;
 }
 
 const Vector  Vector::operator+(const Vector& Vb)

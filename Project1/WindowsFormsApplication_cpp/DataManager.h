@@ -20,10 +20,12 @@ struct Vector
 	const double operator * (const Vector& Vb);
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 
-	bool dimCheck(Vector& Vb);
+	bool dimCheck(const Vector& Vb);
 	const double Norm();
 	const Vector Normal();
-	const double Angle(Vector& Vb);
+	const double Angle( Vector& Vb);
+	const double Com( Vector& Vb);
+	const Vector Proj( Vector& Vb);
 };
 
 //Defined Struct Matrix
