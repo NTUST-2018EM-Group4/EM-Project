@@ -466,6 +466,7 @@ namespace WindowsFormsApplication_cpp
 				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle("	\
 					|| userCommand[1] == "Com("		|| userCommand[1] == "Proj(")			\
 					|| userCommand[1] == "Cross("	|| userCommand[1] == "isParallel("		\
+					|| userCommand[1] == "Area("											\
 					&& userCommand[3] == ","		&& userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
@@ -546,6 +547,12 @@ namespace WindowsFormsApplication_cpp
 								else
 									outputTemp = "No";
 								Output->Text += outputTemp + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Area(")
+							{
+								/***bug***/
+								double ans = Va.Area(Vb);
+								Output->Text += ans + Environment::NewLine;
 							}
 						}
 					}

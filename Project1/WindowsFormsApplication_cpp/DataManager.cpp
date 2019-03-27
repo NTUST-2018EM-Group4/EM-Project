@@ -192,7 +192,7 @@ const double Vector::Norm() const
 	return ans;
 }
 
-const Vector Vector::Normal()
+const Vector Vector::Normal() const
 {
 	double norm = this->Norm();
 	std::vector<double> ans(this->Data.size());
@@ -227,7 +227,7 @@ const Vector Vector::Proj(const Vector & Vb)
 	return ans;
 }
 
-const Vector Vector::Cross(const Vector & Vb)
+const Vector Vector::Cross(const Vector & Vb) const
 {
 	std::vector<double> ans(3);
 	for (int i = 0; i < 3; i++)
@@ -238,7 +238,15 @@ const Vector Vector::Cross(const Vector & Vb)
 	return Vector("ans", ans);
 }
 
-const Vector  Vector::operator+(const Vector& Vb)
+const double Vector::Area(const Vector & Vb)
+{
+	double ans, theta;
+	theta = this->Angle(Vb) * (PI / 180);	//deg to rad
+	ans = this->Norm() * Vb.Norm() * sin(theta) / 2;
+	return ans;
+}
+
+const Vector  Vector::operator+(const Vector& Vb) const
 {
 	std::vector<double> ans;
 	ans.resize(Vb.Data.size());
@@ -249,7 +257,7 @@ const Vector  Vector::operator+(const Vector& Vb)
 	return Vector("ans",ans);
 }
 
-const Vector Vector::operator-(const Vector & Vb)
+const Vector Vector::operator-(const Vector & Vb) const
 {
 	std::vector<double> ans;
 	ans.resize(Vb.Data.size());
@@ -286,6 +294,7 @@ const Vector operator*(const Vector & Va, const Vector & Vb)
 	}
 	return Vector("ans", ans);
 }
+
 
 Matrix::Matrix() :Name("")
 {

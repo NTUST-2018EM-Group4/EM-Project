@@ -15,18 +15,19 @@ struct Vector
 	Vector(std::vector<double> data);
 	Vector(double scalar);
 	Vector(std::string name, std::vector<double> data);
-	const Vector operator + (const Vector& Vb);
-	const Vector operator - (const Vector& Vb);
+	const Vector operator + (const Vector& Vb) const;
+	const Vector operator - (const Vector& Vb) const;
 	const double operator * (const Vector& Vb);
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 
 	bool dimCheck(const Vector& Vb);
 	const double Norm() const;
-	const Vector Normal();
+	const Vector Normal() const;
 	const double Angle(const Vector& Vb);
 	const double Com(const Vector& Vb);
 	const Vector Proj(const Vector& Vb);
-	const Vector Cross(const Vector& Vb);
+	const Vector Cross(const Vector& Vb) const;
+	const double Area(const Vector& Vb);
 };
 
 //Defined Struct Matrix
