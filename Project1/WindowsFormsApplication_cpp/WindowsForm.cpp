@@ -28,7 +28,7 @@ namespace WindowsFormsApplication_cpp
 		{
 			s += v.Data[i].ToString();
 			if (i != v.Data.size() - 1)
-				s += ",";
+				s += ", ";
 		}
 		s += "]" + Environment::NewLine;
 		return s;
@@ -430,45 +430,33 @@ namespace WindowsFormsApplication_cpp
 			{
 				Vector Va, Vb;
 				bool foundFlag = 0;
-				if (userCommand[1] == "Norm(" && userCommand[3] == ")")
+				if ((userCommand[1] == "Norm(" || userCommand[1] == "Normal(")\
+					&& userCommand[3] == ")")	//unary
 				{
-#ifdef DEBUG
-					Output->Text += "Norm called" + Environment::NewLine;
-#endif // DEBUG
-					for (unsigned int i = 0; i < vectors.size(); i++)
+					std::string nameTemp;
+					MarshalString(userCommand[2], nameTemp);
+					int index = findVector(nameTemp, vectors);
+					if (index != -1)
 					{
-						if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+						Va = vectors[index];
+						foundFlag = 1;
+						if (userCommand[1] == "Norm(")
 						{
-							Va = vectors[i];
-							foundFlag = 1;
-							break;
-						}
-					}
-					if (foundFlag)
-					{
-						double ans = Va.Norm();
-						Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
-					}
-				}
-				else if (userCommand[1] == "Normal(" && userCommand[3] == ")")
-				{
 #ifdef DEBUG
-					Output->Text += "Normalization called" + Environment::NewLine;
+							Output->Text += "Norm called" + Environment::NewLine;
 #endif // DEBUG
-					for (unsigned int i = 0; i < vectors.size(); i++)
-					{
-						if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
-						{
-							Va = vectors[i];
-							foundFlag = 1;
-							break;
+							double ans = Va.Norm();
+							Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
 						}
-					}
-					if (foundFlag)
-					{
-						Vector ans = Va.Normal();
-						Output->Text += "Normal(" + userCommand[2] + ") = ";
-						//call print
+						else if (userCommand[1] == "Normal(")
+						{
+#ifdef DEBUG
+							Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+							Vector ans = Va.Normal();
+							String^ outputTemp = printVector(outputTemp, ans);
+							Output->Text += "Normal(" + userCommand[2] + ") = " + outputTemp + Environment::NewLine;
+						}
 					}
 				}
 				else
