@@ -177,7 +177,7 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += "-Vector not found-" + Environment::NewLine;
 			}
 
-			else if (userCommand[0] == "cal")
+			else if (userCommand[0] == "calV")
 			{
 				//infix to postfix
 
@@ -466,7 +466,8 @@ namespace WindowsFormsApplication_cpp
 				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle("	\
 					|| userCommand[1] == "Com("		|| userCommand[1] == "Proj(")			\
 					|| userCommand[1] == "Cross("	|| userCommand[1] == "isParallel("		\
-					|| userCommand[1] == "Area("											\
+					|| userCommand[1] == "Area("	|| userCommand[1] == "pN("				\
+					|| userCommand[1] == "isLI("	\
 					&& userCommand[3] == ","		&& userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
 					MarshalString(userCommand[2], nameTemp);
@@ -510,7 +511,7 @@ namespace WindowsFormsApplication_cpp
 							else if (userCommand[1] == "Proj(")
 							{
 #ifdef DEBUG
-								Output->Text += "Proj call" + Environment::NewLine;
+								Output->Text += "Proj called" + Environment::NewLine;
 #endif // DEBUG
 								Vector ans = Va.Proj(Vb);
 								String^ outputTemp = "";
@@ -520,12 +521,12 @@ namespace WindowsFormsApplication_cpp
 								outputTemp = printVector(outputTemp, ans);
 								Output->Text += outputTemp;
 							}
-							else if (userCommand[1] == "Cross(")
+							else if (userCommand[1] == "Cross(" || userCommand[1] == "pN(")
 							{
 								if (Va.Data.size() == 3)
 								{
 #ifdef DEBUG
-									Output->Text += "Cross call" + Environment::NewLine;
+									Output->Text += "Cross / pN called" + Environment::NewLine;
 #endif // DEBUG
 									Vector ans = Va.Cross(Vb);
 									String^ outputTemp = "";
@@ -540,6 +541,10 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (userCommand[1] == "isParallel(")
 							{
+#ifdef DEBUG
+								Output->Text += "isParallel called" + Environment::NewLine;
+#endif // DEBUG
+
 								String^ outputTemp;
 								double angle = Va.Angle(Vb);
 								if (angle == 0 || angle == 180)
@@ -550,10 +555,81 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (userCommand[1] == "Area(")
 							{
-								/***bug***/
+#ifdef DEBUG
+								Output->Text += "Area called" + Environment::NewLine;
+#endif // DEBUG
+
 								double ans = Va.Area(Vb);
 								Output->Text += ans + Environment::NewLine;
 							}
+							else if (userCommand[1] == "isLI(")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								//todo
+							}
+						}
+					}
+				}
+				else if (userCommand[1] == "Ob(")
+				{
+					MarshalString(userCommand[2], nameTemp);
+					int index = findVector(nameTemp, vectors);
+					if (index != -1)
+					{
+						foundFlag = 1;
+						std::vector<Vector> ui;
+						ui.push_back(vectors[index]);
+						int normal = ui[0].Data.size();
+						std::vector<Vector> Vi(normal);
+						std::vector<Vector> ni(normal);
+						ui.resize(normal);
+						Vi[0] = ui[0];
+						ni[0] = Vi[0].Normal();
+						for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
+						{
+							MarshalString(userCommand[i], nameTemp);
+							index = findVector(nameTemp, vectors);
+							if (index == -1)
+							{
+								foundFlag = 0;
+								break;
+							}
+							if (vectors[index].Data.size() != normal)
+							{
+								dimFlag = 0;
+								break;
+							}
+							dimFlag = 1;
+							ui[j] = vectors[index];	//get vector data into ui
+						}
+						if (dimFlag && foundFlag)
+						{
+#ifdef DEBUG
+							Output->Text += "Ob called" + Environment::NewLine;
+#endif // DEBUG
+							//formula from wikipedia "Gram¡VSchmidt process"
+							for (int i = 1; foundFlag && i < normal; i++)
+							{
+								Vector sum;
+								sum.Data.resize(normal);
+								for (int j = 0; j <= i - 1; j++)
+								{
+									sum = sum + ((ui[i] * ni[j]) * ni[j]);
+								}
+								Vi[i] = ui[i] - sum;
+								ni[i] = Vi[i].Normal();
+							}
+							String^ outputTemp = "";
+							for (int i = 1; i <= normal * 2 + 1; i++)
+								outputTemp += userCommand[i];
+							outputTemp += " :" + Environment::NewLine;
+							for (int i = 0; i < normal; i++)
+							{
+								outputTemp = printVector(outputTemp, ni[i]);
+							}
+							Output->Text += outputTemp;
 						}
 					}
 				}
