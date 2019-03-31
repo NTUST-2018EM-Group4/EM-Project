@@ -298,4 +298,5 @@ namespace WindowsFormsApplication_cpp {
 	String^ printVector(String^ s, const Vector& v);
 	int findVector(std::string name, const std::vector<Vector>& v);
 	int findMatrix(std::string name, const std::vector<Matrix>& m);
+	Generic::List<String^> ^CmdProcess(array<String^>^ CmdList);
 }

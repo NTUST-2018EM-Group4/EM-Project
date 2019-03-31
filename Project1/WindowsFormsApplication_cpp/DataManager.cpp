@@ -254,8 +254,11 @@ Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 	case '-':
 		temp = Ma - Mb;
 		break;
-	case'*':
+	case '*':
 		temp = Ma * Mb;
+		break;
+	case '\\':
+		throw "---Operator not Support---";
 		break;
 	default:
 		break;
@@ -324,6 +327,25 @@ const Matrix Matrix::operator*(const Matrix & Mb)
 	}
 }
 
+const Matrix Matrix::trans()
+{
+	Matrix temp;
+	if (Data.empty())
+	{
+		throw "---Empty Matrix---";
+	}
+	temp.Data.resize(Data[0].Data.size());
+	for (int i = 0; i < Data.size(); i++)
+	{
+		for (int j = 0; j < Data[i].Data.size(); j++)
+		{
+			temp.Data[j].Data.push_back(Data[i].Data[j]);
+		}
+	}
+	temp.Name = "Trans Result";
+	return temp;
+}
+
 System::String^ Matrix::outputStr()
 {
 	System::String^ Temp;
@@ -334,7 +356,7 @@ System::String^ Matrix::outputStr()
 	{
 		std::string temp;
 		temp += "[";
-		for (int j = 0; j < Data.size(); j++)
+		for (int j = 0; j < Data[i].Data.size(); j++)
 		{
 			temp += std::to_string(Data[i].Data[j]);
 			if (j != Data[i].Data.size() - 1)
@@ -386,6 +408,4 @@ bool Matrix::dimCheck(Matrix Mb, char op)
 		return false;
 		break;
 	}
-	
-	
 }

@@ -40,6 +40,8 @@ struct Matrix
 	const Matrix operator - (const Matrix& Mb);
 	const Matrix operator * (const Matrix& Mb);
 
+	const Matrix trans();
+
 	System::String^ outputStr();
 	bool dimCheck(Matrix Mb, char op);
 };

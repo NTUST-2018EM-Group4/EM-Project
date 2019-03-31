@@ -66,6 +66,48 @@ namespace WindowsFormsApplication_cpp
 		// return -1;
 	}
 
+	Generic::List<String^>^ CmdProcess(array<String^>^ CmdList)
+	{
+		//若運算式中有空格先合併成無空格版
+		for (int i = 2; i < CmdList->Length; i++)
+		{
+			CmdList[1] += CmdList[i];
+		}
+		String^ Cmdtemp = "";
+		for (int i = 0; i < CmdList[1]->Length; i++)
+		{
+			if (CmdList[1][i] == '(' || CmdList[1][i] == ')' || CmdList[1][i] == ',')
+			{
+				Cmdtemp += " " + CmdList[1][i] + " ";
+			}
+			else
+			{
+				Cmdtemp += CmdList[1][i];
+			}
+		}
+		if (Cmdtemp[0] == ' ')
+		{
+			Cmdtemp = Cmdtemp->Remove(0, 1);
+		}
+		if (Cmdtemp[Cmdtemp->Length - 1] == ' ')
+		{
+			Cmdtemp = Cmdtemp->Remove(Cmdtemp->Length - 1, 1);
+		}
+		array<String^> ^CmdArray = Cmdtemp->Split(' ');
+
+		//將array(CmdArray)轉成List
+		Generic::List<String^> ^Cmd = gcnew Generic::List<String^>();
+		for (int i = 0; i < CmdArray->Length; i++)
+		{
+			//Avoid " " bug
+			if (CmdArray[i] != "" && CmdArray[i] != "(" && CmdArray[i] != ")" && CmdArray[i] != ",")
+			{
+				Cmd->Add(CmdArray[i]);
+			}
+		}
+		return Cmd;
+	}
+
 	System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 	{
 		//開啟Dialog
@@ -617,7 +659,8 @@ namespace WindowsFormsApplication_cpp
 			
 			else if (userCommand[0] == "func")
 			{
-				Vector Va, Vb;
+		
+		Vector Va, Vb;
 				bool foundFlag = 0;
 				if (userCommand[1] == "Norm(" && userCommand[3] == ")")
 				{
@@ -665,6 +708,33 @@ namespace WindowsFormsApplication_cpp
 
 				if (!foundFlag)
 					Output->Text += "-Vector not found-" + Environment::NewLine;
+			}
+
+			// Matrix Function
+			else if (userCommand[0] == "funcM")
+			{
+				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
+				try
+				{
+					if (funcFormula[0] == "trans")
+					{
+						std::string VarNameTemp = "";
+						MarshalString(funcFormula[1], VarNameTemp);
+						int index = findMatrix(VarNameTemp, matrices);
+						Matrix temp = matrices[index].trans();
+						Output->Text += temp.outputStr();
+					}
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+
 			}
 			//反之則判斷找不到指令
 			else
