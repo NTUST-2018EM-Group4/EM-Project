@@ -743,6 +743,10 @@ namespace WindowsFormsApplication_cpp
 						temp.Data[0].Data.push_back(detValue);
 						temp.Name = "Determinant Value";
 					}
+					else if (funcFormula[0] == "inverse")
+					{
+						temp = matrices[index].inverse();
+					}
 					else
 					{
 						throw "---Command not exist---";

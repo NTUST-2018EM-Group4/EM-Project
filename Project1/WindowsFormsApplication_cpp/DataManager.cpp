@@ -467,6 +467,82 @@ const double Matrix::det()
 	return detValue;
 }
 
+const Matrix Matrix::inverse()
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty())
+	{
+		throw "---Empty Matrix---";
+	}
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
+	// 填好參數化的部分
+	Matrix inver;
+	inver.Data.resize(temp.Data.size());
+	for (int i = 0; i < inver.Data.size(); i++)
+	{
+		for (int j = 0; j < inver.Data.size(); j++)
+		{
+			if (i == j)
+			{
+				inver.Data[i].Data.push_back(1.0);
+			}
+			else
+			{
+				inver.Data[i].Data.push_back(0.0);
+			}
+		}
+	}
+
+	// 開始進行高斯喬登消去法
+	// 內容幾乎與高斯消去法相同
+	for (int i = 0; i < temp.Data.size(); i++)
+	{
+		if (temp.Data[i].Data[i] == 0)
+		{
+			for (int j = i + 1; j < temp.Data.size(); j++)
+			{
+				if (temp.Data[j].Data[i] != 0)
+				{
+					// swap(temp.Data[i], temp.Data[j])
+					Vector tempVec = temp.Data[i];
+					temp.Data[i] = temp.Data[j];
+					temp.Data[j] = tempVec;
+
+					// swap(inver.Data[i], inver.Data[j])
+					tempVec = inver.Data[i];
+					inver.Data[i] = inver.Data[j];
+					inver.Data[j] = tempVec;
+					break;
+				}
+			}
+		}
+		// 反矩陣不存在
+		if (temp.Data[i].Data[i] == 0) throw "---Inverse Matrix not exist---";
+
+		// 將橫條首項變成1
+		double t = temp.Data[i].Data[i];
+		temp.Data[i] = temp.Data[i] / t;
+		inver.Data[i] = inver.Data[i] / t;
+
+		for (int j = 0; j < temp.Data.size(); j++)
+		{
+			if (i != j && temp.Data[j].Data[i] != 0)
+			{
+				double t = temp.Data[j].Data[i];
+				temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				inver.Data[j] = inver.Data[j] - inver.Data[i] * t;
+			}
+		}
+	}
+	inver.Name = "Inverse (" + this->Name + ")";
+	return inver;
+	throw "---Inverse process error---";
+}
+
 
 System::String^ Matrix::outputStr()
 {
