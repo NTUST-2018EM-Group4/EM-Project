@@ -250,8 +250,13 @@ Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 	{
 	case '+':
 		temp = Ma + Mb;
+		break;
 	case '-':
 		temp = Ma - Mb;
+		break;
+	case'*':
+		temp = Ma * Mb;
+		break;
 	default:
 		break;
 	}
@@ -261,7 +266,7 @@ Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 
 const Matrix Matrix::operator+(const Matrix & Mb)
 {
-	if (dimCheck(Mb))
+	if (dimCheck(Mb, '+'))
 	{
 		std::vector<Vector> ans;
 		for (int i = 0; i < this->Data.size(); i++)
@@ -278,7 +283,7 @@ const Matrix Matrix::operator+(const Matrix & Mb)
 
 const Matrix Matrix::operator-(const Matrix & Mb)
 {
-	if (dimCheck(Mb))
+	if (dimCheck(Mb, '-'))
 	{
 		std::vector<Vector> ans;
 		for (int i = 0; i < this->Data.size(); i++)
@@ -290,6 +295,32 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 	else
 	{
 		throw "---Operator - process ERROR!---";
+	}
+}
+
+const Matrix Matrix::operator*(const Matrix & Mb)
+{
+	if (dimCheck(Mb, '*'))
+	{
+		Matrix result;
+		result.Data.resize(this->Data.size());
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			for (int j = 0; j < Mb.Data[0].Data.size(); j++)
+			{
+				double temp = 0;
+				for (int k = 0; k < Mb.Data.size(); k++)
+				{
+					temp += this->Data[i].Data[k] * Mb.Data[k].Data[j];
+				}
+				result.Data[i].Data.push_back(temp);
+			}
+		}
+		return result;
+	}
+	else
+	{
+		throw "---Operator * process ERROR!---";
 	}
 }
 
@@ -316,23 +347,45 @@ System::String^ Matrix::outputStr()
 	return Temp;
 }
 
-bool Matrix::dimCheck(Matrix Mb)
+bool Matrix::dimCheck(Matrix Mb, char op)
 {
-	if (this->Data.size() == Mb.Data.size())
+	switch (op)
 	{
+	case '+' : case '-':
+		if (this->Data.size() == Mb.Data.size())
+		{
+			for (int i = 0; i < this->Data.size(); i++)
+			{
+				if (this->Data[i].Data.size() != Mb.Data[i].Data.size())
+				{
+					throw "---Dimension not same---";
+					return false;
+				}
+			}
+		}
+		else
+		{
+			throw "---Dimension not same---";
+			return false;
+		}
+		return true;
+		break;
+	case '*':
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			if (this->Data[i].Data.size() != Mb.Data[i].Data.size())
+			if (this->Data[i].Data.size() != Mb.Data.size())
 			{
 				throw "---Dimension not same---";
 				return false;
 			}
 		}
-	}
-	else
-	{
-		throw "---Dimension not same---";
+		return true;
+		break;
+	default:
+		throw "---Operator Check ERROR---";
 		return false;
+		break;
 	}
-	return true;
+	
+	
 }

@@ -38,9 +38,10 @@ struct Matrix
 
 	const Matrix operator + (const Matrix& Mb);
 	const Matrix operator - (const Matrix& Mb);
+	const Matrix operator * (const Matrix& Mb);
 
 	System::String^ outputStr();
-	bool dimCheck(Matrix Mb);
+	bool dimCheck(Matrix Mb, char op);
 };
 
 //定義控管資料class
