@@ -18,6 +18,8 @@ struct Vector
 	const Vector operator + (const Vector& Vb);
 	const Vector operator - (const Vector& Vb);
 	const double operator * (const Vector& Vb);
+	const Vector operator * (const double& num);
+	const Vector operator / (const double& num);
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 
 	bool dimCheck(Vector Vb);
@@ -41,6 +43,8 @@ struct Matrix
 	const Matrix operator * (const Matrix& Mb);
 
 	const Matrix trans();
+	const Matrix gaussian();
+	const int rank();
 
 	System::String^ outputStr();
 	bool dimCheck(Matrix Mb, char op);

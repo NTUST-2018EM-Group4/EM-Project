@@ -202,6 +202,10 @@ const Vector Vector::operator-(const Vector & Vb)
 	for (int i = 0; i < Vb.Data.size(); i++)
 	{
 		ans[i] = this->Data[i] - Vb.Data[i];
+		if (abs(ans[i]) < 1E-10)
+		{
+			ans[i] = 0;
+		}
 	}
 	return Vector("ans", ans);
 }
@@ -216,6 +220,28 @@ const double Vector::operator*(const Vector & Vb)
 		ans += this->Data[i] * Vb.Data[i];
 	}
 	return ans;
+}
+
+const Vector Vector::operator*(const double & num)
+{
+	Vector temp = *this;
+	for (int i = 0; i < this->Data.size(); i++)
+	{
+		temp.Data[i] *= num;
+	}
+	temp.Name = "result";
+	return temp;
+}
+
+const Vector Vector::operator/(const double & num)
+{
+	Vector temp = *this;
+	for (int i = 0; i < this->Data.size(); i++)
+	{
+		temp.Data[i] /= num;
+	}
+	temp.Name = "result";
+	return temp;
 }
 
 //scalar
@@ -345,6 +371,79 @@ const Matrix Matrix::trans()
 	temp.Name = "Trans Result";
 	return temp;
 }
+
+const Matrix Matrix::gaussian()
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty())
+	{
+		throw "---Empty Matrix---";
+	}
+	// set dim
+	int dim = temp.Data.size();
+	if (temp.Data[0].Data.size() < dim)
+	{
+		dim = temp.Data[0].Data.size();
+	}
+	// Gaussian
+	for (int i = 0; i < dim; i++)
+	{
+		// 如果橫條的首項係數為零，嘗試與下方橫條交換。
+		if (temp.Data[i].Data[i] == 0)
+		{
+			for (int j = i + 1; j < temp.Data.size(); j++)
+			{
+				if (temp.Data[j].Data[i] != 0)
+				{
+					// swap(Data[i], Data[j])
+					Vector tempVec = temp.Data[i];
+					temp.Data[i] = temp.Data[j];
+					temp.Data[j] = tempVec;
+					break;
+				}
+			}
+		}
+		// 如果首項係數都是零，那就略過。
+		if (temp.Data[i].Data[i] == 0) continue;
+
+		// 抵銷下方橫條，令下方橫條的首項係數化成零。
+		for (int j = i + 1; j < temp.Data.size(); j++)
+		{
+			if (temp.Data[j].Data[i] != 0)
+			{
+				double t = temp.Data[j].Data[i] / temp.Data[i].Data[i];
+				temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+			}
+		}
+	}
+	return temp;
+	throw "---Gaussian process error---";
+}
+
+const int Matrix::rank()
+{
+	// error handling
+	if (this->Data.empty())
+	{
+		throw "---Empty Matrix---";
+	}
+	int rankValue = 0;
+	Matrix gauss = this->gaussian();
+	for (int i = 0; i < gauss.Data.size(); i++)
+	{
+		for (int j = 0; j < gauss.Data[i].Data.size(); j++)
+		{
+			if (gauss.Data[i].Data[j] != 0)
+			{
+				rankValue++;
+				break;
+			}
+		}
+	}
+	return rankValue;
+}
+
 
 System::String^ Matrix::outputStr()
 {

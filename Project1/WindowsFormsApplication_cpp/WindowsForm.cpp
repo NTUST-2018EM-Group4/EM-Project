@@ -716,14 +716,31 @@ namespace WindowsFormsApplication_cpp
 				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
 				try
 				{
+					Matrix temp;
+					std::string VarNameTemp = "";
+					MarshalString(funcFormula[1], VarNameTemp);
+					int index = findMatrix(VarNameTemp, matrices);
+
 					if (funcFormula[0] == "trans")
 					{
-						std::string VarNameTemp = "";
-						MarshalString(funcFormula[1], VarNameTemp);
-						int index = findMatrix(VarNameTemp, matrices);
-						Matrix temp = matrices[index].trans();
-						Output->Text += temp.outputStr();
+						temp = matrices[index].trans();
 					}
+					else if (funcFormula[0] == "gauss")
+					{
+						temp = matrices[index].gaussian();
+					}
+					else if (funcFormula[0] == "rank")
+					{
+						int rankValue = matrices[index].rank();
+						temp.Data.resize(1);
+						temp.Data[0].Data.push_back(rankValue);
+						temp.Name = "Rank Value";
+					}
+					else
+					{
+						throw "---Command not exist---";
+					}
+					Output->Text += temp.outputStr();
 				}
 				catch (const std::exception&)
 				{
@@ -734,7 +751,6 @@ namespace WindowsFormsApplication_cpp
 					std::cout << ERRMSG << std::endl;
 					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
 				}
-
 			}
 			//反之則判斷找不到指令
 			else
