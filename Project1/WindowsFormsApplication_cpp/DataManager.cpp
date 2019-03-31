@@ -241,3 +241,98 @@ Matrix::Matrix() :Name("")
 Matrix::Matrix(std::vector<Vector> data) : Data(data) {}
 
 Matrix::Matrix(std::string name, std::vector<Vector> data) : Name(name), Data(data) {}
+
+Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
+{
+	Matrix temp;
+
+	switch (op)
+	{
+	case '+':
+		temp = Ma + Mb;
+	case '-':
+		temp = Ma - Mb;
+	default:
+		break;
+	}
+	Name = "CalResult";
+	this->Data = temp.Data;
+}
+
+const Matrix Matrix::operator+(const Matrix & Mb)
+{
+	if (dimCheck(Mb))
+	{
+		std::vector<Vector> ans;
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			ans.push_back(this->Data[i] + Mb.Data[i]);
+		}
+		return Matrix("ans", ans);
+	}
+	else
+	{
+		throw "---Operator + process ERROR!---";
+	}
+}
+
+const Matrix Matrix::operator-(const Matrix & Mb)
+{
+	if (dimCheck(Mb))
+	{
+		std::vector<Vector> ans;
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			ans.push_back(this->Data[i] - Mb.Data[i]);
+		}
+		return Matrix("ans", ans);
+	}
+	else
+	{
+		throw "---Operator - process ERROR!---";
+	}
+}
+
+System::String^ Matrix::outputStr()
+{
+	System::String^ Temp;
+	Temp = gcnew System::String(Name.c_str());
+	Temp += " = " + System::Environment::NewLine;
+
+	for (int i = 0; i < Data.size(); i++)
+	{
+		std::string temp;
+		temp += "[";
+		for (int j = 0; j < Data.size(); j++)
+		{
+			temp += std::to_string(Data[i].Data[j]);
+			if (j != Data[i].Data.size() - 1)
+				temp += ",";
+		}
+		temp += "]";
+		Temp += gcnew System::String(temp.c_str());
+		Temp += System::Environment::NewLine;
+	}
+	return Temp;
+}
+
+bool Matrix::dimCheck(Matrix Mb)
+{
+	if (this->Data.size() == Mb.Data.size())
+	{
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			if (this->Data[i].Data.size() != Mb.Data[i].Data.size())
+			{
+				throw "---Dimension not same---";
+				return false;
+			}
+		}
+	}
+	else
+	{
+		throw "---Dimension not same---";
+		return false;
+	}
+	return true;
+}

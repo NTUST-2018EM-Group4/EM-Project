@@ -297,4 +297,5 @@ namespace WindowsFormsApplication_cpp {
 	int priority(char op);
 	String^ printVector(String^ s, const Vector& v);
 	int findVector(std::string name, const std::vector<Vector>& v);
+	int findMatrix(std::string name, const std::vector<Matrix>& m);
 }

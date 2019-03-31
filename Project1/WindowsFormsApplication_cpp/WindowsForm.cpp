@@ -33,6 +33,8 @@ namespace WindowsFormsApplication_cpp
 		s += "]" + Environment::NewLine;
 		return s;
 	}
+
+	// TODO: Combine findVar function
 	int findVector(std::string name, const std::vector<Vector>& v)
 	{
 		std::string temp;
@@ -46,6 +48,22 @@ namespace WindowsFormsApplication_cpp
 				return i;
 		}
 		return -1;
+	}
+	int findMatrix(std::string name, const std::vector<Matrix>& m)
+	{
+		std::string temp;
+		//MarshalString(name, temp);
+
+		//透過for迴圈，從向量資料中找出對應變數
+		for (unsigned int i = 0; i < m.size(); i++)
+		{
+			//若變數名稱與指令變數名稱符合
+			if (name == m[i].Name)
+				return i;
+		}
+		// error handle
+		throw "Varible not found";
+		// return -1;
 	}
 
 	System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
@@ -150,6 +168,7 @@ namespace WindowsFormsApplication_cpp
 		//當Input textbox中的輸入改變時，便會進入此函式
 		//取得向量資料
 		std::vector<Vector> vectors = dataManager->GetVectors();
+		std::vector<Matrix> matrices = dataManager->GetMatrices();
 		//判斷輸入自元為'\n'，並防止取到字串-1位置
 		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
 		{
@@ -425,7 +444,177 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
 				}
 			}
+			
+			// calculate Matrix
+			else if (userCommand[0] == "calM")
+			{
+				//infix to postfix
+				//若運算式中有空格先合併成無空格版
+				for (int i = 2; i < userCommand->Length; i++)
+				{
+					userCommand[1] += userCommand[i];
+				}
+				//將無空格版處理成空格版
+				//定義輸出暫存
+				String^ infixTemp = "";
+				int begin = 0;
+				for (int i = 0; i < userCommand[1]->Length; i++)
+				{
+					if (userCommand[1][i] == '(' ||
+						userCommand[1][i] == ')' ||
+						userCommand[1][i] == '+' ||
+						userCommand[1][i] == '-' ||
+						userCommand[1][i] == '*')
+					{
+						if (i - 1 >= 0)
+						{
+							infixTemp += userCommand[1]->Substring(begin, (i - 1 - begin + 1));
+							infixTemp += " ";
+						}
+						infixTemp += userCommand[1]->Substring(i, 1);
+						infixTemp += " ";
+						begin = i + 1;
+					}
+					else if (i == userCommand[1]->Length - 1)
+					{
+						infixTemp += userCommand[1]->Substring(begin, (i - begin + 1));
+						infixTemp += " ";
+					}
+				}
+				//去除最後一個空格
+				if (infixTemp[infixTemp->Length - 1] == ' ')
+				{
+					infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
+				}
+				//將處理完的字串依空白作切割
+				array<String^> ^infixFormula = infixTemp->Split(' ');
+				String^ stack = " ";
 
+				String^ postfix = "";
+				int top = 0;
+				for (int i = 0; i < infixFormula->Length; i++)
+				{
+
+					if (infixFormula[i] == "(")
+					{
+						// 運算子堆疊
+						stack = stack->Insert(++top, infixFormula[i]);
+					}
+					else if (infixFormula[i] == "+" ||
+						infixFormula[i] == "-" ||
+						infixFormula[i] == "*")
+					{
+						while (priority(stack[top]) >= priority(infixFormula[i][0]))
+						{
+							postfix += stack[top--];
+							postfix += " ";
+						}
+						stack = stack->Insert(++top, infixFormula[i]); // 存入堆疊
+					}
+					else if (infixFormula[i] == ")")
+					{
+						while (stack[top] != '(') { // 遇 ) 輸出至 (
+							postfix += stack[top--];
+							postfix += " ";
+						}
+						top--;  // 不輸出 (
+					}
+					else
+					{
+						// 運算元直接輸出
+						postfix += infixFormula[i];
+						postfix += " ";
+					}
+				}
+				while (top > 0) {
+					postfix += stack[top--];
+					postfix += " ";
+				}
+				//去除最後一個空格
+				if (postfix[postfix->Length - 1] == ' ')
+				{
+					postfix = postfix->Remove(postfix->Length - 1, 1);
+				}
+				//將處理完的字串(postfix)依空白作切割存到array
+				array<String^> ^postfixArray = postfix->Split(' ');
+
+				//將array(postfixArray)轉成List
+				Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^>();
+				for (int i = 0; i < postfixArray->Length; i++)
+				{
+					//Avoid " " bug
+					if (postfixArray[i] != "")
+					{
+						postfixFormula->Add(postfixArray[i]);
+					}
+				}
+
+#ifdef DEBUG
+				Output->Text += "postfix = " + postfix + Environment::NewLine;
+#endif // DEBUG
+
+				Matrix ans, Ma, Mb;
+				std::stack<Matrix> calStack;
+				bool dimFlag, foundFlag;
+				try
+				{
+					for (int i = 0; i < postfixFormula->Count; i++)
+					{
+						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*" || postfixFormula[i] == "\\")
+						{
+							std::string opTemp = "";
+							MarshalString(postfixFormula[i], opTemp);
+
+							Matrix Mb = calStack.top();
+							calStack.pop();
+							Matrix Ma = calStack.top();
+							calStack.pop();
+
+							calStack.push(Matrix(opTemp[0], Ma, Mb));
+						}
+						else
+						{
+							std::string formulaTemp = "";
+							MarshalString(postfixFormula[i], formulaTemp);
+							int index = findMatrix(formulaTemp, matrices);
+							calStack.push(matrices[index]);
+						}
+					}
+
+					Matrix result = calStack.top();
+					calStack.pop();
+
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+
+
+				//if (!foundFlag)
+				//	Output->Text += "-Vector not found-" + Environment::NewLine;
+				//else if (!dimFlag)
+				//	Output->Text += "-Dimension not same-" + Environment::NewLine;
+				//else
+				//{
+				//	//格式無誤，輸出結果
+
+				//	String^ outputTemp;
+				//	//將輸出資料存入暫存
+				//	ans = calStack.top();
+				//	calStack.pop();
+				//	outputTemp = printVector(outputTemp, ans);
+				//	//輸出暫存資訊
+				//	Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
+				//}
+			}
+			
 			else if (userCommand[0] == "func")
 			{
 				Vector Va, Vb;

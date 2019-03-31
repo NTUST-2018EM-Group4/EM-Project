@@ -34,6 +34,13 @@ struct Matrix
 	Matrix();
 	Matrix(std::vector<Vector> data);
 	Matrix(std::string name, std::vector<Vector> data);
+	Matrix(char op, Matrix Ma, Matrix Mb);
+
+	const Matrix operator + (const Matrix& Mb);
+	const Matrix operator - (const Matrix& Mb);
+
+	System::String^ outputStr();
+	bool dimCheck(Matrix Mb);
 };
 
 //定義控管資料class
