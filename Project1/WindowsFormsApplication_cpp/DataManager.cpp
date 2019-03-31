@@ -421,14 +421,14 @@ const Matrix Matrix::gaussian()
 	throw "---Gaussian process error---";
 }
 
-const int Matrix::rank()
+const double Matrix::rank()
 {
 	// error handling
 	if (this->Data.empty())
 	{
 		throw "---Empty Matrix---";
 	}
-	int rankValue = 0;
+	double rankValue = 0;
 	Matrix gauss = this->gaussian();
 	for (int i = 0; i < gauss.Data.size(); i++)
 	{
@@ -442,6 +442,29 @@ const int Matrix::rank()
 		}
 	}
 	return rankValue;
+}
+
+const double Matrix::det()
+{
+	Matrix temp = this->gaussian();
+	// error handling
+	if (temp.Data.empty())
+	{
+		throw "---Empty Matrix---";
+	}
+	// set dim
+	int dim = temp.Data.size();
+	if (temp.Data[0].Data.size() < dim)
+	{
+		dim = temp.Data[0].Data.size();
+	}
+	double detValue = 1.0;
+	// Determinant
+	for (int i = 0; i < dim; i++)
+	{
+		detValue *= temp.Data[i].Data[i];
+	}
+	return detValue;
 }
 
 

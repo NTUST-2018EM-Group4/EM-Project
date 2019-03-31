@@ -731,10 +731,17 @@ namespace WindowsFormsApplication_cpp
 					}
 					else if (funcFormula[0] == "rank")
 					{
-						int rankValue = matrices[index].rank();
+						double rankValue = matrices[index].rank();
 						temp.Data.resize(1);
 						temp.Data[0].Data.push_back(rankValue);
 						temp.Name = "Rank Value";
+					}
+					else if (funcFormula[0] == "det")
+					{
+						double detValue = matrices[index].det();
+						temp.Data.resize(1);
+						temp.Data[0].Data.push_back(detValue);
+						temp.Name = "Determinant Value";
 					}
 					else
 					{

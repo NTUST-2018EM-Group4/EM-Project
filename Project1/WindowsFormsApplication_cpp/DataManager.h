@@ -44,7 +44,8 @@ struct Matrix
 
 	const Matrix trans();
 	const Matrix gaussian();
-	const int rank();
+	const double rank();
+	const double det();
 
 	System::String^ outputStr();
 	bool dimCheck(Matrix Mb, char op);
