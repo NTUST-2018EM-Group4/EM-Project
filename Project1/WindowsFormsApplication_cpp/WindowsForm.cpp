@@ -17,7 +17,7 @@ namespace WindowsFormsApplication_cpp
 	{
 		switch (op) {
 		case '+': case '-': return 1;
-		case '*': case '/': return 2;
+		case '*': case '/': case'\\': return 2;
 		default:            return 0;
 		}
 	}
@@ -506,7 +506,8 @@ namespace WindowsFormsApplication_cpp
 						userCommand[1][i] == ')' ||
 						userCommand[1][i] == '+' ||
 						userCommand[1][i] == '-' ||
-						userCommand[1][i] == '*')
+						userCommand[1][i] == '*' || 
+						userCommand[1][i] == '\\')
 					{
 						if (i - 1 >= 0)
 						{
@@ -544,7 +545,8 @@ namespace WindowsFormsApplication_cpp
 					}
 					else if (infixFormula[i] == "+" ||
 						infixFormula[i] == "-" ||
-						infixFormula[i] == "*")
+						infixFormula[i] == "*" ||
+						infixFormula[i] == "\\")
 					{
 						while (priority(stack[top]) >= priority(infixFormula[i][0]))
 						{

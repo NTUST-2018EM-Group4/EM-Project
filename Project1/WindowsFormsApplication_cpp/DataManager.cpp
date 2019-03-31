@@ -284,7 +284,7 @@ Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 		temp = Ma * Mb;
 		break;
 	case '\\':
-		throw "---Operator not Support---";
+		temp = Ma / Mb;
 		break;
 	default:
 		break;
@@ -350,6 +350,21 @@ const Matrix Matrix::operator*(const Matrix & Mb)
 	else
 	{
 		throw "---Operator * process ERROR!---";
+	}
+}
+
+const Matrix Matrix::operator/(const Matrix & Mb)
+{
+	if (dimCheck(Mb, '\\'))
+	{
+		Matrix inver = this->inverse();
+		Matrix result = inver * Mb;
+		result.Name = this->Name + " \\ " + Mb.Name;
+		return result;
+	}
+	else
+	{
+		throw "---Operator \\ process ERROR!---";
 	}
 }
 
@@ -598,6 +613,33 @@ bool Matrix::dimCheck(Matrix Mb, char op)
 				throw "---Dimension not same---";
 				return false;
 			}
+		}
+		return true;
+		break;
+	case '\\':
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			if (this->Data[i].Data.size() != this->Data.size())
+			{
+				throw "---Fisrt Matrix not square---";
+				return false;
+			}
+		}
+		if (Mb.Data.size() == this->Data.size())
+		{
+			for (int i = 0; i < Mb.Data.size(); i++)
+			{
+				if (Mb.Data[i].Data.size() != 1)
+				{
+					throw "---Second Matrix not n*1---";
+					return false;
+				}
+			}
+		}
+		else
+		{
+			throw "---Second Matrix dimension not same as First's---";
+			return false;
 		}
 		return true;
 		break;
