@@ -1,5 +1,6 @@
 #include"DataManager.h"
-#include <math.h>
+#include <cmath>
+#define PI 3.1415926535897936384626
 
 DataManager::DataManager()
 {
@@ -153,7 +154,7 @@ Vector::Vector(double scalar)
 
 Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
 
-bool Vector::dimCheck(Vector Vb)
+bool Vector::dimCheck(const Vector& Vb)
 {
 	if (this->Data.size() == Vb.Data.size())
 	{
@@ -162,7 +163,7 @@ bool Vector::dimCheck(Vector Vb)
 	return false;
 }
 
-const double Vector::Norm()
+const double Vector::Norm() const
 {
 	double ans = 0;
 	for (int i = 0;i < this->Data.size(); i++)
@@ -173,7 +174,7 @@ const double Vector::Norm()
 	return ans;
 }
 
-const Vector Vector::Normal()
+const Vector Vector::Normal() const
 {
 	double norm = this->Norm();
 	std::vector<double> ans(this->Data.size());
@@ -184,7 +185,50 @@ const Vector Vector::Normal()
 	return Vector("ans", ans);
 }
 
-const Vector  Vector::operator+(const Vector& Vb)
+const double Vector::Angle(const Vector& Vb)
+{
+	double cosTheta, theta = 0;
+	cosTheta = (*this * Vb) / (this->Norm() * Vb.Norm());
+	theta = acos(cosTheta);
+	theta *= (180 / PI);
+	return theta;
+}
+
+const double Vector::Com(const Vector& Vb)
+{
+	double ans;
+	ans = (*this * Vb) / Vb.Norm();
+	return ans;
+}
+
+const Vector Vector::Proj(const Vector & Vb)
+{
+	Vector ans, unit;
+	unit = Vb * (1 / Vb.Norm());
+	ans = this->Com(Vb) * unit;
+	return ans;
+}
+
+const Vector Vector::Cross(const Vector & Vb) const
+{
+	std::vector<double> ans(3);
+	for (int i = 0; i < 3; i++)
+	{
+		ans[i] = this->Data[(i + 1) % 3] * Vb.Data[(i + 2) % 3] \
+			- Vb.Data[(i + 1) % 3] * this->Data[(i + 2) % 3];
+	}
+	return Vector("ans", ans);
+}
+
+const double Vector::Area(const Vector & Vb)
+{
+	double ans, theta;
+	theta = this->Angle(Vb) * (PI / 180);	//deg to rad
+	ans = this->Norm() * Vb.Norm() * sin(theta) / 2;
+	return ans;
+}
+
+const Vector  Vector::operator+(const Vector& Vb) const
 {
 	std::vector<double> ans;
 	ans.resize(Vb.Data.size());
@@ -195,7 +239,7 @@ const Vector  Vector::operator+(const Vector& Vb)
 	return Vector("ans",ans);
 }
 
-const Vector Vector::operator-(const Vector & Vb)
+const Vector Vector::operator-(const Vector & Vb) const
 {
 	std::vector<double> ans;
 	ans.resize(Vb.Data.size());
@@ -258,6 +302,7 @@ const Vector operator*(const Vector & Va, const Vector & Vb)
 	}
 	return Vector("ans", ans);
 }
+
 
 Matrix::Matrix() :Name("")
 {

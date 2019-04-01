@@ -1,4 +1,7 @@
 #include "WindowsForm.h"
+#include <stack>
+
+
 using namespace System;
 using namespace System::Windows::Forms;
 [STAThread]
@@ -26,9 +29,10 @@ namespace WindowsFormsApplication_cpp
 		s += "[";
 		for (int i = 0; i < v.Data.size(); i++)
 		{
+			/*ä¸çŸ¥é“æ€éº¼é™åˆ¶6ä½*/
 			s += v.Data[i].ToString();
 			if (i != v.Data.size() - 1)
-				s += ",";
+				s += ", ";
 		}
 		s += "]" + Environment::NewLine;
 		return s;
@@ -40,10 +44,10 @@ namespace WindowsFormsApplication_cpp
 		std::string temp;
 		//MarshalString(name, temp);
 
-		//³z¹Lfor°j°é¡A±q¦V¶q¸ê®Æ¤¤§ä¥X¹ïÀ³ÅÜ¼Æ
+		//é€éforè¿´åœˆï¼Œå¾å‘é‡è³‡æ–™ä¸­æ‰¾å‡ºå°æ‡‰è®Šæ•¸
 		for (unsigned int i = 0; i < v.size(); i++)
 		{
-			//­YÅÜ¼Æ¦WºÙ»P«ü¥OÅÜ¼Æ¦WºÙ²Å¦X
+			//è‹¥è®Šæ•¸åç¨±èˆ‡æŒ‡ä»¤è®Šæ•¸åç¨±ç¬¦åˆ
 			if (name == v[i].Name)
 				return i;
 		}
@@ -54,10 +58,10 @@ namespace WindowsFormsApplication_cpp
 		std::string temp;
 		//MarshalString(name, temp);
 
-		//³z¹Lfor°j°é¡A±q¦V¶q¸ê®Æ¤¤§ä¥X¹ïÀ³ÅÜ¼Æ
+		//é€éforè¿´åœˆï¼Œå¾å‘é‡è³‡æ–™ä¸­æ‰¾å‡ºå°æ‡‰è®Šæ•¸
 		for (unsigned int i = 0; i < m.size(); i++)
 		{
-			//­YÅÜ¼Æ¦WºÙ»P«ü¥OÅÜ¼Æ¦WºÙ²Å¦X
+			//è‹¥è®Šæ•¸åç¨±èˆ‡æŒ‡ä»¤è®Šæ•¸åç¨±ç¬¦åˆ
 			if (name == m[i].Name)
 				return i;
 		}
@@ -68,7 +72,7 @@ namespace WindowsFormsApplication_cpp
 
 	Generic::List<String^>^ CmdProcess(array<String^>^ CmdList)
 	{
-		//­Y¹Bºâ¦¡¤¤¦³ªÅ®æ¥ı¦X¨Ö¦¨µLªÅ®æª©
+		//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
 		for (int i = 2; i < CmdList->Length; i++)
 		{
 			CmdList[1] += CmdList[i];
@@ -95,7 +99,7 @@ namespace WindowsFormsApplication_cpp
 		}
 		array<String^> ^CmdArray = Cmdtemp->Split(' ');
 
-		//±Narray(CmdArray)Âà¦¨List
+		//å°‡array(CmdArray)è½‰æˆList
 		Generic::List<String^> ^Cmd = gcnew Generic::List<String^>();
 		for (int i = 0; i < CmdArray->Length; i++)
 		{
@@ -110,32 +114,32 @@ namespace WindowsFormsApplication_cpp
 
 	System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		//¶}±ÒDialog
+		//é–‹å•ŸDialog
 		openFileDialog1->ShowDialog();
 	}
 	System::Void WindowsForm::openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e)
 	{
-		//¦bDialog«ö¤UOK«K·|¶i¤J¦¹¨ç¦¡
-		//¦r¦êÂà¨îstring^ to string
+		//åœ¨DialogæŒ‰ä¸‹OKä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å­—ä¸²è½‰åˆ¶string^ to string
 		std::string tempFileName;
 		MarshalString(openFileDialog1->FileName, tempFileName);
-		//±NÀÉ®×¸ô®|¦WºÙ¶Ç¤JdataManager
+		//å°‡æª”æ¡ˆè·¯å¾‘åç¨±å‚³å…¥dataManager
 		dataManager->SetFileName(tempFileName);
-		//±qÅª¨úÅª¨ú¦V¶q¸ê®Æ
+		//å¾è®€å–è®€å–å‘é‡è³‡æ–™
 		if (dataManager->LoadVectorData())
 		{
-			//±NVectorList¤¤¶µ¥Ø¥ı°µ²M°£
+			//å°‡VectorListä¸­é …ç›®å…ˆåšæ¸…é™¤
 			VectorList->Items->Clear();
-			//¨ú±o©Ò¦³¦V¶q¸ê®Æ
+			//å–å¾—æ‰€æœ‰å‘é‡è³‡æ–™
 			std::vector<Vector> vectors = dataManager->GetVectors();
 
 			for (unsigned int i = 0; i < vectors.size(); i++)
 			{
-				//±NÀÉ®×¦WºÙ¦s¤J¼È¦s
+				//å°‡æª”æ¡ˆåç¨±å­˜å…¥æš«å­˜
 				std::string tempString = vectors[i].Name;
-				//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 				tempString += " [";
-				//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 				for (unsigned int j = 0; j < vectors[i].Data.size(); j++)
 				{
 					std::string scalarString = std::to_string(vectors[i].Data[j]);
@@ -143,9 +147,9 @@ namespace WindowsFormsApplication_cpp
 					if (j != vectors[i].Data.size() - 1)
 						tempString += ",";
 				}
-				//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 				tempString += "]";
-				//±N¶µ¥Ø¥[¤JVectorList¤¤
+				//å°‡é …ç›®åŠ å…¥VectorListä¸­
 				VectorList->Items->Add(gcnew String(tempString.c_str()));
 			}
 			Output->Text += "-Vector datas have been loaded-" + Environment::NewLine;
@@ -153,37 +157,37 @@ namespace WindowsFormsApplication_cpp
 	}
 	System::Void WindowsForm::loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		//¶}±ÒDialog
+		//é–‹å•ŸDialog
 		openFileDialog2->ShowDialog();
 	}
 	System::Void WindowsForm::openFileDialog2_FileOk(System::Object ^ sender, System::ComponentModel::CancelEventArgs ^ e)
 	{
-		//¦bDialog«ö¤UOK«K·|¶i¤J¦¹¨ç¦¡
-		//¦r¦êÂà¨îstring^ to string
+		//åœ¨DialogæŒ‰ä¸‹OKä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å­—ä¸²è½‰åˆ¶string^ to string
 		std::string tempFileName;
 		MarshalString(openFileDialog2->FileName, tempFileName);
 
-		//±NÀÉ®×¸ô®|¦WºÙ¶Ç¤JdataManager
+		//å°‡æª”æ¡ˆè·¯å¾‘åç¨±å‚³å…¥dataManager
 		dataManager->SetFileName(tempFileName);
 
-		//±qÅª¨úÅª¨ú¦V¶q¸ê®Æ
+		//å¾è®€å–è®€å–å‘é‡è³‡æ–™
 		if (dataManager->LoadMatrixData())
 		{
-			//±NForm::MatrixList¤¤¶µ¥Ø¥ı°µ²M°£
+			//å°‡Form::MatrixListä¸­é …ç›®å…ˆåšæ¸…é™¤
 			MatrixList->Items->Clear();
 
-			//¨ú±o©Ò¦³¦V¶q¸ê®Æ
+			//å–å¾—æ‰€æœ‰å‘é‡è³‡æ–™
 			std::vector<Matrix> matrices = dataManager->GetMatrices();
 
 			for (unsigned int i = 0; i < matrices.size(); i++)
 			{
-				//±NÀÉ®×¦WºÙ¦s¤J¼È¦s
+				//å°‡æª”æ¡ˆåç¨±å­˜å…¥æš«å­˜
 				std::string tempString = matrices[i].Name + "\n";
 				
-				//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 				for (unsigned int j = 0; j < matrices[i].Data.size(); j++)
 				{
-					//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 					tempString += "[";
 
 					for (unsigned int k = 0; k < matrices[i].Data[j].Data.size(); k++)
@@ -193,12 +197,12 @@ namespace WindowsFormsApplication_cpp
 						if (k != matrices[i].Data[j].Data.size() - 1)
 							tempString += ",";
 					}
-					//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 					tempString += "]\n";
 					
 				}
 
-				//±N¶µ¥Ø¥[¤JVectorList¤¤
+				//å°‡é …ç›®åŠ å…¥VectorListä¸­
 				MatrixList->Items->Add(gcnew String(tempString.c_str()));
 			}
 			Output->Text += "-Matrix datas have been loaded-" + Environment::NewLine;
@@ -207,21 +211,22 @@ namespace WindowsFormsApplication_cpp
 
 	System::Void WindowsForm::Input_TextChanged(System::Object^  sender, System::EventArgs^  e)
 	{
-		//·íInput textbox¤¤ªº¿é¤J§ïÅÜ®É¡A«K·|¶i¤J¦¹¨ç¦¡
-		//¨ú±o¦V¶q¸ê®Æ
+		//ç•¶Input textboxä¸­çš„è¼¸å…¥æ”¹è®Šæ™‚ï¼Œä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å–å¾—å‘é‡è³‡æ–™
 		std::vector<Vector> vectors = dataManager->GetVectors();
 		std::vector<Matrix> matrices = dataManager->GetMatrices();
-		//§PÂ_¿é¤J¦Û¤¸¬°'\n'¡A¨Ã¨¾¤î¨ú¨ì¦r¦ê-1¦ì¸m
+		//åˆ¤æ–·è¼¸å…¥è‡ªå…ƒç‚º'\n'ï¼Œä¸¦é˜²æ­¢å–åˆ°å­—ä¸²-1ä½ç½®
 		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
 		{
-			//±N¨Ï¥ÎªÌ¿é¤J¦r¦ê(¦buserInput¤¤)¡A¨ÌªÅ¥Õ§@¤Á³Î
+			//å°‡ä½¿ç”¨è€…è¼¸å…¥å­—ä¸²(åœ¨userInputä¸­)ï¼Œä¾ç©ºç™½ä½œåˆ‡å‰²
 			array<String^> ^userCommand = userInput->Split(' ');
-			//¦r¦ê¤ñ¸û¡A­Y«ü¥O¬°"print"ªº±¡ªp
+			std::string nameTemp;
+			//å­—ä¸²æ¯”è¼ƒï¼Œè‹¥æŒ‡ä»¤ç‚º"print"çš„æƒ…æ³
 			if (userCommand[0] == "print")
 			{
-				//©w¸q¿é¥X¼È¦s
+				//å®šç¾©è¼¸å‡ºæš«å­˜
 				String^ outputTemp = "";
-				std::string nameTemp;
+
 				MarshalString(userCommand[1], nameTemp);
 				int index = findVector(nameTemp, vectors);
 				if (index != -1)
@@ -233,17 +238,17 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += "-Vector not found-" + Environment::NewLine;
 			}
 
-			else if (userCommand[0] == "cal")
+			else if (userCommand[0] == "calV")
 			{
 				//infix to postfix
 
-				//­Y¹Bºâ¦¡¤¤¦³ªÅ®æ¥ı¦X¨Ö¦¨µLªÅ®æª©
+				//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
 				for (int i = 2; i < userCommand->Length; i++)
 				{
 					userCommand[1] += userCommand[i];
 				}
-				//±NµLªÅ®æª©³B²z¦¨ªÅ®æª©
-				//©w¸q¿é¥X¼È¦s
+				//å°‡ç„¡ç©ºæ ¼ç‰ˆè™•ç†æˆç©ºæ ¼ç‰ˆ
+				//å®šç¾©è¼¸å‡ºæš«å­˜
 				String^ infixTemp = "";
 				int begin = 0;
 				for (int i = 0; i < userCommand[1]->Length; i++)
@@ -269,12 +274,12 @@ namespace WindowsFormsApplication_cpp
 						infixTemp += " ";
 					}
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (infixTemp[infixTemp->Length - 1] == ' ')
 				{
 					infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê¨ÌªÅ¥Õ§@¤Á³Î
+				//å°‡è™•ç†å®Œçš„å­—ä¸²ä¾ç©ºç™½ä½œåˆ‡å‰²
 				array<String^> ^infixFormula = infixTemp->Split(' ');
 				String^ stack = " ";
 
@@ -285,7 +290,7 @@ namespace WindowsFormsApplication_cpp
 
 					if (infixFormula[i] == "(")
 					{
-						// ¹Bºâ¤l°ïÅ|
+						// é‹ç®—å­å †ç–Š
 						stack = stack->Insert(++top, infixFormula[i]);
 					}
 					else if (infixFormula[i] == "+" ||
@@ -297,19 +302,19 @@ namespace WindowsFormsApplication_cpp
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						stack = stack->Insert(++top, infixFormula[i]); // ¦s¤J°ïÅ|
+						stack = stack->Insert(++top, infixFormula[i]); // å­˜å…¥å †ç–Š
 					}
 					else if (infixFormula[i] == ")")
 					{
-						while (stack[top] != '(') { // ¹J ) ¿é¥X¦Ü (
+						while (stack[top] != '(') { // é‡ ) è¼¸å‡ºè‡³ (
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						top--;  // ¤£¿é¥X (
+						top--;  // ä¸è¼¸å‡º (
 					}
 					else
 					{
-						// ¹Bºâ¤¸ª½±µ¿é¥X
+						// é‹ç®—å…ƒç›´æ¥è¼¸å‡º
 						postfix += infixFormula[i];
 						postfix += " ";
 					}
@@ -318,15 +323,15 @@ namespace WindowsFormsApplication_cpp
 					postfix += stack[top--];
 					postfix += " ";
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (postfix[postfix->Length - 1] == ' ')
 				{
 					postfix = postfix->Remove(postfix->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê(postfix)¨ÌªÅ¥Õ§@¤Á³Î¦s¨ìarray
+				//å°‡è™•ç†å®Œçš„å­—ä¸²(postfix)ä¾ç©ºç™½ä½œåˆ‡å‰²å­˜åˆ°array
 				array<String^> ^postfixArray = postfix->Split(' ');
 
-				//±Narray(postfixArray)Âà¦¨List
+				//å°‡array(postfixArray)è½‰æˆList
 				Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^>();
 				for (int i = 0; i < postfixArray->Length; i++)
 				{
@@ -367,7 +372,6 @@ namespace WindowsFormsApplication_cpp
 							scalar = strtod(temp.c_str(), NULL);
 
 						//find vector to calculate
-						std::string nameTemp;
 						MarshalString(postfixFormula[i - 2], nameTemp);
 						int index = findVector(nameTemp, vectors);
 						if (index != -1)
@@ -378,7 +382,7 @@ namespace WindowsFormsApplication_cpp
 						if (index != -1)
 							Vb = vectors[index];
 
-						//±qºâ¦¡stack¤¤Àò±o¹Bºâ¤l
+						//å¾ç®—å¼stackä¸­ç²å¾—é‹ç®—å­
 						if (Vb.Name == "" && !calStack.empty())
 						{
 							Vb = calStack.top();
@@ -475,15 +479,15 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += "-Dimension not same-" + Environment::NewLine;
 				else
 				{
-					//®æ¦¡µL»~¡A¿é¥Xµ²ªG
+					//æ ¼å¼ç„¡èª¤ï¼Œè¼¸å‡ºçµæœ
 
 					String^ outputTemp;
-					//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 					ans = calStack.top();
 					calStack.pop();
 					outputTemp = printVector(outputTemp, ans);
-					//¿é¥X¼È¦s¸ê°T
-					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
+					//è¼¸å‡ºæš«å­˜è³‡è¨Š
+					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
 				}
 			}
 			
@@ -491,13 +495,13 @@ namespace WindowsFormsApplication_cpp
 			else if (userCommand[0] == "calM")
 			{
 				//infix to postfix
-				//­Y¹Bºâ¦¡¤¤¦³ªÅ®æ¥ı¦X¨Ö¦¨µLªÅ®æª©
+				//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
 				for (int i = 2; i < userCommand->Length; i++)
 				{
 					userCommand[1] += userCommand[i];
 				}
-				//±NµLªÅ®æª©³B²z¦¨ªÅ®æª©
-				//©w¸q¿é¥X¼È¦s
+				//å°‡ç„¡ç©ºæ ¼ç‰ˆè™•ç†æˆç©ºæ ¼ç‰ˆ
+				//å®šç¾©è¼¸å‡ºæš«å­˜
 				String^ infixTemp = "";
 				int begin = 0;
 				for (int i = 0; i < userCommand[1]->Length; i++)
@@ -524,12 +528,12 @@ namespace WindowsFormsApplication_cpp
 						infixTemp += " ";
 					}
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (infixTemp[infixTemp->Length - 1] == ' ')
 				{
 					infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê¨ÌªÅ¥Õ§@¤Á³Î
+				//å°‡è™•ç†å®Œçš„å­—ä¸²ä¾ç©ºç™½ä½œåˆ‡å‰²
 				array<String^> ^infixFormula = infixTemp->Split(' ');
 				String^ stack = " ";
 
@@ -540,7 +544,7 @@ namespace WindowsFormsApplication_cpp
 
 					if (infixFormula[i] == "(")
 					{
-						// ¹Bºâ¤l°ïÅ|
+						// é‹ç®—å­å †ç–Š
 						stack = stack->Insert(++top, infixFormula[i]);
 					}
 					else if (infixFormula[i] == "+" ||
@@ -553,19 +557,19 @@ namespace WindowsFormsApplication_cpp
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						stack = stack->Insert(++top, infixFormula[i]); // ¦s¤J°ïÅ|
+						stack = stack->Insert(++top, infixFormula[i]); // å­˜å…¥å †ç–Š
 					}
 					else if (infixFormula[i] == ")")
 					{
-						while (stack[top] != '(') { // ¹J ) ¿é¥X¦Ü (
+						while (stack[top] != '(') { // é‡ ) è¼¸å‡ºè‡³ (
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						top--;  // ¤£¿é¥X (
+						top--;  // ä¸è¼¸å‡º (
 					}
 					else
 					{
-						// ¹Bºâ¤¸ª½±µ¿é¥X
+						// é‹ç®—å…ƒç›´æ¥è¼¸å‡º
 						postfix += infixFormula[i];
 						postfix += " ";
 					}
@@ -574,15 +578,15 @@ namespace WindowsFormsApplication_cpp
 					postfix += stack[top--];
 					postfix += " ";
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (postfix[postfix->Length - 1] == ' ')
 				{
 					postfix = postfix->Remove(postfix->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê(postfix)¨ÌªÅ¥Õ§@¤Á³Î¦s¨ìarray
+				//å°‡è™•ç†å®Œçš„å­—ä¸²(postfix)ä¾ç©ºç™½ä½œåˆ‡å‰²å­˜åˆ°array
 				array<String^> ^postfixArray = postfix->Split(' ');
 
-				//±Narray(postfixArray)Âà¦¨List
+				//å°‡array(postfixArray)è½‰æˆList
 				Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^>();
 				for (int i = 0; i < postfixArray->Length; i++)
 				{
@@ -647,69 +651,230 @@ namespace WindowsFormsApplication_cpp
 				//	Output->Text += "-Dimension not same-" + Environment::NewLine;
 				//else
 				//{
-				//	//®æ¦¡µL»~¡A¿é¥Xµ²ªG
+				//	//æ ¼å¼ç„¡èª¤ï¼Œè¼¸å‡ºçµæœ
 
 				//	String^ outputTemp;
-				//	//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+				//	//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 				//	ans = calStack.top();
 				//	calStack.pop();
 				//	outputTemp = printVector(outputTemp, ans);
-				//	//¿é¥X¼È¦s¸ê°T
+				//	//è¼¸å‡ºæš«å­˜è³‡è¨Š
 				//	Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
 				//}
 			}
 			
 			else if (userCommand[0] == "func")
 			{
-		
-		Vector Va, Vb;
-				bool foundFlag = 0;
-				if (userCommand[1] == "Norm(" && userCommand[3] == ")")
+				Vector Va, Vb;
+				bool foundFlag = 0, funcFound = 1, dimFlag = 0;
+				if ((userCommand[1] == "Norm(" || userCommand[1] == "Normal(")\
+					&& userCommand[3] == ")")	//unary "funcName( $v )"
 				{
-#ifdef DEBUG
-					Output->Text += "Norm called" + Environment::NewLine;
-#endif // DEBUG
-					for (unsigned int i = 0; i < vectors.size(); i++)
+					dimFlag = 1;
+					MarshalString(userCommand[2], nameTemp);
+					int index = findVector(nameTemp, vectors);
+					if (index != -1)
 					{
-						if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+						foundFlag = 1;
+						Va = vectors[index];
+						if (userCommand[1] == "Norm(")
 						{
-							Va = vectors[i];
-							foundFlag = 1;
-							break;
+#ifdef DEBUG
+							Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
+							double ans = Va.Norm();
+							Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
 						}
-					}
-					if (foundFlag)
-					{
-						double ans = Va.Norm();
-						Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
+						else if (userCommand[1] == "Normal(")
+						{
+#ifdef DEBUG
+							Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+							Vector ans = Va.Normal();
+							String^ outputTemp = printVector(outputTemp, ans);
+							Output->Text += "Normal(" + userCommand[2] + ") = " + outputTemp;
+						}
 					}
 				}
-				else if (userCommand[1] == "Normal(" && userCommand[3] == ")")
+				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle("	\
+					|| userCommand[1] == "Com("		|| userCommand[1] == "Proj(")			\
+					|| userCommand[1] == "Cross("	|| userCommand[1] == "isParallel("		\
+					|| userCommand[1] == "Area("	|| userCommand[1] == "pN("				\
+					|| userCommand[1] == "isLI("	\
+					&& userCommand[3] == ","		&& userCommand[5] == ")")	//binary "funcName( $va , $vb )"
 				{
-#ifdef DEBUG
-					Output->Text += "Normalization called" + Environment::NewLine;
-#endif // DEBUG
-					for (unsigned int i = 0; i < vectors.size(); i++)
+					MarshalString(userCommand[2], nameTemp);
+					int indexA = findVector(nameTemp, vectors);
+					MarshalString(userCommand[4], nameTemp);
+					int indexB = findVector(nameTemp, vectors);
+					if (indexA != -1 && indexB != -1)
 					{
-						if (userCommand[2] == gcnew String(vectors[i].Name.c_str()))
+						foundFlag = 1;
+						Va = vectors[indexA];
+						Vb = vectors[indexB];
+						if (Va.dimCheck(Vb))	//dinmension check
 						{
-							Va = vectors[i];
-							foundFlag = 1;
-							break;
+							dimFlag = 1;
+							if (userCommand[1] == "isOrthogonal(")
+							{
+#ifdef DEBUG
+								Output->Text += "isOrthogonal called" + Environment::NewLine;
+#endif // DEBUG
+								String^ outputTemp = ((Va * Vb) == 0) ? "Yes" : "No";
+								Output->Text += outputTemp + Environment::NewLine;
+
+							}
+							else if (userCommand[1] == "Angle(")
+							{
+#ifdef DEBUG
+								Output->Text += "Angle called" + Environment::NewLine;
+#endif // DEBUG
+								double ans = Va.Angle(Vb);
+								Output->Text += "theta = " + ans + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Com(")
+							{
+#ifdef DEBUG
+								Output->Text += "Com called" + Environment::NewLine;
+#endif // DEBUG
+
+								double ans = Va.Com(Vb);
+								Output->Text += ans + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Proj(")
+							{
+#ifdef DEBUG
+								Output->Text += "Proj called" + Environment::NewLine;
+#endif // DEBUG
+								Vector ans = Va.Proj(Vb);
+								String^ outputTemp = "";
+								for (int i = 1; i <= 5; i++)
+									outputTemp += userCommand[i];
+								outputTemp += " = ";
+								outputTemp = printVector(outputTemp, ans);
+								Output->Text += outputTemp;
+							}
+							else if (userCommand[1] == "Cross(" || userCommand[1] == "pN(")
+							{
+								if (Va.Data.size() == 3)
+								{
+#ifdef DEBUG
+									Output->Text += "Cross / pN called" + Environment::NewLine;
+#endif // DEBUG
+									Vector ans = Va.Cross(Vb);
+									String^ outputTemp = "";
+									for (int i = 1; i <= 5; i++)
+										outputTemp += userCommand[i];
+									outputTemp += " = ";
+									outputTemp = printVector(outputTemp, ans);
+									Output->Text += outputTemp;
+								}
+								else
+									Output->Text += "-Dimension error-" + Environment::NewLine;
+							}
+							else if (userCommand[1] == "isParallel(")
+							{
+#ifdef DEBUG
+								Output->Text += "isParallel called" + Environment::NewLine;
+#endif // DEBUG
+
+								String^ outputTemp;
+								double angle = Va.Angle(Vb);
+								if (angle == 0 || angle == 180)
+									outputTemp = "Yes";
+								else
+									outputTemp = "No";
+								Output->Text += outputTemp + Environment::NewLine;
+							}
+							else if (userCommand[1] == "Area(")
+							{
+#ifdef DEBUG
+								Output->Text += "Area called" + Environment::NewLine;
+#endif // DEBUG
+
+								double ans = Va.Area(Vb);
+								Output->Text += ans + Environment::NewLine;
+							}
+							else if (userCommand[1] == "isLI(")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								//todo
+							}
 						}
 					}
-					if (foundFlag)
+				}
+				else if (userCommand[1] == "Ob(")
+				{
+					MarshalString(userCommand[2], nameTemp);
+					int index = findVector(nameTemp, vectors);
+					if (index != -1)
 					{
-						Vector ans = Va.Normal();
-						Output->Text += "Normal(" + userCommand[2] + ") = ";
-						//call print
+						foundFlag = 1;
+						std::vector<Vector> ui;
+						ui.push_back(vectors[index]);
+						int normal = ui[0].Data.size();
+						std::vector<Vector> Vi(normal);
+						std::vector<Vector> ni(normal);
+						ui.resize(normal);
+						Vi[0] = ui[0];
+						ni[0] = Vi[0].Normal();
+						for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
+						{
+							MarshalString(userCommand[i], nameTemp);
+							index = findVector(nameTemp, vectors);
+							if (index == -1)
+							{
+								foundFlag = 0;
+								break;
+							}
+							if (vectors[index].Data.size() != normal)
+							{
+								dimFlag = 0;
+								break;
+							}
+							dimFlag = 1;
+							ui[j] = vectors[index];	//get vector data into ui
+						}
+						if (dimFlag && foundFlag)
+						{
+#ifdef DEBUG
+							Output->Text += "Ob called" + Environment::NewLine;
+#endif // DEBUG
+							//formula from wikipedia "Gramâ€“Schmidt process"
+							for (int i = 1; foundFlag && i < normal; i++)
+							{
+								Vector sum;
+								sum.Data.resize(normal);
+								for (int j = 0; j <= i - 1; j++)
+								{
+									sum = sum + ((ui[i] * ni[j]) * ni[j]);
+								}
+								Vi[i] = ui[i] - sum;
+								ni[i] = Vi[i].Normal();
+							}
+							String^ outputTemp = "";
+							for (int i = 1; i <= normal * 2 + 1; i++)
+								outputTemp += userCommand[i];
+							outputTemp += " :" + Environment::NewLine;
+							for (int i = 0; i < normal; i++)
+							{
+								outputTemp = printVector(outputTemp, ni[i]);
+							}
+							Output->Text += outputTemp;
+						}
 					}
 				}
 				else
+				{
+					funcFound = 0;
 					Output->Text += "-Function not found-" + Environment::NewLine;
-
-				if (!foundFlag)
+				}
+				if (funcFound && !foundFlag)
 					Output->Text += "-Vector not found-" + Environment::NewLine;
+				else if (funcFound && !dimFlag)
+					Output->Text += "-dimension not same-" + Environment::NewLine;
 			}
 
 			// Matrix Function
@@ -765,7 +930,7 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
 				}
 			}
-			//¤Ï¤§«h§PÂ_§ä¤£¨ì«ü¥O
+			//åä¹‹å‰‡åˆ¤æ–·æ‰¾ä¸åˆ°æŒ‡ä»¤
 			else
 			{
 				Output->Text += "-Command not found-" + Environment::NewLine;
@@ -774,9 +939,9 @@ namespace WindowsFormsApplication_cpp
 		}
 		else
 		{
-			//±N¨Ï¥ÎªÌ¿é¤J¦r¦ê(¦bText box¤¤)¡A¨Ì'\n'§@¤Á³Î
+			//å°‡ä½¿ç”¨è€…è¼¸å…¥å­—ä¸²(åœ¨Text boxä¸­)ï¼Œä¾'\n'ä½œåˆ‡å‰²
 			array<String^> ^userCommand = Input->Text->Split('\n');
-			//¨Ã±N³Ì«á¤@¦æ¡A§@¬°¥Ø«e¨Ï¥ÎªÌ¿é¤J«ü¥O
+			//ä¸¦å°‡æœ€å¾Œä¸€è¡Œï¼Œä½œç‚ºç›®å‰ä½¿ç”¨è€…è¼¸å…¥æŒ‡ä»¤
 			userInput = userCommand[userCommand->Length - 1];
 		}
 
