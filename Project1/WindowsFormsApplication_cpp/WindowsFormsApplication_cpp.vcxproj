@@ -140,11 +140,27 @@
   <ItemGroup>
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DotNetUitilities.cpp" />
+    <ClCompile Include="Matrix.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="WindowsForm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DotNetUtilities.h" />
+    <ClInclude Include="Matrix.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="WindowsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

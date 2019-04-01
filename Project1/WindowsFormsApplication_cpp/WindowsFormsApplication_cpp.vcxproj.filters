@@ -24,6 +24,12 @@
     <ClCompile Include="DotNetUitilities.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowsForm.h">
@@ -33,6 +39,12 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="DotNetUtilities.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
