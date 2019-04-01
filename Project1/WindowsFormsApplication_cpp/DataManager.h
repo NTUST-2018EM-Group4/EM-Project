@@ -30,11 +30,15 @@ public:
 	bool LoadVectorData();
 	//取得向量資料
 	std::vector<Vector> GetVectors();
+	// find vector index
+	int findVector(std::string name);
 
 	//Read Matrix Data
 	bool LoadMatrixData();
 	//Get Matrix Data
 	std::vector<Matrix> GetMatrices();
+	// find matrix index
+	int findMatrix(std::string name);
 
 	//設置檔案路徑名稱
 	void SetFileName(std::string fileName);

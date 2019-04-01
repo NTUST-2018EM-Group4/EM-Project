@@ -296,8 +296,8 @@ namespace WindowsFormsApplication_cpp {
 	int priority(String^ op);
 	int priority(std::string op);
 	String^ printVector(String^ s, const Vector& v);
-	int findVector(std::string name, const std::vector<Vector>& v);
-	int findMatrix(std::string name, const std::vector<Matrix>& m);
+	//int findVector(std::string name, const std::vector<Vector>& v);
+	//int findMatrix(std::string name, const std::vector<Matrix>& m);
 	Generic::List<String^> ^inToPostfix(array<String^>^ formulaList);
 	Generic::List<String^> ^CmdProcess(array<String^>^ CmdList);
 }

@@ -138,9 +138,39 @@ std::vector<Vector> DataManager::GetVectors()
 {
 	return Vectors;
 }
+int DataManager::findVector(std::string name)
+{
+	std::string temp;
+	//MarshalString(name, temp);
+
+	//透過for迴圈，從向量資料中找出對應變數
+	for (unsigned int i = 0; i < Vectors.size(); i++)
+	{
+		//若變數名稱與指令變數名稱符合
+		if (name == Vectors[i].Name)
+			return i;
+	}
+	return -1;
+}
 std::vector<Matrix> DataManager::GetMatrices()
 {
 	return Matrices;
+}
+int DataManager::findMatrix(std::string name)
+{
+	std::string temp;
+	//MarshalString(name, temp);
+
+	//透過for迴圈，從向量資料中找出對應變數
+	for (unsigned int i = 0; i < Matrices.size(); i++)
+	{
+		//若變數名稱與指令變數名稱符合
+		if (name == Matrices[i].Name)
+			return i;
+	}
+	// error handle
+	throw "---Varible not found---";
+	// return -1;
 }
 void DataManager::SetFileName(std::string fileName)
 {

@@ -47,36 +47,36 @@ namespace WindowsFormsApplication_cpp
 	}
 
 	// TODO: Combine findVar function
-	int findVector(std::string name, const std::vector<Vector>& v)
-	{
-		std::string temp;
-		//MarshalString(name, temp);
+	//int findVector(std::string name, const std::vector<Vector>& v)
+	//{
+	//	std::string temp;
+	//	//MarshalString(name, temp);
 
-		//透過for迴圈，從向量資料中找出對應變數
-		for (unsigned int i = 0; i < v.size(); i++)
-		{
-			//若變數名稱與指令變數名稱符合
-			if (name == v[i].Name)
-				return i;
-		}
-		return -1;
-	}
-	int findMatrix(std::string name, const std::vector<Matrix>& m)
-	{
-		std::string temp;
-		//MarshalString(name, temp);
+	//	//透過for迴圈，從向量資料中找出對應變數
+	//	for (unsigned int i = 0; i < v.size(); i++)
+	//	{
+	//		//若變數名稱與指令變數名稱符合
+	//		if (name == v[i].Name)
+	//			return i;
+	//	}
+	//	return -1;
+	//}
+	//int findMatrix(std::string name, const std::vector<Matrix>& m)
+	//{
+	//	std::string temp;
+	//	//MarshalString(name, temp);
 
-		//透過for迴圈，從向量資料中找出對應變數
-		for (unsigned int i = 0; i < m.size(); i++)
-		{
-			//若變數名稱與指令變數名稱符合
-			if (name == m[i].Name)
-				return i;
-		}
-		// error handle
-		throw "Varible not found";
-		// return -1;
-	}
+	//	//透過for迴圈，從向量資料中找出對應變數
+	//	for (unsigned int i = 0; i < m.size(); i++)
+	//	{
+	//		//若變數名稱與指令變數名稱符合
+	//		if (name == m[i].Name)
+	//			return i;
+	//	}
+	//	// error handle
+	//	throw "Varible not found";
+	//	// return -1;
+	//}
 
 	Generic::List<String^>^ inToPostfix(array<String^>^ formulaList)
 	{
@@ -346,7 +346,7 @@ namespace WindowsFormsApplication_cpp
 				String^ outputTemp = "";
 
 				MarshalString(userCommand[1], nameTemp);
-				int index = findVector(nameTemp, vectors);
+				int index = dataManager->findVector(nameTemp);
 				if (index != -1)
 				{
 					outputTemp = printVector(outputTemp, vectors[index]);
@@ -360,7 +360,7 @@ namespace WindowsFormsApplication_cpp
 				try
 				{
 					MarshalString(userCommand[1], nameTemp);
-					int index = findMatrix(nameTemp, matrices);
+					int index = dataManager->findMatrix(nameTemp);
 					Output->Text += matrices[index].outputStr();
 				}
 				catch (const std::exception&)
@@ -413,12 +413,12 @@ namespace WindowsFormsApplication_cpp
 
 						//find vector to calculate
 						MarshalString(postfixFormula[i - 2], nameTemp);
-						int index = findVector(nameTemp, vectors);
+						int index = dataManager->findVector(nameTemp);
 						if (index != -1)
 							Va = vectors[index];
 
 						MarshalString(postfixFormula[i - 1], nameTemp);
-						index = findVector(nameTemp, vectors);
+						index = dataManager->findVector(nameTemp);
 						if (index != -1)
 							Vb = vectors[index];
 
@@ -564,7 +564,7 @@ namespace WindowsFormsApplication_cpp
 						{
 							std::string formulaTemp = "";
 							MarshalString(postfixFormula[i], formulaTemp);
-							int index = findMatrix(formulaTemp, matrices);
+							int index = dataManager->findMatrix(formulaTemp);
 							calStack.push(matrices[index]);
 						}
 					}
@@ -605,7 +605,7 @@ namespace WindowsFormsApplication_cpp
 						case 2:
 
 							MarshalString(funcFormula[1], VarNameTemp);
-							index = findVector(VarNameTemp, vectors);
+							index = dataManager->findVector(VarNameTemp);
 
 							if (funcFormula[0] == "norm")
 							{
@@ -630,9 +630,9 @@ namespace WindowsFormsApplication_cpp
 						case 3:
 
 							MarshalString(funcFormula[1], VarNameTemp);
-							indexA = findVector(VarNameTemp, vectors);
+							indexA = dataManager->findVector(VarNameTemp);
 							MarshalString(funcFormula[2], VarNameTemp);
-							indexB = findVector(VarNameTemp, vectors);
+							indexB = dataManager->findVector(VarNameTemp);
 
 							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
 
@@ -744,7 +744,7 @@ namespace WindowsFormsApplication_cpp
 							{
 								bool foundFlag = 0, funcFound = 1, dimFlag = 0;
 								MarshalString(userCommand[2], nameTemp);
-								int index = findVector(nameTemp, vectors);
+								int index = dataManager->findVector(nameTemp);
 								if (index != -1)
 								{
 									foundFlag = 1;
@@ -759,7 +759,7 @@ namespace WindowsFormsApplication_cpp
 									for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
 									{
 										MarshalString(userCommand[i], nameTemp);
-										index = findVector(nameTemp, vectors);
+										index = dataManager->findVector(nameTemp);
 										if (index == -1)
 										{
 											foundFlag = 0;
@@ -1043,7 +1043,7 @@ namespace WindowsFormsApplication_cpp
 					Matrix result;
 					std::string VarNameTemp = "";
 					MarshalString(funcFormula[1], VarNameTemp);
-					int index = findMatrix(VarNameTemp, matrices);
+					int index = dataManager->findMatrix(VarNameTemp);
 
 					if (funcFormula[0] == "trans")
 					{
