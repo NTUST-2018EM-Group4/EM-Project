@@ -62,10 +62,7 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 		}
 		return Matrix("ans", ans);
 	}
-	else
-	{
-		throw "---Operator - process ERROR!---";
-	}
+	else throw "---Operator - process ERROR!---";
 }
 
 const Matrix Matrix::operator*(const Matrix & Mb)
@@ -88,10 +85,7 @@ const Matrix Matrix::operator*(const Matrix & Mb)
 		}
 		return result;
 	}
-	else
-	{
-		throw "---Operator * process ERROR!---";
-	}
+	else throw "---Operator * process ERROR!---";
 }
 
 const Matrix Matrix::operator/(const Matrix & Mb)
@@ -103,19 +97,14 @@ const Matrix Matrix::operator/(const Matrix & Mb)
 		result.Name = this->Name + " \\ " + Mb.Name;
 		return result;
 	}
-	else
-	{
-		throw "---Operator \\ process ERROR!---";
-	}
+	else throw "---Operator \\ process ERROR!---";
 }
 
 const Matrix Matrix::trans()
 {
 	Matrix temp;
-	if (Data.empty())
-	{
-		throw "---Empty Matrix---";
-	}
+	if (Data.empty()) throw "---Empty Matrix---";
+
 	temp.Data.resize(Data[0].Data.size());
 	for (int i = 0; i < Data.size(); i++)
 	{
@@ -132,10 +121,8 @@ const Matrix Matrix::gaussian()
 {
 	Matrix temp = *this;
 	// error handling
-	if (temp.Data.empty())
-	{
-		throw "---Empty Matrix---";
-	}
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+
 	// set dim
 	int dim = temp.Data.size();
 	if (temp.Data[0].Data.size() < dim)
@@ -180,10 +167,7 @@ const Matrix Matrix::gaussian()
 const double Matrix::rank()
 {
 	// error handling
-	if (this->Data.empty())
-	{
-		throw "---Empty Matrix---";
-	}
+	if (this->Data.empty()) throw "---Empty Matrix---";
 	double rankValue = 0;
 	Matrix gauss = this->gaussian();
 	for (int i = 0; i < gauss.Data.size(); i++)
@@ -204,10 +188,8 @@ const double Matrix::det()
 {
 	Matrix temp = this->gaussian();
 	// error handling
-	if (temp.Data.empty())
-	{
-		throw "---Empty Matrix---";
-	}
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+
 	// set dim
 	int dim = temp.Data.size();
 	if (temp.Data[0].Data.size() < dim)
@@ -227,10 +209,8 @@ const Matrix Matrix::inverse()
 {
 	Matrix temp = *this;
 	// error handling
-	if (temp.Data.empty())
-	{
-		throw "---Empty Matrix---";
-	}
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+
 	if (this->Data.size() != this->Data[0].Data.size())
 	{
 		throw "---Matrix not square---";

@@ -360,7 +360,9 @@ namespace WindowsFormsApplication_cpp
 				try
 				{
 					MarshalString(userCommand[1], nameTemp);
+					// find Matrix index
 					int index = dataManager->findMatrix(nameTemp);
+					// Output
 					Output->Text += matrices[index].outputStr();
 				}
 				catch (const std::exception&)
@@ -374,6 +376,7 @@ namespace WindowsFormsApplication_cpp
 				}
 			}
 
+			// calculate Vector
 			else if (userCommand[0] == "calV")
 			{	
 				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
@@ -534,8 +537,10 @@ namespace WindowsFormsApplication_cpp
 			// calculate Matrix
 			else if (userCommand[0] == "calM")
 			{
+				// normalization postfix formula
 				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
 #ifdef DEBUG
+				// Output postfix formula
 				Output->Text += "postfix =";
 				for (int i = 0; i < postfixFormula->Count; i++)
 				{
@@ -543,23 +548,28 @@ namespace WindowsFormsApplication_cpp
 				}
 				Output->Text += Environment::NewLine;
 #endif // DEBUG
+				// store temp Matrix
 				std::stack<Matrix> calStack;
 				try
 				{
 					for (int i = 0; i < postfixFormula->Count; i++)
 					{
+						// if detect operator
 						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*" || postfixFormula[i] == "\\")
 						{
 							std::string opTemp = "";
 							MarshalString(postfixFormula[i], opTemp);
 
+							// pop two Matrix
 							Matrix Mb = calStack.top();
 							calStack.pop();
 							Matrix Ma = calStack.top();
 							calStack.pop();
 
+							// push calculated result
 							calStack.push(Matrix(opTemp[0], Ma, Mb));
 						}
+						// not operator push matrix into stack 
 						else
 						{
 							std::string formulaTemp = "";
@@ -568,9 +578,11 @@ namespace WindowsFormsApplication_cpp
 							calStack.push(matrices[index]);
 						}
 					}
+					// pop final calculate result matrix 
 					Matrix result = calStack.top();
 					calStack.pop();
 
+					// output
 					Output->Text += result.outputStr();
 				}
 				catch (const std::exception&)
@@ -587,12 +599,14 @@ namespace WindowsFormsApplication_cpp
 			// Vector Function
 			else if (userCommand[0] == "funcV")
 			{
+				// normalization the command name and parameter
 				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
 				try
 				{
 					Vector result;
 					std::string VarNameTemp = "";
-					if (funcFormula->Count == 0) throw "---No parameter---";
+					// TODO: if Count == 0
+					if (funcFormula->Count == 1) throw "---No parameter---";
 					else
 					{
 						// TODO: Change rename method
@@ -626,6 +640,7 @@ namespace WindowsFormsApplication_cpp
 							}
 							else throw "---Function of unary not exist---";
 							break;
+
 						// binary parameter function case
 						case 3:
 
@@ -693,10 +708,7 @@ namespace WindowsFormsApplication_cpp
 									}
 									result.Name += "(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
 								}
-								else
-								{
-									throw "---Cross / pN Dimension error---";
-								}
+								else throw "---Cross / pN Dimension error---";
 #ifdef DEBUG
 								Output->Text += "Cross / pN called" + Environment::NewLine;
 #endif // DEBUG
@@ -1036,6 +1048,7 @@ namespace WindowsFormsApplication_cpp
 			// Matrix Function
 			else if (userCommand[0] == "funcM")
 			{
+				// normalization the command name and parameter
 				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
 
 				try
@@ -1043,6 +1056,7 @@ namespace WindowsFormsApplication_cpp
 					Matrix result;
 					std::string VarNameTemp = "";
 					MarshalString(funcFormula[1], VarNameTemp);
+					// find matrix
 					int index = dataManager->findMatrix(VarNameTemp);
 
 					if (funcFormula[0] == "trans")
@@ -1071,10 +1085,8 @@ namespace WindowsFormsApplication_cpp
 					{
 						result = matrices[index].inverse();
 					}
-					else
-					{
-						throw "---Function not exist---";
-					}
+					else throw "---Function not exist---";
+					// output result
 					Output->Text += result.outputStr();
 				}
 				catch (const std::exception&)
