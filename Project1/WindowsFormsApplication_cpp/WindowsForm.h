@@ -293,9 +293,11 @@ namespace WindowsFormsApplication_cpp {
 	//
 	// function
 	//
-	int priority(char op);
+	int priority(String^ op);
+	int priority(std::string op);
 	String^ printVector(String^ s, const Vector& v);
 	int findVector(std::string name, const std::vector<Vector>& v);
 	int findMatrix(std::string name, const std::vector<Matrix>& m);
+	Generic::List<String^> ^inToPostfix(array<String^>^ formulaList);
 	Generic::List<String^> ^CmdProcess(array<String^>^ CmdList);
 }
