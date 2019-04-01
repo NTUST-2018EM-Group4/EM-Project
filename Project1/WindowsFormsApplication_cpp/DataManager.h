@@ -18,6 +18,8 @@ struct Vector
 	const Vector operator + (const Vector& Vb);
 	const Vector operator - (const Vector& Vb);
 	const double operator * (const Vector& Vb);
+	const Vector operator * (const double& num);
+	const Vector operator / (const double& num);
 	friend const  Vector operator * (const Vector& Va, const Vector& Vb);
 
 	bool dimCheck(Vector Vb);
@@ -34,6 +36,21 @@ struct Matrix
 	Matrix();
 	Matrix(std::vector<Vector> data);
 	Matrix(std::string name, std::vector<Vector> data);
+	Matrix(char op, Matrix Ma, Matrix Mb);
+
+	const Matrix operator + (const Matrix& Mb);
+	const Matrix operator - (const Matrix& Mb);
+	const Matrix operator * (const Matrix& Mb);
+	const Matrix operator / (const Matrix& Mb);
+
+	const Matrix trans();
+	const Matrix gaussian();
+	const double rank();
+	const double det();
+	const Matrix inverse();
+
+	System::String^ outputStr();
+	bool dimCheck(Matrix Mb, char op);
 };
 
 //定義控管資料class
