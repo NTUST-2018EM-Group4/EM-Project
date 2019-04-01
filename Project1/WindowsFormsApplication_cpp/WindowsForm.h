@@ -87,9 +87,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox3->SuspendLayout();
 			this->groupBox4->SuspendLayout();
 			this->SuspendLayout();
-			//
+			// 
 			// menuStrip2
-			//
+			// 
 			this->menuStrip2->ImageScalingSize = System::Drawing::Size(20, 20);
 			this->menuStrip2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
 				this->loadVectorToolStripMenuItem,
@@ -101,33 +101,33 @@ namespace WindowsFormsApplication_cpp {
 			this->menuStrip2->Size = System::Drawing::Size(879, 27);
 			this->menuStrip2->TabIndex = 1;
 			this->menuStrip2->Text = L"menuStrip2";
-			//
+			// 
 			// loadVectorToolStripMenuItem
-			//
+			// 
 			this->loadVectorToolStripMenuItem->Name = L"loadVectorToolStripMenuItem";
 			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(105, 23);
 			this->loadVectorToolStripMenuItem->Text = L"Load Vector";
 			this->loadVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadVectorToolStripMenuItem_Click);
-			//
+			// 
 			// loadMatrixToolStripMenuItem
-			//
+			// 
 			this->loadMatrixToolStripMenuItem->Name = L"loadMatrixToolStripMenuItem";
 			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(104, 23);
 			this->loadMatrixToolStripMenuItem->Text = L"Load Matrix";
 			this->loadMatrixToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadMatrixToolStripMenuItem_Click);
-			//
+			// 
 			// openFileDialog1
-			//
+			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &WindowsForm::openFileDialog1_FileOk);
-			//
+			// 
 			// openFileDialog2
-			//
+			// 
 			this->openFileDialog2->FileName = L"openFileDialog1";
 			this->openFileDialog2->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &WindowsForm::openFileDialog2_FileOk);
-			//
+			// 
 			// groupBox2
-			//
+			// 
 			this->groupBox2->Controls->Add(this->Output);
 			this->groupBox2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox2->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -138,9 +138,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox2->TabIndex = 5;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Output";
-			//
+			// 
 			// Output
-			//
+			// 
 			this->Output->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->Output->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -149,11 +149,12 @@ namespace WindowsFormsApplication_cpp {
 			this->Output->Multiline = true;
 			this->Output->Name = L"Output";
 			this->Output->ReadOnly = true;
+			this->Output->ScrollBars = System::Windows::Forms::ScrollBars::Both;
 			this->Output->Size = System::Drawing::Size(867, 124);
 			this->Output->TabIndex = 1;
-			//
+			// 
 			// groupBox1
-			//
+			// 
 			this->groupBox1->Controls->Add(this->Input);
 			this->groupBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold));
@@ -163,9 +164,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox1->TabIndex = 4;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Input";
-			//
+			// 
 			// Input
-			//
+			// 
 			this->Input->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->Input->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
@@ -176,35 +177,37 @@ namespace WindowsFormsApplication_cpp {
 			this->Input->Size = System::Drawing::Size(867, 46);
 			this->Input->TabIndex = 1;
 			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
-			//
+			// 
 			// VectorList
-			//
+			// 
 			this->VectorList->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->VectorList->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->VectorList->FormattingEnabled = true;
+			this->VectorList->HorizontalScrollbar = true;
 			this->VectorList->ItemHeight = 19;
 			this->VectorList->Location = System::Drawing::Point(3, 23);
 			this->VectorList->Margin = System::Windows::Forms::Padding(4);
 			this->VectorList->Name = L"VectorList";
 			this->VectorList->Size = System::Drawing::Size(867, 124);
 			this->VectorList->TabIndex = 3;
-			//
+			// 
 			// MatrixList
-			//
+			// 
 			this->MatrixList->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->MatrixList->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
 			this->MatrixList->FormattingEnabled = true;
+			this->MatrixList->HorizontalScrollbar = true;
 			this->MatrixList->ItemHeight = 19;
 			this->MatrixList->Location = System::Drawing::Point(3, 23);
 			this->MatrixList->Margin = System::Windows::Forms::Padding(4);
 			this->MatrixList->Name = L"MatrixList";
 			this->MatrixList->Size = System::Drawing::Size(867, 125);
 			this->MatrixList->TabIndex = 0;
-			//
+			// 
 			// tableLayoutPanel1
-			//
+			// 
 			this->tableLayoutPanel1->ColumnCount = 1;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				100)));
@@ -223,9 +226,9 @@ namespace WindowsFormsApplication_cpp {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 28.57143F)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(879, 547);
 			this->tableLayoutPanel1->TabIndex = 2;
-			//
+			// 
 			// groupBox3
-			//
+			// 
 			this->groupBox3->Controls->Add(this->VectorList);
 			this->groupBox3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -236,9 +239,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox3->TabIndex = 6;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Vector";
-			//
+			// 
 			// groupBox4
-			//
+			// 
 			this->groupBox4->Controls->Add(this->MatrixList);
 			this->groupBox4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox4->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
@@ -249,9 +252,9 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox4->TabIndex = 7;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Matrix";
-			//
+			// 
 			// WindowsForm
-			//
+			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(879, 574);
@@ -293,4 +296,6 @@ namespace WindowsFormsApplication_cpp {
 	int priority(char op);
 	String^ printVector(String^ s, const Vector& v);
 	int findVector(std::string name, const std::vector<Vector>& v);
+	int findMatrix(std::string name, const std::vector<Matrix>& m);
+	Generic::List<String^> ^CmdProcess(array<String^>^ CmdList);
 }

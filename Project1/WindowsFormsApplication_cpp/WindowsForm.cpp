@@ -20,7 +20,7 @@ namespace WindowsFormsApplication_cpp
 	{
 		switch (op) {
 		case '+': case '-': return 1;
-		case '*': case '/': return 2;
+		case '*': case '/': case'\\': return 2;
 		default:            return 0;
 		}
 	}
@@ -29,7 +29,7 @@ namespace WindowsFormsApplication_cpp
 		s += "[";
 		for (int i = 0; i < v.Data.size(); i++)
 		{
-			/*¤£ª¾¹D«ç»ò­­¨î6¦ì*/
+			/*ä¸çŸ¥é“æ€éº¼é™åˆ¶6ä½*/
 			s += v.Data[i].ToString();
 			if (i != v.Data.size() - 1)
 				s += ", ";
@@ -37,49 +37,109 @@ namespace WindowsFormsApplication_cpp
 		s += "]" + Environment::NewLine;
 		return s;
 	}
+
+	// TODO: Combine findVar function
 	int findVector(std::string name, const std::vector<Vector>& v)
 	{
 		std::string temp;
 		//MarshalString(name, temp);
 
-		//³z¹Lfor°j°é¡A±q¦V¶q¸ê®Æ¤¤§ä¥X¹ïÀ³ÅÜ¼Æ
+		//é€éforè¿´åœˆï¼Œå¾å‘é‡è³‡æ–™ä¸­æ‰¾å‡ºå°æ‡‰è®Šæ•¸
 		for (unsigned int i = 0; i < v.size(); i++)
 		{
-			//­YÅÜ¼Æ¦WºÙ»P«ü¥OÅÜ¼Æ¦WºÙ²Å¦X
+			//è‹¥è®Šæ•¸åç¨±èˆ‡æŒ‡ä»¤è®Šæ•¸åç¨±ç¬¦åˆ
 			if (name == v[i].Name)
 				return i;
 		}
 		return -1;
 	}
+	int findMatrix(std::string name, const std::vector<Matrix>& m)
+	{
+		std::string temp;
+		//MarshalString(name, temp);
+
+		//é€éforè¿´åœˆï¼Œå¾å‘é‡è³‡æ–™ä¸­æ‰¾å‡ºå°æ‡‰è®Šæ•¸
+		for (unsigned int i = 0; i < m.size(); i++)
+		{
+			//è‹¥è®Šæ•¸åç¨±èˆ‡æŒ‡ä»¤è®Šæ•¸åç¨±ç¬¦åˆ
+			if (name == m[i].Name)
+				return i;
+		}
+		// error handle
+		throw "Varible not found";
+		// return -1;
+	}
+
+	Generic::List<String^>^ CmdProcess(array<String^>^ CmdList)
+	{
+		//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
+		for (int i = 2; i < CmdList->Length; i++)
+		{
+			CmdList[1] += CmdList[i];
+		}
+		String^ Cmdtemp = "";
+		for (int i = 0; i < CmdList[1]->Length; i++)
+		{
+			if (CmdList[1][i] == '(' || CmdList[1][i] == ')' || CmdList[1][i] == ',')
+			{
+				Cmdtemp += " " + CmdList[1][i] + " ";
+			}
+			else
+			{
+				Cmdtemp += CmdList[1][i];
+			}
+		}
+		if (Cmdtemp[0] == ' ')
+		{
+			Cmdtemp = Cmdtemp->Remove(0, 1);
+		}
+		if (Cmdtemp[Cmdtemp->Length - 1] == ' ')
+		{
+			Cmdtemp = Cmdtemp->Remove(Cmdtemp->Length - 1, 1);
+		}
+		array<String^> ^CmdArray = Cmdtemp->Split(' ');
+
+		//å°‡array(CmdArray)è½‰æˆList
+		Generic::List<String^> ^Cmd = gcnew Generic::List<String^>();
+		for (int i = 0; i < CmdArray->Length; i++)
+		{
+			//Avoid " " bug
+			if (CmdArray[i] != "" && CmdArray[i] != "(" && CmdArray[i] != ")" && CmdArray[i] != ",")
+			{
+				Cmd->Add(CmdArray[i]);
+			}
+		}
+		return Cmd;
+	}
 
 	System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		//¶}±ÒDialog
+		//é–‹å•ŸDialog
 		openFileDialog1->ShowDialog();
 	}
 	System::Void WindowsForm::openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e)
 	{
-		//¦bDialog«ö¤UOK«K·|¶i¤J¦¹¨ç¦¡
-		//¦r¦êÂà¨îstring^ to string
+		//åœ¨DialogæŒ‰ä¸‹OKä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å­—ä¸²è½‰åˆ¶string^ to string
 		std::string tempFileName;
 		MarshalString(openFileDialog1->FileName, tempFileName);
-		//±NÀÉ®×¸ô®|¦WºÙ¶Ç¤JdataManager
+		//å°‡æª”æ¡ˆè·¯å¾‘åç¨±å‚³å…¥dataManager
 		dataManager->SetFileName(tempFileName);
-		//±qÅª¨úÅª¨ú¦V¶q¸ê®Æ
+		//å¾è®€å–è®€å–å‘é‡è³‡æ–™
 		if (dataManager->LoadVectorData())
 		{
-			//±NVectorList¤¤¶µ¥Ø¥ı°µ²M°£
+			//å°‡VectorListä¸­é …ç›®å…ˆåšæ¸…é™¤
 			VectorList->Items->Clear();
-			//¨ú±o©Ò¦³¦V¶q¸ê®Æ
+			//å–å¾—æ‰€æœ‰å‘é‡è³‡æ–™
 			std::vector<Vector> vectors = dataManager->GetVectors();
 
 			for (unsigned int i = 0; i < vectors.size(); i++)
 			{
-				//±NÀÉ®×¦WºÙ¦s¤J¼È¦s
+				//å°‡æª”æ¡ˆåç¨±å­˜å…¥æš«å­˜
 				std::string tempString = vectors[i].Name;
-				//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 				tempString += " [";
-				//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 				for (unsigned int j = 0; j < vectors[i].Data.size(); j++)
 				{
 					std::string scalarString = std::to_string(vectors[i].Data[j]);
@@ -87,9 +147,9 @@ namespace WindowsFormsApplication_cpp
 					if (j != vectors[i].Data.size() - 1)
 						tempString += ",";
 				}
-				//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 				tempString += "]";
-				//±N¶µ¥Ø¥[¤JVectorList¤¤
+				//å°‡é …ç›®åŠ å…¥VectorListä¸­
 				VectorList->Items->Add(gcnew String(tempString.c_str()));
 			}
 			Output->Text += "-Vector datas have been loaded-" + Environment::NewLine;
@@ -97,37 +157,37 @@ namespace WindowsFormsApplication_cpp
 	}
 	System::Void WindowsForm::loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		//¶}±ÒDialog
+		//é–‹å•ŸDialog
 		openFileDialog2->ShowDialog();
 	}
 	System::Void WindowsForm::openFileDialog2_FileOk(System::Object ^ sender, System::ComponentModel::CancelEventArgs ^ e)
 	{
-		//¦bDialog«ö¤UOK«K·|¶i¤J¦¹¨ç¦¡
-		//¦r¦êÂà¨îstring^ to string
+		//åœ¨DialogæŒ‰ä¸‹OKä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å­—ä¸²è½‰åˆ¶string^ to string
 		std::string tempFileName;
 		MarshalString(openFileDialog2->FileName, tempFileName);
 
-		//±NÀÉ®×¸ô®|¦WºÙ¶Ç¤JdataManager
+		//å°‡æª”æ¡ˆè·¯å¾‘åç¨±å‚³å…¥dataManager
 		dataManager->SetFileName(tempFileName);
 
-		//±qÅª¨úÅª¨ú¦V¶q¸ê®Æ
+		//å¾è®€å–è®€å–å‘é‡è³‡æ–™
 		if (dataManager->LoadMatrixData())
 		{
-			//±NForm::MatrixList¤¤¶µ¥Ø¥ı°µ²M°£
+			//å°‡Form::MatrixListä¸­é …ç›®å…ˆåšæ¸…é™¤
 			MatrixList->Items->Clear();
 
-			//¨ú±o©Ò¦³¦V¶q¸ê®Æ
+			//å–å¾—æ‰€æœ‰å‘é‡è³‡æ–™
 			std::vector<Matrix> matrices = dataManager->GetMatrices();
 
 			for (unsigned int i = 0; i < matrices.size(); i++)
 			{
-				//±NÀÉ®×¦WºÙ¦s¤J¼È¦s
+				//å°‡æª”æ¡ˆåç¨±å­˜å…¥æš«å­˜
 				std::string tempString = matrices[i].Name + "\n";
 				
-				//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+				//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 				for (unsigned int j = 0; j < matrices[i].Data.size(); j++)
 				{
-					//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 					tempString += "[";
 
 					for (unsigned int k = 0; k < matrices[i].Data[j].Data.size(); k++)
@@ -137,12 +197,12 @@ namespace WindowsFormsApplication_cpp
 						if (k != matrices[i].Data[j].Data.size() - 1)
 							tempString += ",";
 					}
-					//±N¿é¥X®æ¦¡¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºæ ¼å¼å­˜å…¥æš«å­˜
 					tempString += "]\n";
 					
 				}
 
-				//±N¶µ¥Ø¥[¤JVectorList¤¤
+				//å°‡é …ç›®åŠ å…¥VectorListä¸­
 				MatrixList->Items->Add(gcnew String(tempString.c_str()));
 			}
 			Output->Text += "-Matrix datas have been loaded-" + Environment::NewLine;
@@ -151,19 +211,20 @@ namespace WindowsFormsApplication_cpp
 
 	System::Void WindowsForm::Input_TextChanged(System::Object^  sender, System::EventArgs^  e)
 	{
-		//·íInput textbox¤¤ªº¿é¤J§ïÅÜ®É¡A«K·|¶i¤J¦¹¨ç¦¡
-		//¨ú±o¦V¶q¸ê®Æ
+		//ç•¶Input textboxä¸­çš„è¼¸å…¥æ”¹è®Šæ™‚ï¼Œä¾¿æœƒé€²å…¥æ­¤å‡½å¼
+		//å–å¾—å‘é‡è³‡æ–™
 		std::vector<Vector> vectors = dataManager->GetVectors();
-		//§PÂ_¿é¤J¦Û¤¸¬°'\n'¡A¨Ã¨¾¤î¨ú¨ì¦r¦ê-1¦ì¸m
+		std::vector<Matrix> matrices = dataManager->GetMatrices();
+		//åˆ¤æ–·è¼¸å…¥è‡ªå…ƒç‚º'\n'ï¼Œä¸¦é˜²æ­¢å–åˆ°å­—ä¸²-1ä½ç½®
 		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
 		{
-			//±N¨Ï¥ÎªÌ¿é¤J¦r¦ê(¦buserInput¤¤)¡A¨ÌªÅ¥Õ§@¤Á³Î
+			//å°‡ä½¿ç”¨è€…è¼¸å…¥å­—ä¸²(åœ¨userInputä¸­)ï¼Œä¾ç©ºç™½ä½œåˆ‡å‰²
 			array<String^> ^userCommand = userInput->Split(' ');
 			std::string nameTemp;
-			//¦r¦ê¤ñ¸û¡A­Y«ü¥O¬°"print"ªº±¡ªp
+			//å­—ä¸²æ¯”è¼ƒï¼Œè‹¥æŒ‡ä»¤ç‚º"print"çš„æƒ…æ³
 			if (userCommand[0] == "print")
 			{
-				//©w¸q¿é¥X¼È¦s
+				//å®šç¾©è¼¸å‡ºæš«å­˜
 				String^ outputTemp = "";
 
 				MarshalString(userCommand[1], nameTemp);
@@ -181,13 +242,13 @@ namespace WindowsFormsApplication_cpp
 			{
 				//infix to postfix
 
-				//­Y¹Bºâ¦¡¤¤¦³ªÅ®æ¥ı¦X¨Ö¦¨µLªÅ®æª©
+				//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
 				for (int i = 2; i < userCommand->Length; i++)
 				{
 					userCommand[1] += userCommand[i];
 				}
-				//±NµLªÅ®æª©³B²z¦¨ªÅ®æª©
-				//©w¸q¿é¥X¼È¦s
+				//å°‡ç„¡ç©ºæ ¼ç‰ˆè™•ç†æˆç©ºæ ¼ç‰ˆ
+				//å®šç¾©è¼¸å‡ºæš«å­˜
 				String^ infixTemp = "";
 				int begin = 0;
 				for (int i = 0; i < userCommand[1]->Length; i++)
@@ -213,12 +274,12 @@ namespace WindowsFormsApplication_cpp
 						infixTemp += " ";
 					}
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (infixTemp[infixTemp->Length - 1] == ' ')
 				{
 					infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê¨ÌªÅ¥Õ§@¤Á³Î
+				//å°‡è™•ç†å®Œçš„å­—ä¸²ä¾ç©ºç™½ä½œåˆ‡å‰²
 				array<String^> ^infixFormula = infixTemp->Split(' ');
 				String^ stack = " ";
 
@@ -229,7 +290,7 @@ namespace WindowsFormsApplication_cpp
 
 					if (infixFormula[i] == "(")
 					{
-						// ¹Bºâ¤l°ïÅ|
+						// é‹ç®—å­å †ç–Š
 						stack = stack->Insert(++top, infixFormula[i]);
 					}
 					else if (infixFormula[i] == "+" ||
@@ -241,19 +302,19 @@ namespace WindowsFormsApplication_cpp
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						stack = stack->Insert(++top, infixFormula[i]); // ¦s¤J°ïÅ|
+						stack = stack->Insert(++top, infixFormula[i]); // å­˜å…¥å †ç–Š
 					}
 					else if (infixFormula[i] == ")")
 					{
-						while (stack[top] != '(') { // ¹J ) ¿é¥X¦Ü (
+						while (stack[top] != '(') { // é‡ ) è¼¸å‡ºè‡³ (
 							postfix += stack[top--];
 							postfix += " ";
 						}
-						top--;  // ¤£¿é¥X (
+						top--;  // ä¸è¼¸å‡º (
 					}
 					else
 					{
-						// ¹Bºâ¤¸ª½±µ¿é¥X
+						// é‹ç®—å…ƒç›´æ¥è¼¸å‡º
 						postfix += infixFormula[i];
 						postfix += " ";
 					}
@@ -262,15 +323,15 @@ namespace WindowsFormsApplication_cpp
 					postfix += stack[top--];
 					postfix += " ";
 				}
-				//¥h°£³Ì«á¤@­ÓªÅ®æ
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
 				if (postfix[postfix->Length - 1] == ' ')
 				{
 					postfix = postfix->Remove(postfix->Length - 1, 1);
 				}
-				//±N³B²z§¹ªº¦r¦ê(postfix)¨ÌªÅ¥Õ§@¤Á³Î¦s¨ìarray
+				//å°‡è™•ç†å®Œçš„å­—ä¸²(postfix)ä¾ç©ºç™½ä½œåˆ‡å‰²å­˜åˆ°array
 				array<String^> ^postfixArray = postfix->Split(' ');
 
-				//±Narray(postfixArray)Âà¦¨List
+				//å°‡array(postfixArray)è½‰æˆList
 				Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^>();
 				for (int i = 0; i < postfixArray->Length; i++)
 				{
@@ -321,7 +382,7 @@ namespace WindowsFormsApplication_cpp
 						if (index != -1)
 							Vb = vectors[index];
 
-						//±qºâ¦¡stack¤¤Àò±o¹Bºâ¤l
+						//å¾ç®—å¼stackä¸­ç²å¾—é‹ç®—å­
 						if (Vb.Name == "" && !calStack.empty())
 						{
 							Vb = calStack.top();
@@ -418,18 +479,190 @@ namespace WindowsFormsApplication_cpp
 					Output->Text += "-Dimension not same-" + Environment::NewLine;
 				else
 				{
-					//®æ¦¡µL»~¡A¿é¥Xµ²ªG
+					//æ ¼å¼ç„¡èª¤ï¼Œè¼¸å‡ºçµæœ
 
 					String^ outputTemp;
-					//±N¿é¥X¸ê®Æ¦s¤J¼È¦s
+					//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
 					ans = calStack.top();
 					calStack.pop();
 					outputTemp = printVector(outputTemp, ans);
-					//¿é¥X¼È¦s¸ê°T
+					//è¼¸å‡ºæš«å­˜è³‡è¨Š
 					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
 				}
 			}
+			
+			// calculate Matrix
+			else if (userCommand[0] == "calM")
+			{
+				//infix to postfix
+				//è‹¥é‹ç®—å¼ä¸­æœ‰ç©ºæ ¼å…ˆåˆä½µæˆç„¡ç©ºæ ¼ç‰ˆ
+				for (int i = 2; i < userCommand->Length; i++)
+				{
+					userCommand[1] += userCommand[i];
+				}
+				//å°‡ç„¡ç©ºæ ¼ç‰ˆè™•ç†æˆç©ºæ ¼ç‰ˆ
+				//å®šç¾©è¼¸å‡ºæš«å­˜
+				String^ infixTemp = "";
+				int begin = 0;
+				for (int i = 0; i < userCommand[1]->Length; i++)
+				{
+					if (userCommand[1][i] == '(' ||
+						userCommand[1][i] == ')' ||
+						userCommand[1][i] == '+' ||
+						userCommand[1][i] == '-' ||
+						userCommand[1][i] == '*' || 
+						userCommand[1][i] == '\\')
+					{
+						if (i - 1 >= 0)
+						{
+							infixTemp += userCommand[1]->Substring(begin, (i - 1 - begin + 1));
+							infixTemp += " ";
+						}
+						infixTemp += userCommand[1]->Substring(i, 1);
+						infixTemp += " ";
+						begin = i + 1;
+					}
+					else if (i == userCommand[1]->Length - 1)
+					{
+						infixTemp += userCommand[1]->Substring(begin, (i - begin + 1));
+						infixTemp += " ";
+					}
+				}
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
+				if (infixTemp[infixTemp->Length - 1] == ' ')
+				{
+					infixTemp = infixTemp->Remove(infixTemp->Length - 1, 1);
+				}
+				//å°‡è™•ç†å®Œçš„å­—ä¸²ä¾ç©ºç™½ä½œåˆ‡å‰²
+				array<String^> ^infixFormula = infixTemp->Split(' ');
+				String^ stack = " ";
 
+				String^ postfix = "";
+				int top = 0;
+				for (int i = 0; i < infixFormula->Length; i++)
+				{
+
+					if (infixFormula[i] == "(")
+					{
+						// é‹ç®—å­å †ç–Š
+						stack = stack->Insert(++top, infixFormula[i]);
+					}
+					else if (infixFormula[i] == "+" ||
+						infixFormula[i] == "-" ||
+						infixFormula[i] == "*" ||
+						infixFormula[i] == "\\")
+					{
+						while (priority(stack[top]) >= priority(infixFormula[i][0]))
+						{
+							postfix += stack[top--];
+							postfix += " ";
+						}
+						stack = stack->Insert(++top, infixFormula[i]); // å­˜å…¥å †ç–Š
+					}
+					else if (infixFormula[i] == ")")
+					{
+						while (stack[top] != '(') { // é‡ ) è¼¸å‡ºè‡³ (
+							postfix += stack[top--];
+							postfix += " ";
+						}
+						top--;  // ä¸è¼¸å‡º (
+					}
+					else
+					{
+						// é‹ç®—å…ƒç›´æ¥è¼¸å‡º
+						postfix += infixFormula[i];
+						postfix += " ";
+					}
+				}
+				while (top > 0) {
+					postfix += stack[top--];
+					postfix += " ";
+				}
+				//å»é™¤æœ€å¾Œä¸€å€‹ç©ºæ ¼
+				if (postfix[postfix->Length - 1] == ' ')
+				{
+					postfix = postfix->Remove(postfix->Length - 1, 1);
+				}
+				//å°‡è™•ç†å®Œçš„å­—ä¸²(postfix)ä¾ç©ºç™½ä½œåˆ‡å‰²å­˜åˆ°array
+				array<String^> ^postfixArray = postfix->Split(' ');
+
+				//å°‡array(postfixArray)è½‰æˆList
+				Generic::List<String^> ^postfixFormula = gcnew Generic::List<String^>();
+				for (int i = 0; i < postfixArray->Length; i++)
+				{
+					//Avoid " " bug
+					if (postfixArray[i] != "")
+					{
+						postfixFormula->Add(postfixArray[i]);
+					}
+				}
+
+#ifdef DEBUG
+				Output->Text += "postfix = " + postfix + Environment::NewLine;
+#endif // DEBUG
+
+				Matrix ans, Ma, Mb;
+				std::stack<Matrix> calStack;
+				bool dimFlag, foundFlag;
+				try
+				{
+					for (int i = 0; i < postfixFormula->Count; i++)
+					{
+						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*" || postfixFormula[i] == "\\")
+						{
+							std::string opTemp = "";
+							MarshalString(postfixFormula[i], opTemp);
+
+							Matrix Mb = calStack.top();
+							calStack.pop();
+							Matrix Ma = calStack.top();
+							calStack.pop();
+
+							calStack.push(Matrix(opTemp[0], Ma, Mb));
+						}
+						else
+						{
+							std::string formulaTemp = "";
+							MarshalString(postfixFormula[i], formulaTemp);
+							int index = findMatrix(formulaTemp, matrices);
+							calStack.push(matrices[index]);
+						}
+					}
+
+					Matrix result = calStack.top();
+					calStack.pop();
+
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+
+
+				//if (!foundFlag)
+				//	Output->Text += "-Vector not found-" + Environment::NewLine;
+				//else if (!dimFlag)
+				//	Output->Text += "-Dimension not same-" + Environment::NewLine;
+				//else
+				//{
+				//	//æ ¼å¼ç„¡èª¤ï¼Œè¼¸å‡ºçµæœ
+
+				//	String^ outputTemp;
+				//	//å°‡è¼¸å‡ºè³‡æ–™å­˜å…¥æš«å­˜
+				//	ans = calStack.top();
+				//	calStack.pop();
+				//	outputTemp = printVector(outputTemp, ans);
+				//	//è¼¸å‡ºæš«å­˜è³‡è¨Š
+				//	Output->Text += gcnew String(userCommand[1] + " = " + outputTemp) + Environment::NewLine;
+				//}
+			}
+			
 			else if (userCommand[0] == "func")
 			{
 				Vector Va, Vb;
@@ -609,7 +842,7 @@ namespace WindowsFormsApplication_cpp
 #ifdef DEBUG
 							Output->Text += "Ob called" + Environment::NewLine;
 #endif // DEBUG
-							//formula from wikipedia "Gram¡VSchmidt process"
+							//formula from wikipedia "Gramâ€“Schmidt process"
 							for (int i = 1; foundFlag && i < normal; i++)
 							{
 								Vector sum;
@@ -643,7 +876,61 @@ namespace WindowsFormsApplication_cpp
 				else if (funcFound && !dimFlag)
 					Output->Text += "-dimension not same-" + Environment::NewLine;
 			}
-			//¤Ï¤§«h§PÂ_§ä¤£¨ì«ü¥O
+
+			// Matrix Function
+			else if (userCommand[0] == "funcM")
+			{
+				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
+				try
+				{
+					Matrix temp;
+					std::string VarNameTemp = "";
+					MarshalString(funcFormula[1], VarNameTemp);
+					int index = findMatrix(VarNameTemp, matrices);
+
+					if (funcFormula[0] == "trans")
+					{
+						temp = matrices[index].trans();
+					}
+					else if (funcFormula[0] == "gauss")
+					{
+						temp = matrices[index].gaussian();
+					}
+					else if (funcFormula[0] == "rank")
+					{
+						double rankValue = matrices[index].rank();
+						temp.Data.resize(1);
+						temp.Data[0].Data.push_back(rankValue);
+						temp.Name = "Rank Value";
+					}
+					else if (funcFormula[0] == "det")
+					{
+						double detValue = matrices[index].det();
+						temp.Data.resize(1);
+						temp.Data[0].Data.push_back(detValue);
+						temp.Name = "Determinant Value";
+					}
+					else if (funcFormula[0] == "inverse")
+					{
+						temp = matrices[index].inverse();
+					}
+					else
+					{
+						throw "---Command not exist---";
+					}
+					Output->Text += temp.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+			//åä¹‹å‰‡åˆ¤æ–·æ‰¾ä¸åˆ°æŒ‡ä»¤
 			else
 			{
 				Output->Text += "-Command not found-" + Environment::NewLine;
@@ -652,9 +939,9 @@ namespace WindowsFormsApplication_cpp
 		}
 		else
 		{
-			//±N¨Ï¥ÎªÌ¿é¤J¦r¦ê(¦bText box¤¤)¡A¨Ì'\n'§@¤Á³Î
+			//å°‡ä½¿ç”¨è€…è¼¸å…¥å­—ä¸²(åœ¨Text boxä¸­)ï¼Œä¾'\n'ä½œåˆ‡å‰²
 			array<String^> ^userCommand = Input->Text->Split('\n');
-			//¨Ã±N³Ì«á¤@¦æ¡A§@¬°¥Ø«e¨Ï¥ÎªÌ¿é¤J«ü¥O
+			//ä¸¦å°‡æœ€å¾Œä¸€è¡Œï¼Œä½œç‚ºç›®å‰ä½¿ç”¨è€…è¼¸å…¥æŒ‡ä»¤
 			userInput = userCommand[userCommand->Length - 1];
 		}
 
