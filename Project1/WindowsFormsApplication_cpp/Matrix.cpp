@@ -11,39 +11,38 @@ Matrix::Matrix(std::string name, std::vector<Vector> data) : Name(name), Data(da
 
 Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 {
-	Matrix temp;
-
+	Name = "CalResult";
 	switch (op)
 	{
 	case '+':
-		temp = Ma + Mb;
+		*this = Ma + Mb;
 		break;
 	case '-':
-		temp = Ma - Mb;
+		*this = Ma - Mb;
 		break;
 	case '*':
-		temp = Ma * Mb;
+		*this = Ma * Mb;
 		break;
 	case '\\':
-		temp = Ma / Mb;
+		*this = Ma / Mb;
 		break;
 	default:
 		break;
 	}
-	Name = "CalResult";
-	this->Data = temp.Data;
 }
 
 const Matrix Matrix::operator+(const Matrix & Mb)
 {
 	if (dimCheck(Mb, '+'))
 	{
-		std::vector<Vector> ans;
+		Matrix result;
+		result.Data.resize(this->Data.size());
+
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			ans.push_back(this->Data[i] + Mb.Data[i]);
+			result.Data.push_back(this->Data[i] + Mb.Data[i]);
 		}
-		return Matrix("ans", ans);
+		return result;
 	}
 	else
 	{
@@ -55,12 +54,14 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 {
 	if (dimCheck(Mb, '-'))
 	{
-		std::vector<Vector> ans;
+		Matrix result;
+		result.Data.resize(this->Data.size());
+
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			ans.push_back(this->Data[i] - Mb.Data[i]);
+			result.Data.push_back(this->Data[i] + Mb.Data[i]);
 		}
-		return Matrix("ans", ans);
+		return result;
 	}
 	else throw "---Operator - process ERROR!---";
 }
@@ -279,6 +280,37 @@ const Matrix Matrix::inverse()
 	throw "---Inverse process error---";
 }
 
+const Matrix Ob(const int normal, const std::vector<Vector> ui)
+{
+	std::vector<Vector> Vi(normal);
+	std::vector<Vector> ans(normal);
+
+	Vi[0] = ui[0];
+	ans[0] = Vi[0].Normal();
+	//formula from wikipedia "Gram¡VSchmidt process"
+	for (int i = 1; i < normal; i++)
+	{
+		Vector sum, temp;
+		double tempD;
+		sum.Data.resize(normal);
+		for (int j = 0; j <= i - 1; j++)
+		{
+			sum = sum + (ans[j] * (ans[j] * ui[i]));
+		}
+		Vi[i] = ui[i] - sum;
+		ans[i] = Vi[i].Normal();
+	}
+	return Matrix("ans", ans);
+}
+
+const bool isLI(const int normal, const std::vector<Vector> ui)
+{
+	Matrix A(ui), At = A.trans(), temp;
+	temp = At * A;
+	if (temp.det() != 0)
+		return true;
+	return false;
+}
 
 System::String^ Matrix::outputStr()
 {
@@ -303,7 +335,7 @@ System::String^ Matrix::outputStr()
 	return Temp;
 }
 
-bool Matrix::dimCheck(Matrix Mb, char op)
+bool Matrix::dimCheck(const Matrix Mb, char op) const
 {
 	switch (op)
 	{

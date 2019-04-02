@@ -46,38 +46,6 @@ namespace WindowsFormsApplication_cpp
 		return s;
 	}
 
-	// TODO: Combine findVar function
-	//int findVector(std::string name, const std::vector<Vector>& v)
-	//{
-	//	std::string temp;
-	//	//MarshalString(name, temp);
-
-	//	//透過for迴圈，從向量資料中找出對應變數
-	//	for (unsigned int i = 0; i < v.size(); i++)
-	//	{
-	//		//若變數名稱與指令變數名稱符合
-	//		if (name == v[i].Name)
-	//			return i;
-	//	}
-	//	return -1;
-	//}
-	//int findMatrix(std::string name, const std::vector<Matrix>& m)
-	//{
-	//	std::string temp;
-	//	//MarshalString(name, temp);
-
-	//	//透過for迴圈，從向量資料中找出對應變數
-	//	for (unsigned int i = 0; i < m.size(); i++)
-	//	{
-	//		//若變數名稱與指令變數名稱符合
-	//		if (name == m[i].Name)
-	//			return i;
-	//	}
-	//	// error handle
-	//	throw "Varible not found";
-	//	// return -1;
-	//}
-
 	Generic::List<String^>^ inToPostfix(array<String^>^ formulaList)
 	{
 		//若運算式中有空格先合併成無空格版
@@ -388,150 +356,195 @@ namespace WindowsFormsApplication_cpp
 				}
 				Output->Text += Environment::NewLine;
 #endif // DEBUG
-
-				Vector ans, Va, Vb;
+				// store temp Vector
 				std::stack<Vector> calStack;
-				bool dimFlag, foundFlag;
-				for (int i = 0; i < postfixFormula->Count; i++)
+				try
 				{
-					dimFlag = 0;
-					foundFlag = 0;
-					Va = Vector();
-					Vb = Vector();
-					if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
+					for (int i = 0; i < postfixFormula->Count; i++)
 					{
-						std::string temp;
-						double scalar;
-
-						//check scalar or not
-						System::String^ Temp = postfixFormula[i - 2];
-						MarshalString(Temp, temp);
-						if (temp[0] != '$')
-							scalar = strtod(temp.c_str(), NULL);
-
-						Temp = postfixFormula[i - 1];
-						MarshalString(Temp, temp);
-						if (temp[0] != '$')
-							scalar = strtod(temp.c_str(), NULL);
-
-						//find vector to calculate
-						MarshalString(postfixFormula[i - 2], nameTemp);
-						int index = dataManager->findVector(nameTemp);
-						if (index != -1)
-							Va = vectors[index];
-
-						MarshalString(postfixFormula[i - 1], nameTemp);
-						index = dataManager->findVector(nameTemp);
-						if (index != -1)
-							Vb = vectors[index];
-
-						//從算式stack中獲得運算子
-						if (Vb.Name == "" && !calStack.empty())
+						// if detect operator
+						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
 						{
-							Vb = calStack.top();
+							std::string opTemp = "";
+							MarshalString(postfixFormula[i], opTemp);
+
+							// pop two Vector
+							Vector Vb = calStack.top();
 							calStack.pop();
-						}
-
-						if (Va.Name == "" && !calStack.empty())
-						{
-							Va = calStack.top();
+							Vector Va = calStack.top();
 							calStack.pop();
+
+							// push calculated result
+							calStack.push(Vector(opTemp[0], Va, Vb));
 						}
-
-						//found check
-						if (!Va.Data.empty() && !Vb.Data.empty())
-							foundFlag = 1;
-						else if (Va.Data.empty() && Vb.Data.empty()) break;
-
-						//dimesion check
-						if (Va.dimCheck(Vb)) {
-							dimFlag = 1;
-
-							if (postfixFormula[i] == "+")
-							{
-								//call Addition
-#ifdef DEBUG
-								Output->Text += "Addition called" + Environment::NewLine;
-#endif // DEBUG
-								ans = Va + Vb;
-							}
-							else if (postfixFormula[i] == "-")
-							{
-								//call Subtraction
-#ifdef DEBUG
-								Output->Text += "Subtraction called" + Environment::NewLine;
-#endif // DEBUG
-								ans = Va - Vb;
-							}
-							else if (postfixFormula[i] == "*")
-							{
-								//call dot
-#ifdef DEBUG
-								Output->Text += "Dot called" + Environment::NewLine;
-#endif // DEBUG
-								ans = Va * Vb;
-							}
-							//push into calStack
-							calStack.push(ans);
-
-							postfixFormula->RemoveAt(i - 2);
-							postfixFormula->RemoveAt(i - 2);
-							i -= 2;
-
-						}
+						// not operator push vector into stack 
 						else
 						{
-							if (Va.Data.empty() || Vb.Data.empty() || \
-								(!Va.Data.empty() && !Vb.Data.empty()))
-							{
-								if (Va.Data.empty() && postfixFormula[i - 2][0] == '$' || \
-									Vb.Data.empty() && postfixFormula[i - 1][0] == '$')
-									continue;
-								dimFlag = 1;
-								foundFlag = 1;
-								//call scalar
-#ifdef DEBUG
-								Output->Text += "Scalar called" + Environment::NewLine;
-#endif // DEBUG
-								if (Va.Data.size() < Vb.Data.size())
-								{
-									if (!Va.Data.empty())
-										scalar = Va.Data[0];
-									ans = scalar * Vb;
-								}
-								else
-								{
-									if (!Vb.Data.empty())
-										scalar = Vb.Data[0];
-									ans = scalar * Va;
-								}
-								//push into calStack
-								calStack.push(ans);
-								postfixFormula->RemoveAt(i - 2);
-								postfixFormula->RemoveAt(i - 2);
-								i -= 2;
-							}
-							else break;
+							std::string formulaTemp = "";
+							MarshalString(postfixFormula[i], formulaTemp);
+							int index = dataManager->findVector(formulaTemp);
+							calStack.push(vectors[index]);
 						}
 					}
-				}
-
-				if (!foundFlag)
-					Output->Text += "-Vector not found-" + Environment::NewLine;
-				else if (!dimFlag)
-					Output->Text += "-Dimension not same-" + Environment::NewLine;
-				else
-				{
-					//格式無誤，輸出結果
-
-					String^ outputTemp;
-					//將輸出資料存入暫存
-					ans = calStack.top();
+					// pop final calculate result vector 
+					Vector result = calStack.top();
 					calStack.pop();
-					outputTemp = printVector(outputTemp, ans);
-					//輸出暫存資訊
-					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
+
+					// output
+					Output->Text += result.outputStr();
 				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+//				Vector ans, Va, Vb;
+//				std::stack<Vector> calStack;
+//				bool dimFlag, foundFlag;
+//				for (int i = 0; i < postfixFormula->Count; i++)
+//				{
+//					dimFlag = 0;
+//					foundFlag = 0;
+//					Va = Vector();
+//					Vb = Vector();
+//					if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
+//					{
+//						std::string temp;
+//						double scalar;
+//
+//						//check scalar or not
+//						System::String^ Temp = postfixFormula[i - 2];
+//						MarshalString(Temp, temp);
+//						if (temp[0] != '$')
+//							scalar = strtod(temp.c_str(), NULL);
+//
+//						Temp = postfixFormula[i - 1];
+//						MarshalString(Temp, temp);
+//						if (temp[0] != '$')
+//							scalar = strtod(temp.c_str(), NULL);
+//
+//						//find vector to calculate
+//						MarshalString(postfixFormula[i - 2], nameTemp);
+//						int index = dataManager->findVector(nameTemp);
+//						if (index != -1)
+//							Va = vectors[index];
+//
+//						MarshalString(postfixFormula[i - 1], nameTemp);
+//						index = dataManager->findVector(nameTemp);
+//						if (index != -1)
+//							Vb = vectors[index];
+//
+//						//從算式stack中獲得運算子
+//						if (Vb.Name == "" && !calStack.empty())
+//						{
+//							Vb = calStack.top();
+//							calStack.pop();
+//						}
+//
+//						if (Va.Name == "" && !calStack.empty())
+//						{
+//							Va = calStack.top();
+//							calStack.pop();
+//						}
+//
+//						//found check
+//						if (!Va.Data.empty() && !Vb.Data.empty())
+//							foundFlag = 1;
+//						else if (Va.Data.empty() && Vb.Data.empty()) break;
+//
+//						//dimesion check
+//						if (Va.dimCheck(Vb)) {
+//							dimFlag = 1;
+//
+//							if (postfixFormula[i] == "+")
+//							{
+//								//call Addition
+//#ifdef DEBUG
+//								Output->Text += "Addition called" + Environment::NewLine;
+//#endif // DEBUG
+//								ans = Va + Vb;
+//							}
+//							else if (postfixFormula[i] == "-")
+//							{
+//								//call Subtraction
+//#ifdef DEBUG
+//								Output->Text += "Subtraction called" + Environment::NewLine;
+//#endif // DEBUG
+//								ans = Va - Vb;
+//							}
+//							else if (postfixFormula[i] == "*")
+//							{
+//								//call dot
+//#ifdef DEBUG
+//								Output->Text += "Dot called" + Environment::NewLine;
+//#endif // DEBUG
+//								ans = Va * Vb;
+//							}
+//							//push into calStack
+//							calStack.push(ans);
+//
+//							postfixFormula->RemoveAt(i - 2);
+//							postfixFormula->RemoveAt(i - 2);
+//							i -= 2;
+//
+//						}
+//						else
+//						{
+//							if (Va.Data.empty() || Vb.Data.empty() || \
+//								(!Va.Data.empty() && !Vb.Data.empty()))
+//							{
+//								if (Va.Data.empty() && postfixFormula[i - 2][0] == '$' || \
+//									Vb.Data.empty() && postfixFormula[i - 1][0] == '$')
+//									continue;
+//								dimFlag = 1;
+//								foundFlag = 1;
+//								//call scalar
+//#ifdef DEBUG
+//								Output->Text += "Scalar called" + Environment::NewLine;
+//#endif // DEBUG
+//								if (Va.Data.size() < Vb.Data.size())
+//								{
+//									if (!Va.Data.empty())
+//										scalar = Va.Data[0];
+//									ans = scalar * Vb;
+//								}
+//								else
+//								{
+//									if (!Vb.Data.empty())
+//										scalar = Vb.Data[0];
+//									ans = scalar * Va;
+//								}
+//								//push into calStack
+//								calStack.push(ans);
+//								postfixFormula->RemoveAt(i - 2);
+//								postfixFormula->RemoveAt(i - 2);
+//								i -= 2;
+//							}
+//							else break;
+//						}
+//					}
+//				}
+//
+//				if (!foundFlag)
+//					Output->Text += "-Vector not found-" + Environment::NewLine;
+//				else if (!dimFlag)
+//					Output->Text += "-Dimension not same-" + Environment::NewLine;
+//				else
+//				{
+//					//格式無誤，輸出結果
+//
+//					String^ outputTemp;
+//					//將輸出資料存入暫存
+//					ans = calStack.top();
+//					calStack.pop();
+//					outputTemp = printVector(outputTemp, ans);
+//					//輸出暫存資訊
+//					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
+//				}
 			}
 
 			// calculate Matrix
@@ -631,7 +644,7 @@ namespace WindowsFormsApplication_cpp
 #endif // DEBUG
 							}
 							else if (funcFormula[0] == "normal")
-							{
+						 	{
 								result = vectors[index].Normal();
 								result.Name = "Normal(" + vectors[index].Name + ")";
 #ifdef DEBUG
@@ -654,7 +667,8 @@ namespace WindowsFormsApplication_cpp
 							if (funcFormula[0] == "isorthogonal")
 							{
 								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-								if (vectors[indexA] * vectors[indexB] == 0)
+								result = vectors[indexA] * vectors[indexB];
+								if (result.Data[0] == 0)
 								{
 									result.Name = " : Yes";
 								}
@@ -739,80 +753,68 @@ namespace WindowsFormsApplication_cpp
 								Output->Text += "Area called" + Environment::NewLine;
 #endif // DEBUG
 							}
-							else if (funcFormula[0] == "isli")
-							{
-								// TODO:
-								throw "---isLI Function not finished---";
-#ifdef DEBUG
-								Output->Text += "isLI called" + Environment::NewLine;
-#endif // DEBUG
-							}
+
 							else throw "---Function of binary not exist---";
 							break;
 						// Ob function or error
 						default:
-							// TODO: Ob output not support
+
+							/*bool*/ /*foundFlag = 0,*/ /*funcFound = 1,*/ /*dimFlag = 0;*/
+							MarshalString(/*userCommand[2]*/ funcFormula[1], nameTemp);
+							index = dataManager->findVector(nameTemp);
+							//foundFlag = 1;
+							std::vector<Vector> ui;
+							ui.push_back(vectors[index]);
+							int normal = ui[0].Data.size();
+							ui.resize(normal);
+							/*for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)*/
+							for (int i = 2; i <= normal; i++)
+							{
+								/*MarshalString(userCommand[i], nameTemp);*/
+								MarshalString(funcFormula[i], nameTemp);
+								index = dataManager->findVector(nameTemp);
+
+								//if (index == -1)
+								//{
+								//	foundFlag = 0;
+								//	break;
+								//}
+								//if (vectors[index].Data.size() != normal)
+								//{
+								//	dimFlag = 0;
+								//	break;
+								//}
+
+								//dimFlag = 1;
+								//ui[j] = vectors[index];	//get vector data into ui
+
+								if (vectors[index].dimCheck(ui[0]))
+								{
+									ui[i-1] = vectors[index];	//get vector data into ui
+								}
+							}
+							// TODO: Ob isLI output not support
 							if (funcFormula[0] == "ob")
 							{
-								bool foundFlag = 0, funcFound = 1, dimFlag = 0;
-								MarshalString(userCommand[2], nameTemp);
-								int index = dataManager->findVector(nameTemp);
-								if (index != -1)
-								{
-									foundFlag = 1;
-									std::vector<Vector> ui;
-									ui.push_back(vectors[index]);
-									int normal = ui[0].Data.size();
-									std::vector<Vector> Vi(normal);
-									std::vector<Vector> ni(normal);
-									ui.resize(normal);
-									Vi[0] = ui[0];
-									ni[0] = Vi[0].Normal();
-									for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
-									{
-										MarshalString(userCommand[i], nameTemp);
-										index = dataManager->findVector(nameTemp);
-										if (index == -1)
-										{
-											foundFlag = 0;
-											break;
-										}
-										if (vectors[index].Data.size() != normal)
-										{
-											dimFlag = 0;
-											break;
-										}
-										dimFlag = 1;
-										ui[j] = vectors[index];	//get vector data into ui
-									}
-									if (dimFlag && foundFlag)
-									{
+								//if (dimFlag && foundFlag)
+								//	{
 #ifdef DEBUG
 										Output->Text += "Ob called" + Environment::NewLine;
 #endif // DEBUG
-										//formula from wikipedia "Gram–Schmidt process"
-										for (int i = 1; foundFlag && i < normal; i++)
-										{
-											Vector sum;
-											sum.Data.resize(normal);
-											for (int j = 0; j <= i - 1; j++)
-											{
-												sum = sum + ((ui[i] * ni[j]) * ni[j]);
-											}
-											Vi[i] = ui[i] - sum;
-											ni[i] = Vi[i].Normal();
-										}
-										String^ outputTemp = "";
-										for (int i = 1; i <= normal * 2 + 1; i++)
-											outputTemp += userCommand[i];
-										outputTemp += " :" + Environment::NewLine;
-										for (int i = 0; i < normal; i++)
-										{
-											outputTemp = printVector(outputTemp, ni[i]);
-										}
-										Output->Text += outputTemp;
-									}
-								}
+										Matrix ans;
+										ans = Ob(normal, ui);
+
+										Output->Text += ans.outputStr();
+									//}
+							}
+							else if (funcFormula[0] == "isli")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								String^ outputTemp;
+								outputTemp = (isLI(normal, ui)) ? "Yes" : "No";
+								Output->Text += outputTemp + Environment::NewLine;
 							}
 							else throw  "---Parameter amount error / Function not found---";
 							break;
@@ -973,6 +975,7 @@ namespace WindowsFormsApplication_cpp
 //						}
 //					}
 //				}
+
 //				else if (userCommand[1] == "Ob(")
 //				{
 //					MarshalString(userCommand[2], nameTemp);

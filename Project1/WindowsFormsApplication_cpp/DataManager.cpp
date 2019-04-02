@@ -150,6 +150,8 @@ int DataManager::findVector(std::string name)
 		if (name == Vectors[i].Name)
 			return i;
 	}
+	// error handle
+	throw "---Varible not found---";
 	return -1;
 }
 std::vector<Matrix> DataManager::GetMatrices()
@@ -176,5 +178,3 @@ void DataManager::SetFileName(std::string fileName)
 {
 	FileName = fileName;
 }
-
-

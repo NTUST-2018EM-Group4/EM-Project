@@ -36,11 +36,13 @@ struct Matrix
 	const double rank();
 	const double det();
 	const Matrix inverse();
+	friend const Matrix Ob(const int normal, const std::vector<Vector> ui);
+	friend const bool isLI(const int normal, const std::vector<Vector> ui);
 
 	//
 	// Tool Function
 	//
 	System::String^ outputStr();
-	bool dimCheck(Matrix Mb, char op);
+	bool dimCheck(const Matrix Mb, char op) const;
 };
 
