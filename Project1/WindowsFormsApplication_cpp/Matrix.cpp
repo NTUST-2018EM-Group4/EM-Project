@@ -279,6 +279,30 @@ const Matrix Matrix::inverse()
 	throw "---Inverse process error---";
 }
 
+const Matrix Ob(const int normal, const std::vector<Vector> ui)
+{
+	std::vector<Vector> Vi(normal);
+	std::vector<Vector> ans(normal);
+
+	Vi[0] = ui[0];
+	ans[0] = Vi[0].Normal();
+	//formula from wikipedia "Gram¡VSchmidt process"
+	for (int i = 1; i < normal; i++)
+	{
+		Vector sum, temp;
+		double tempD;
+		sum.Data.resize(normal);
+		for (int j = 0; j <= i - 1; j++)
+		{
+			//temp = (ui[i] * ans[j]);
+			//temp = temp * ans[j];
+			sum = sum + ((ans[j] * ui[i]) * ans[j]);
+		}
+		Vi[i] = ui[i] - sum;
+		ans[i] = Vi[i].Normal();
+	}
+	return Matrix("ans", ans);
+}
 
 System::String^ Matrix::outputStr()
 {

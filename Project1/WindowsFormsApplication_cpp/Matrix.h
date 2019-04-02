@@ -36,6 +36,7 @@ struct Matrix
 	const double rank();
 	const double det();
 	const Matrix inverse();
+	friend const Matrix Ob(const int normal, const std::vector<Vector> ui);
 
 	//
 	// Tool Function

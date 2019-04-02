@@ -46,38 +46,6 @@ namespace WindowsFormsApplication_cpp
 		return s;
 	}
 
-	// TODO: Combine findVar function
-	//int findVector(std::string name, const std::vector<Vector>& v)
-	//{
-	//	std::string temp;
-	//	//MarshalString(name, temp);
-
-	//	//透過for迴圈，從向量資料中找出對應變數
-	//	for (unsigned int i = 0; i < v.size(); i++)
-	//	{
-	//		//若變數名稱與指令變數名稱符合
-	//		if (name == v[i].Name)
-	//			return i;
-	//	}
-	//	return -1;
-	//}
-	//int findMatrix(std::string name, const std::vector<Matrix>& m)
-	//{
-	//	std::string temp;
-	//	//MarshalString(name, temp);
-
-	//	//透過for迴圈，從向量資料中找出對應變數
-	//	for (unsigned int i = 0; i < m.size(); i++)
-	//	{
-	//		//若變數名稱與指令變數名稱符合
-	//		if (name == m[i].Name)
-	//			return i;
-	//	}
-	//	// error handle
-	//	throw "Varible not found";
-	//	// return -1;
-	//}
-
 	Generic::List<String^>^ inToPostfix(array<String^>^ formulaList)
 	{
 		//若運算式中有空格先合併成無空格版
@@ -631,7 +599,7 @@ namespace WindowsFormsApplication_cpp
 #endif // DEBUG
 							}
 							else if (funcFormula[0] == "normal")
-							{
+						 	{
 								result = vectors[index].Normal();
 								result.Name = "Normal(" + vectors[index].Name + ")";
 #ifdef DEBUG
@@ -763,11 +731,7 @@ namespace WindowsFormsApplication_cpp
 									std::vector<Vector> ui;
 									ui.push_back(vectors[index]);
 									int normal = ui[0].Data.size();
-									std::vector<Vector> Vi(normal);
-									std::vector<Vector> ni(normal);
 									ui.resize(normal);
-									Vi[0] = ui[0];
-									ni[0] = Vi[0].Normal();
 									for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
 									{
 										MarshalString(userCommand[i], nameTemp);
@@ -790,27 +754,10 @@ namespace WindowsFormsApplication_cpp
 #ifdef DEBUG
 										Output->Text += "Ob called" + Environment::NewLine;
 #endif // DEBUG
-										//formula from wikipedia "Gram–Schmidt process"
-										for (int i = 1; foundFlag && i < normal; i++)
-										{
-											Vector sum;
-											sum.Data.resize(normal);
-											for (int j = 0; j <= i - 1; j++)
-											{
-												sum = sum + ((ui[i] * ni[j]) * ni[j]);
-											}
-											Vi[i] = ui[i] - sum;
-											ni[i] = Vi[i].Normal();
-										}
-										String^ outputTemp = "";
-										for (int i = 1; i <= normal * 2 + 1; i++)
-											outputTemp += userCommand[i];
-										outputTemp += " :" + Environment::NewLine;
-										for (int i = 0; i < normal; i++)
-										{
-											outputTemp = printVector(outputTemp, ni[i]);
-										}
-										Output->Text += outputTemp;
+										Matrix ans;
+										ans = Ob(normal, ui);
+
+										Output->Text += ans.outputStr();
 									}
 								}
 							}
@@ -973,6 +920,7 @@ namespace WindowsFormsApplication_cpp
 //						}
 //					}
 //				}
+
 //				else if (userCommand[1] == "Ob(")
 //				{
 //					MarshalString(userCommand[2], nameTemp);

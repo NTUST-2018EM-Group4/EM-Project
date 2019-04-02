@@ -31,5 +31,6 @@ struct Vector
 	const Vector Cross(const Vector& Vb) const;
 	const double Area(const Vector& Vb);
 
+
 	System::String^ outputStr();
 };
