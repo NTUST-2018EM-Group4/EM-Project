@@ -109,8 +109,6 @@ System::String ^ Vector::outputStr()
 	return Temp;
 }
 
-
-
 const Vector  Vector::operator+(const Vector& Vb) const
 {
 	std::vector<double> ans;
@@ -185,5 +183,3 @@ const Vector operator*(const Vector & Va, const Vector & Vb)
 	}
 	return Vector("ans", ans);
 }
-
-

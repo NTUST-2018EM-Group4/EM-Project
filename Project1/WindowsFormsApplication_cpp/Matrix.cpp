@@ -294,14 +294,21 @@ const Matrix Ob(const int normal, const std::vector<Vector> ui)
 		sum.Data.resize(normal);
 		for (int j = 0; j <= i - 1; j++)
 		{
-			//temp = (ui[i] * ans[j]);
-			//temp = temp * ans[j];
 			sum = sum + ((ans[j] * ui[i]) * ans[j]);
 		}
 		Vi[i] = ui[i] - sum;
 		ans[i] = Vi[i].Normal();
 	}
 	return Matrix("ans", ans);
+}
+
+const bool isLI(const int normal, const std::vector<Vector> ui)
+{
+	Matrix A(ui), At = A.trans(), temp;
+	temp = At * A;
+	if (temp.det() != 0)
+		return true;
+	return false;
 }
 
 System::String^ Matrix::outputStr()

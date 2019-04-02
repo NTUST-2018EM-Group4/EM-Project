@@ -37,6 +37,7 @@ struct Matrix
 	const double det();
 	const Matrix inverse();
 	friend const Matrix Ob(const int normal, const std::vector<Vector> ui);
+	friend const bool isLI(const int normal, const std::vector<Vector> ui);
 
 	//
 	// Tool Function

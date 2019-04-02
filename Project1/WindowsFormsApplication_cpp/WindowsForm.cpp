@@ -707,49 +707,41 @@ namespace WindowsFormsApplication_cpp
 								Output->Text += "Area called" + Environment::NewLine;
 #endif // DEBUG
 							}
-							else if (funcFormula[0] == "isli")
-							{
-								// TODO:
-								throw "---isLI Function not finished---";
-#ifdef DEBUG
-								Output->Text += "isLI called" + Environment::NewLine;
-#endif // DEBUG
-							}
+
 							else throw "---Function of binary not exist---";
 							break;
 						// Ob function or error
 						default:
-							// TODO: Ob output not support
+
+							bool foundFlag = 0, funcFound = 1, dimFlag = 0;
+							MarshalString(userCommand[2], nameTemp);
+							index = dataManager->findVector(nameTemp);
+							foundFlag = 1;
+							std::vector<Vector> ui;
+							ui.push_back(vectors[index]);
+							int normal = ui[0].Data.size();
+							ui.resize(normal);
+							for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
+							{
+								MarshalString(userCommand[i], nameTemp);
+								index = dataManager->findVector(nameTemp);
+								if (index == -1)
+								{
+									foundFlag = 0;
+									break;
+								}
+								if (vectors[index].Data.size() != normal)
+								{
+									dimFlag = 0;
+									break;
+								}
+								dimFlag = 1;
+								ui[j] = vectors[index];	//get vector data into ui
+							}
+							// TODO: Ob isLI output not support
 							if (funcFormula[0] == "ob")
 							{
-								bool foundFlag = 0, funcFound = 1, dimFlag = 0;
-								MarshalString(userCommand[2], nameTemp);
-								int index = dataManager->findVector(nameTemp);
-								if (index != -1)
-								{
-									foundFlag = 1;
-									std::vector<Vector> ui;
-									ui.push_back(vectors[index]);
-									int normal = ui[0].Data.size();
-									ui.resize(normal);
-									for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
-									{
-										MarshalString(userCommand[i], nameTemp);
-										index = dataManager->findVector(nameTemp);
-										if (index == -1)
-										{
-											foundFlag = 0;
-											break;
-										}
-										if (vectors[index].Data.size() != normal)
-										{
-											dimFlag = 0;
-											break;
-										}
-										dimFlag = 1;
-										ui[j] = vectors[index];	//get vector data into ui
-									}
-									if (dimFlag && foundFlag)
+								if (dimFlag && foundFlag)
 									{
 #ifdef DEBUG
 										Output->Text += "Ob called" + Environment::NewLine;
@@ -759,7 +751,15 @@ namespace WindowsFormsApplication_cpp
 
 										Output->Text += ans.outputStr();
 									}
-								}
+							}
+							else if (funcFormula[0] == "isli")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								String^ outputTemp;
+								outputTemp = (isLI(normal, ui)) ? "Yes" : "No";
+								Output->Text += outputTemp + Environment::NewLine;
 							}
 							else throw  "---Parameter amount error / Function not found---";
 							break;
