@@ -246,6 +246,14 @@ namespace WindowsFormsApplication_cpp
 		//開啟Dialog
 		openFileDialog2->ShowDialog();
 	}
+	System::Void WindowsForm::clearInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		Input->Text = "";
+	}
+	System::Void WindowsForm::clearOutputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		Output->Text = "";
+	}
 	System::Void WindowsForm::openFileDialog2_FileOk(System::Object ^ sender, System::ComponentModel::CancelEventArgs ^ e)
 	{
 		//在Dialog按下OK便會進入此函式
