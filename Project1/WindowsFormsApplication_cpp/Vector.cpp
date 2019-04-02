@@ -12,7 +12,26 @@ Vector::Vector(double scalar)
 	Data.push_back(scalar);
 }
 
-Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {};
+Vector::Vector(std::string name, std::vector<double> data) :Name(name), Data(data) {}
+
+Vector::Vector(char op, Vector Va, Vector Vb)
+{
+	Name = "CalResult";
+	switch (op)
+	{
+	case '+':
+		*this = Va + Vb;
+		break;
+	case '-':
+		*this = Va - Vb;
+		break;
+	case '*':
+		*this = Va * Vb;
+		break;
+	default:
+		break;
+	}
+}
 
 bool Vector::dimCheck(const Vector& Vb)
 {
@@ -21,6 +40,34 @@ bool Vector::dimCheck(const Vector& Vb)
 		return true;
 	}
 	return false;
+}
+
+bool Vector::dimCheck(const Vector & Vb, char op) const
+{
+	switch (op)
+	{
+	case '+': case '-':
+		if (this->Data.size() != Vb.Data.size())
+		{
+			throw "---Dimension not same---";
+			return false;
+		}
+		return true;
+		break;
+	case '*':
+		if (this->Data.size() != Vb.Data.size() && \
+			Vb.Data.size() != 1 && this->Data.size() != 1)
+		{
+			throw "---Dimension not same---";
+			return false;
+		}
+		return true;
+		break;
+	default:
+		throw "---Operator Check ERROR---";
+		return false;
+		break;
+	}
 }
 
 const double Vector::Norm() const
@@ -48,7 +95,8 @@ const Vector Vector::Normal() const
 const double Vector::Angle(const Vector& Vb)
 {
 	double cosTheta, theta = 0;
-	cosTheta = (*this * Vb) / (this->Norm() * Vb.Norm());
+	Vector temp = Vector('*', *this, Vb);
+	cosTheta = temp.Data[0] / (this->Norm() * Vb.Norm());
 	theta = acos(cosTheta);
 	theta *= (180 / PI);
 	return theta;
@@ -57,7 +105,8 @@ const double Vector::Angle(const Vector& Vb)
 const double Vector::Com(const Vector& Vb)
 {
 	double ans;
-	ans = (*this * Vb) / Vb.Norm();
+	Vector temp = Vector('*',*this, Vb);
+	ans = temp.Data[0] / Vb.Norm();
 	return ans;
 }
 
@@ -65,7 +114,7 @@ const Vector Vector::Proj(const Vector & Vb)
 {
 	Vector ans, unit;
 	unit = Vb * (1 / Vb.Norm());
-	ans = this->Com(Vb) * unit;
+	ans = unit * this->Com(Vb);
 	return ans;
 }
 
@@ -109,43 +158,86 @@ System::String ^ Vector::outputStr()
 	return Temp;
 }
 
-const Vector  Vector::operator+(const Vector& Vb) const
+const Vector Vector::operator+(const Vector& Vb) const
 {
-	std::vector<double> ans;
-	ans.resize(Vb.Data.size());
-	for (int i = 0; i < Vb.Data.size(); i++)
+	if (dimCheck(Vb, '+'))
 	{
-		ans[i] = this->Data[i] + Vb.Data[i];
+		Vector result;
+		for (int i = 0; i < this->Data.size(); i++)
+		{
+			result.Data.push_back(this->Data[i] + Vb.Data[i]);
+		}
+		return result;
 	}
-	return Vector("ans", ans);
+	else
+	{
+		throw "---Operator + process ERROR!---";
+	}
 }
 
 const Vector Vector::operator-(const Vector & Vb) const
 {
-	std::vector<double> ans;
-	ans.resize(Vb.Data.size());
-	for (int i = 0; i < Vb.Data.size(); i++)
+	if (dimCheck(Vb, '-'))
 	{
-		ans[i] = this->Data[i] - Vb.Data[i];
-		if (abs(ans[i]) < 1E-10)
+		Vector result;
+		for (int i = 0; i < this->Data.size(); i++)
 		{
-			ans[i] = 0;
+			result.Data.push_back(this->Data[i] - Vb.Data[i]);
 		}
+		return result;
 	}
-	return Vector("ans", ans);
+	else
+	{
+		throw "---Operator - process ERROR!---";
+	}
+}
+
+const Vector Vector::operator*(const Vector & Vb) const
+{
+	if (dimCheck(Vb, '*'))
+	{
+		Vector result;
+
+		// Scalar Calculate
+		if (this->Data.size() == 1 || Vb.Data.size() == 1)
+		{
+			for (int i = 0; i < this->Data.size(); i++)
+			{
+				for (int j = 0; j < Vb.Data.size(); j++)
+				{
+					result.Data.push_back(this->Data[i] * Vb.Data[j]);
+				}
+			}
+		}
+		// Dot Calculate
+		else
+		{
+			double dotValue = 0;
+			for (int i = 0; i < Vb.Data.size(); i++)
+			{
+				dotValue += this->Data[i] * Vb.Data[i];
+			}
+			result.Data.push_back(dotValue);
+		}
+		return result;
+	}
+	else
+	{
+		throw "---Operator * process ERROR!---";
+	}
 }
 
 //dot
-const double Vector::operator*(const Vector & Vb)
-{
-
-	double ans = 0;
-	for (int i = 0; i < Vb.Data.size(); i++)
-	{
-		ans += this->Data[i] * Vb.Data[i];
-	}
-	return ans;
-}
+//const double Vector::operator*(const Vector & Vb)
+//{
+//
+//	double ans = 0;
+//	for (int i = 0; i < Vb.Data.size(); i++)
+//	{
+//		ans += this->Data[i] * Vb.Data[i];
+//	}
+//	return ans;
+//}
 
 const Vector Vector::operator*(const double & num)
 {
@@ -170,16 +262,16 @@ const Vector Vector::operator/(const double & num)
 }
 
 //scalar
-const Vector operator*(const Vector & Va, const Vector & Vb)
-{
-	std::vector<double> ans;
-
-	for (int i = 0; i < Va.Data.size(); i++)
-	{
-		for (int j = 0; j < Vb.Data.size(); j++)
-		{
-			ans.push_back(Va.Data[i] * Vb.Data[j]);
-		}
-	}
-	return Vector("ans", ans);
-}
+//const Vector operator*(const Vector & Va, const Vector & Vb)
+//{
+//	std::vector<double> ans;
+//
+//	for (int i = 0; i < Va.Data.size(); i++)
+//	{
+//		for (int j = 0; j < Vb.Data.size(); j++)
+//		{
+//			ans.push_back(Va.Data[i] * Vb.Data[j]);
+//		}
+//	}
+//	return Vector("ans", ans);
+//}

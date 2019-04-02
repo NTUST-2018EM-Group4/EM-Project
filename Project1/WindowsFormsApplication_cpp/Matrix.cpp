@@ -11,39 +11,38 @@ Matrix::Matrix(std::string name, std::vector<Vector> data) : Name(name), Data(da
 
 Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 {
-	Matrix temp;
-
+	Name = "CalResult";
 	switch (op)
 	{
 	case '+':
-		temp = Ma + Mb;
+		*this = Ma + Mb;
 		break;
 	case '-':
-		temp = Ma - Mb;
+		*this = Ma - Mb;
 		break;
 	case '*':
-		temp = Ma * Mb;
+		*this = Ma * Mb;
 		break;
 	case '\\':
-		temp = Ma / Mb;
+		*this = Ma / Mb;
 		break;
 	default:
 		break;
 	}
-	Name = "CalResult";
-	this->Data = temp.Data;
 }
 
 const Matrix Matrix::operator+(const Matrix & Mb)
 {
 	if (dimCheck(Mb, '+'))
 	{
-		std::vector<Vector> ans;
+		Matrix result;
+		result.Data.resize(this->Data.size());
+
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			ans.push_back(this->Data[i] + Mb.Data[i]);
+			result.Data.push_back(this->Data[i] + Mb.Data[i]);
 		}
-		return Matrix("ans", ans);
+		return result;
 	}
 	else
 	{
@@ -55,12 +54,14 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 {
 	if (dimCheck(Mb, '-'))
 	{
-		std::vector<Vector> ans;
+		Matrix result;
+		result.Data.resize(this->Data.size());
+
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			ans.push_back(this->Data[i] - Mb.Data[i]);
+			result.Data.push_back(this->Data[i] + Mb.Data[i]);
 		}
-		return Matrix("ans", ans);
+		return result;
 	}
 	else throw "---Operator - process ERROR!---";
 }
@@ -294,7 +295,7 @@ const Matrix Ob(const int normal, const std::vector<Vector> ui)
 		sum.Data.resize(normal);
 		for (int j = 0; j <= i - 1; j++)
 		{
-			sum = sum + ((ans[j] * ui[i]) * ans[j]);
+			sum = sum + (ans[j] * (ans[j] * ui[i]));
 		}
 		Vi[i] = ui[i] - sum;
 		ans[i] = Vi[i].Normal();
@@ -334,7 +335,7 @@ System::String^ Matrix::outputStr()
 	return Temp;
 }
 
-bool Matrix::dimCheck(Matrix Mb, char op)
+bool Matrix::dimCheck(const Matrix Mb, char op) const
 {
 	switch (op)
 	{

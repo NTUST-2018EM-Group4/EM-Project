@@ -43,6 +43,6 @@ struct Matrix
 	// Tool Function
 	//
 	System::String^ outputStr();
-	bool dimCheck(Matrix Mb, char op);
+	bool dimCheck(const Matrix Mb, char op) const;
 };
 
