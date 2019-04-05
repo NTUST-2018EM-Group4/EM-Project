@@ -1176,4 +1176,18 @@ namespace WindowsFormsApplication_cpp
 			userInput = userCommand[userCommand->Length - 1];
 		}
 	}
+	System::Void WindowsForm::VectorList_DoubleClick(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		if (VectorList->SelectedItem != NULL)
+		{
+			Input->Text = Input->Text->Insert(Input->SelectionStart, "$v" + VectorList->SelectedIndex.ToString());
+		}
+	}
+	System::Void WindowsForm::MatrixList_DoubleClick(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		if (MatrixList->SelectedItem != NULL)
+		{
+			Input->Text = Input->Text->Insert(Input->SelectionStart, "$m" + MatrixList->SelectedIndex.ToString());
+		}
+	}
 }

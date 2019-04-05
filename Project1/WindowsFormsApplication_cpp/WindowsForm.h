@@ -158,7 +158,7 @@ namespace WindowsFormsApplication_cpp {
 			this->menuStrip2->Location = System::Drawing::Point(0, 0);
 			this->menuStrip2->Name = L"menuStrip2";
 			this->menuStrip2->Padding = System::Windows::Forms::Padding(8, 2, 0, 2);
-			this->menuStrip2->Size = System::Drawing::Size(879, 28);
+			this->menuStrip2->Size = System::Drawing::Size(879, 27);
 			this->menuStrip2->TabIndex = 1;
 			this->menuStrip2->Text = L"menuStrip2";
 			// 
@@ -172,7 +172,7 @@ namespace WindowsFormsApplication_cpp {
 					this->linearIndependentToolStripMenuItem, this->gramschmidtToolStripMenuItem
 			});
 			this->loadVectorToolStripMenuItem->Name = L"loadVectorToolStripMenuItem";
-			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(66, 24);
+			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(66, 23);
 			this->loadVectorToolStripMenuItem->Text = L"Vector";
 			// 
 			// loadVectorToolStripMenuItem1
@@ -275,7 +275,7 @@ namespace WindowsFormsApplication_cpp {
 					this->eigenValueVectorToolStripMenuItem, this->powerMethodToolStripMenuItem, this->leastSquareToolStripMenuItem
 			});
 			this->loadMatrixToolStripMenuItem->Name = L"loadMatrixToolStripMenuItem";
-			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(65, 24);
+			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(65, 23);
 			this->loadMatrixToolStripMenuItem->Text = L"Matrix";
 			// 
 			// loadMatrixToolStripMenuItem1
@@ -354,21 +354,21 @@ namespace WindowsFormsApplication_cpp {
 			// clearInputToolStripMenuItem
 			// 
 			this->clearInputToolStripMenuItem->Name = L"clearInputToolStripMenuItem";
-			this->clearInputToolStripMenuItem->Size = System::Drawing::Size(97, 24);
+			this->clearInputToolStripMenuItem->Size = System::Drawing::Size(97, 23);
 			this->clearInputToolStripMenuItem->Text = L"Clear Input";
 			this->clearInputToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::clearInputToolStripMenuItem_Click);
 			// 
 			// clearOutputToolStripMenuItem
 			// 
 			this->clearOutputToolStripMenuItem->Name = L"clearOutputToolStripMenuItem";
-			this->clearOutputToolStripMenuItem->Size = System::Drawing::Size(110, 24);
+			this->clearOutputToolStripMenuItem->Size = System::Drawing::Size(110, 23);
 			this->clearOutputToolStripMenuItem->Text = L"Clear Output";
 			this->clearOutputToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::clearOutputToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
 			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
-			this->helpToolStripMenuItem->Size = System::Drawing::Size(53, 24);
+			this->helpToolStripMenuItem->Size = System::Drawing::Size(53, 23);
 			this->helpToolStripMenuItem->Text = L"Help";
 			// 
 			// openFileDialog1
@@ -387,7 +387,7 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox2->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->groupBox2->Location = System::Drawing::Point(3, 80);
+			this->groupBox2->Location = System::Drawing::Point(3, 81);
 			this->groupBox2->Name = L"groupBox2";
 			this->groupBox2->Size = System::Drawing::Size(873, 150);
 			this->groupBox2->TabIndex = 5;
@@ -415,7 +415,7 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold));
 			this->groupBox1->Location = System::Drawing::Point(3, 3);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(873, 71);
+			this->groupBox1->Size = System::Drawing::Size(873, 72);
 			this->groupBox1->TabIndex = 4;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Input";
@@ -429,7 +429,7 @@ namespace WindowsFormsApplication_cpp {
 			this->Input->Margin = System::Windows::Forms::Padding(4);
 			this->Input->Multiline = true;
 			this->Input->Name = L"Input";
-			this->Input->Size = System::Drawing::Size(867, 45);
+			this->Input->Size = System::Drawing::Size(867, 46);
 			this->Input->TabIndex = 1;
 			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
 			// 
@@ -446,6 +446,7 @@ namespace WindowsFormsApplication_cpp {
 			this->VectorList->Name = L"VectorList";
 			this->VectorList->Size = System::Drawing::Size(867, 124);
 			this->VectorList->TabIndex = 3;
+			this->VectorList->DoubleClick += gcnew System::EventHandler(this, &WindowsForm::VectorList_DoubleClick);
 			// 
 			// MatrixList
 			// 
@@ -460,6 +461,7 @@ namespace WindowsFormsApplication_cpp {
 			this->MatrixList->Name = L"MatrixList";
 			this->MatrixList->Size = System::Drawing::Size(867, 125);
 			this->MatrixList->TabIndex = 0;
+			this->MatrixList->DoubleClick += gcnew System::EventHandler(this, &WindowsForm::MatrixList_DoubleClick);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -471,7 +473,7 @@ namespace WindowsFormsApplication_cpp {
 			this->tableLayoutPanel1->Controls->Add(this->groupBox3, 0, 2);
 			this->tableLayoutPanel1->Controls->Add(this->groupBox4, 0, 3);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 28);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 27);
 			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(4);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 4;
@@ -479,7 +481,7 @@ namespace WindowsFormsApplication_cpp {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 28.57143F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 28.57143F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 28.57143F)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(879, 546);
+			this->tableLayoutPanel1->Size = System::Drawing::Size(879, 547);
 			this->tableLayoutPanel1->TabIndex = 2;
 			// 
 			// groupBox3
@@ -488,7 +490,7 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->groupBox3->Location = System::Drawing::Point(3, 236);
+			this->groupBox3->Location = System::Drawing::Point(3, 237);
 			this->groupBox3->Name = L"groupBox3";
 			this->groupBox3->Size = System::Drawing::Size(873, 150);
 			this->groupBox3->TabIndex = 6;
@@ -501,7 +503,7 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox4->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->groupBox4->Location = System::Drawing::Point(3, 392);
+			this->groupBox4->Location = System::Drawing::Point(3, 393);
 			this->groupBox4->Name = L"groupBox4";
 			this->groupBox4->Size = System::Drawing::Size(873, 151);
 			this->groupBox4->TabIndex = 7;
@@ -548,7 +550,8 @@ namespace WindowsFormsApplication_cpp {
 
 		System::Void Input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 
-
+		System::Void VectorList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
+		System::Void MatrixList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
 };
 
 	//
