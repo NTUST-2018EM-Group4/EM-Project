@@ -95,9 +95,9 @@ const Matrix Matrix::operator*(const double & num)
 	// error handling
 	if (temp.Data.empty()) throw "---Empty Matrix---";
 
-	for (int i = 0; i < temp.size(); i++)
+	for (int i = 0; i < temp.Data.size(); i++)
 	{
-		temp[i] = temp[i] * num;
+		temp.Data[i] = temp.Data[i] * num;
 	}
 	return temp;
 	throw "---Operator * process ERROR!---";
@@ -301,10 +301,27 @@ const Matrix Matrix::adjoint()
 	if (temp.Data.empty()) throw "---Empty Matrix---";
 	
 	temp = temp.inverse();
-	temp = temp * temp.det();
+	temp = temp * this->det();
 
 	return temp;
 	throw "---Adjoint process error---";
+}
+
+const Matrix Matrix::leastSquare(const Matrix & Mb)
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (Mb.Data.empty()) throw "---Empty Matrix---";
+
+	temp = this->trans();
+	temp = temp * *this;
+	temp = temp.inverse();
+	temp = temp * this->trans();
+	temp = temp * Mb;
+
+	return temp;
+	throw "---LeastSquare process error---";
 }
 
 const Matrix Ob(const int normal, const std::vector<Vector> ui)

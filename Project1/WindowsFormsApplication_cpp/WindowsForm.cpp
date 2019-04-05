@@ -1080,7 +1080,7 @@ namespace WindowsFormsApplication_cpp
 						case 2:
 							MarshalString(funcFormula[1], VarNameTemp);
 							// find matrix
-							int index = dataManager->findMatrix(VarNameTemp);
+							index = dataManager->findMatrix(VarNameTemp);
 
 							if (funcFormula[0] == "trans")
 							{
@@ -1108,7 +1108,7 @@ namespace WindowsFormsApplication_cpp
 							{
 								result = matrices[index].inverse();
 							}
-							else if (funcFormula[0] == "adjoint")
+							else if (funcFormula[0] == "adj")
 							{
 								result = matrices[index].adjoint();
 							}
@@ -1130,7 +1130,7 @@ namespace WindowsFormsApplication_cpp
 
 							if (funcFormula[0] == "leastsquare")
 							{
-								throw "---LeastSquare not finished---";
+								result = matrices[indexA].leastSquare(matrices[indexB]);
 							}
 							break;
 						default:

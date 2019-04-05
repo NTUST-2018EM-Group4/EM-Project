@@ -38,7 +38,7 @@ struct Matrix
 	const double det();
 	const Matrix inverse();
 	const Matrix adjoint();
-	const Matrix leastSquare();
+	const Matrix leastSquare(const Matrix& Mb);
 
 	//
 	// Calculate Vector Function
