@@ -1066,37 +1066,79 @@ namespace WindowsFormsApplication_cpp
 				{
 					Matrix result;
 					std::string VarNameTemp = "";
-					MarshalString(funcFormula[1], VarNameTemp);
-					// find matrix
-					int index = dataManager->findMatrix(VarNameTemp);
+					// TODO: if Count == 0
+					if (funcFormula->Count == 1) throw "---No parameter---";
+					else
+					{
+						// TODO: Change rename method
+						switch (funcFormula->Count)
+						{
+							// record parameter index of array
+							int index, indexA, indexB;
 
-					if (funcFormula[0] == "trans")
-					{
-						result = matrices[index].trans();
+							// unary parameter function case
+						case 2:
+							MarshalString(funcFormula[1], VarNameTemp);
+							// find matrix
+							int index = dataManager->findMatrix(VarNameTemp);
+
+							if (funcFormula[0] == "trans")
+							{
+								result = matrices[index].trans();
+							}
+							else if (funcFormula[0] == "gauss")
+							{
+								result = matrices[index].gaussian();
+							}
+							else if (funcFormula[0] == "rank")
+							{
+								double rankValue = matrices[index].rank();
+								result.Data.resize(1);
+								result.Data[0].Data.push_back(rankValue);
+								result.Name = "Rank Value";
+							}
+							else if (funcFormula[0] == "det")
+							{
+								double detValue = matrices[index].det();
+								result.Data.resize(1);
+								result.Data[0].Data.push_back(detValue);
+								result.Name = "Determinant Value";
+							}
+							else if (funcFormula[0] == "inverse")
+							{
+								result = matrices[index].inverse();
+							}
+							else if (funcFormula[0] == "adjoint")
+							{
+								result = matrices[index].adjoint();
+							}
+							else if (funcFormula[0] == "eigen")
+							{
+								throw "---Eigen not finished---";
+							}
+							else if (funcFormula[0] == "pm")
+							{
+								throw "---PM not finished---";
+							}
+							else throw "---Function of binary not exist---";
+							break;
+						case 3:
+							MarshalString(funcFormula[1], VarNameTemp);
+							indexA = dataManager->findMatrix(VarNameTemp);
+							MarshalString(funcFormula[2], VarNameTemp);
+							indexB = dataManager->findMatrix(VarNameTemp);
+
+							if (funcFormula[0] == "leastsquare")
+							{
+								throw "---LeastSquare not finished---";
+							}
+							break;
+						default:
+							throw  "---Parameter amount error / Function not found---";
+							break;
+						}
 					}
-					else if (funcFormula[0] == "gauss")
-					{
-						result = matrices[index].gaussian();
-					}
-					else if (funcFormula[0] == "rank")
-					{
-						double rankValue = matrices[index].rank();
-						result.Data.resize(1);
-						result.Data[0].Data.push_back(rankValue);
-						result.Name = "Rank Value";
-					}
-					else if (funcFormula[0] == "det")
-					{
-						double detValue = matrices[index].det();
-						result.Data.resize(1);
-						result.Data[0].Data.push_back(detValue);
-						result.Name = "Determinant Value";
-					}
-					else if (funcFormula[0] == "inverse")
-					{
-						result = matrices[index].inverse();
-					}
-					else throw "---Function not exist---";
+					
 					// output result
 					Output->Text += result.outputStr();
 				}
@@ -1123,6 +1165,5 @@ namespace WindowsFormsApplication_cpp
 			//並將最後一行，作為目前使用者輸入指令
 			userInput = userCommand[userCommand->Length - 1];
 		}
-
 	}
 }
