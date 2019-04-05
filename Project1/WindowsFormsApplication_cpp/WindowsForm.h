@@ -37,6 +37,10 @@ namespace WindowsFormsApplication_cpp {
 			}
 		}
 
+		/// <summary>
+			DataManager* dataManager;
+			String^ userInput;
+			int lastInputLength;
 	private: System::Windows::Forms::MenuStrip^  menuStrip2;
 			 System::Windows::Forms::ToolStripMenuItem^  loadVectorToolStripMenuItem;
 			 System::Windows::Forms::ToolStripMenuItem^  loadMatrixToolStripMenuItem;
@@ -51,14 +55,37 @@ namespace WindowsFormsApplication_cpp {
 			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 			 System::Windows::Forms::GroupBox^  groupBox3;
 			 System::Windows::Forms::GroupBox^  groupBox4;
+			 System::Windows::Forms::ToolStripMenuItem^  clearInputToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  clearOutputToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  loadVectorToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  calculateToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  loadMatrixToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  calculateToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  rankToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  transposeToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  solveLinearSystemToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  determinantToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  inverseToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  adjointToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  eigenValueVectorToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  powerMethodToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  leastSquareToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  normToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  normalToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  crossToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  componentToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  projectionToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  triangleAreaToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  parallelToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  orthogonalToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  angleToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  planeToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  linearIndependentToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  gramschmidtToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  printVectorToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  printMatrixToolStripMenuItem;
 
-		/// <summary>
-			DataManager* dataManager;
-			String^ userInput;
-			int lastInputLength;
-	private: System::Windows::Forms::ToolStripMenuItem^  clearInputToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  clearOutputToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem;
 			 /// </summary>
 			System::ComponentModel::Container ^components;
 
@@ -71,7 +98,34 @@ namespace WindowsFormsApplication_cpp {
 		{
 			this->menuStrip2 = (gcnew System::Windows::Forms::MenuStrip());
 			this->loadVectorToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadVectorToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->printVectorToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->calculateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->normToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->normalToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->crossToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->componentToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->projectionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->triangleAreaToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->parallelToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->orthogonalToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->angleToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->planeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->linearIndependentToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->gramschmidtToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->loadMatrixToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadMatrixToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->printMatrixToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->calculateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->rankToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->transposeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->solveLinearSystemToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->determinantToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->inverseToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->adjointToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->eigenValueVectorToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->powerMethodToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->leastSquareToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->clearInputToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->clearOutputToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -110,17 +164,192 @@ namespace WindowsFormsApplication_cpp {
 			// 
 			// loadVectorToolStripMenuItem
 			// 
+			this->loadVectorToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(15) {
+				this->loadVectorToolStripMenuItem1,
+					this->printVectorToolStripMenuItem, this->calculateToolStripMenuItem, this->normToolStripMenuItem, this->normalToolStripMenuItem,
+					this->crossToolStripMenuItem, this->componentToolStripMenuItem, this->projectionToolStripMenuItem, this->triangleAreaToolStripMenuItem,
+					this->parallelToolStripMenuItem, this->orthogonalToolStripMenuItem, this->angleToolStripMenuItem, this->planeToolStripMenuItem,
+					this->linearIndependentToolStripMenuItem, this->gramschmidtToolStripMenuItem
+			});
 			this->loadVectorToolStripMenuItem->Name = L"loadVectorToolStripMenuItem";
-			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(105, 24);
-			this->loadVectorToolStripMenuItem->Text = L"Load Vector";
-			this->loadVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadVectorToolStripMenuItem_Click);
+			this->loadVectorToolStripMenuItem->Size = System::Drawing::Size(66, 24);
+			this->loadVectorToolStripMenuItem->Text = L"Vector";
+			// 
+			// loadVectorToolStripMenuItem1
+			// 
+			this->loadVectorToolStripMenuItem1->Name = L"loadVectorToolStripMenuItem1";
+			this->loadVectorToolStripMenuItem1->Size = System::Drawing::Size(220, 26);
+			this->loadVectorToolStripMenuItem1->Text = L"Load Vector";
+			this->loadVectorToolStripMenuItem1->Click += gcnew System::EventHandler(this, &WindowsForm::loadVectorToolStripMenuItem1_Click);
+			// 
+			// printVectorToolStripMenuItem
+			// 
+			this->printVectorToolStripMenuItem->Name = L"printVectorToolStripMenuItem";
+			this->printVectorToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->printVectorToolStripMenuItem->Text = L"Print Vector";
+			// 
+			// calculateToolStripMenuItem
+			// 
+			this->calculateToolStripMenuItem->Name = L"calculateToolStripMenuItem";
+			this->calculateToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->calculateToolStripMenuItem->Text = L"Calculate";
+			// 
+			// normToolStripMenuItem
+			// 
+			this->normToolStripMenuItem->Name = L"normToolStripMenuItem";
+			this->normToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->normToolStripMenuItem->Text = L"Norm";
+			// 
+			// normalToolStripMenuItem
+			// 
+			this->normalToolStripMenuItem->Name = L"normalToolStripMenuItem";
+			this->normalToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->normalToolStripMenuItem->Text = L"Normalization";
+			// 
+			// crossToolStripMenuItem
+			// 
+			this->crossToolStripMenuItem->Name = L"crossToolStripMenuItem";
+			this->crossToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->crossToolStripMenuItem->Text = L"Cross";
+			// 
+			// componentToolStripMenuItem
+			// 
+			this->componentToolStripMenuItem->Name = L"componentToolStripMenuItem";
+			this->componentToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->componentToolStripMenuItem->Text = L"Component";
+			// 
+			// projectionToolStripMenuItem
+			// 
+			this->projectionToolStripMenuItem->Name = L"projectionToolStripMenuItem";
+			this->projectionToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->projectionToolStripMenuItem->Text = L"Projection";
+			// 
+			// triangleAreaToolStripMenuItem
+			// 
+			this->triangleAreaToolStripMenuItem->Name = L"triangleAreaToolStripMenuItem";
+			this->triangleAreaToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->triangleAreaToolStripMenuItem->Text = L"Triangle area";
+			// 
+			// parallelToolStripMenuItem
+			// 
+			this->parallelToolStripMenuItem->Name = L"parallelToolStripMenuItem";
+			this->parallelToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->parallelToolStripMenuItem->Text = L"Parallel";
+			// 
+			// orthogonalToolStripMenuItem
+			// 
+			this->orthogonalToolStripMenuItem->Name = L"orthogonalToolStripMenuItem";
+			this->orthogonalToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->orthogonalToolStripMenuItem->Text = L"Orthogonal";
+			// 
+			// angleToolStripMenuItem
+			// 
+			this->angleToolStripMenuItem->Name = L"angleToolStripMenuItem";
+			this->angleToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->angleToolStripMenuItem->Text = L"Angle";
+			// 
+			// planeToolStripMenuItem
+			// 
+			this->planeToolStripMenuItem->Name = L"planeToolStripMenuItem";
+			this->planeToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->planeToolStripMenuItem->Text = L"Plane";
+			// 
+			// linearIndependentToolStripMenuItem
+			// 
+			this->linearIndependentToolStripMenuItem->Name = L"linearIndependentToolStripMenuItem";
+			this->linearIndependentToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->linearIndependentToolStripMenuItem->Text = L"Linear independent";
+			// 
+			// gramschmidtToolStripMenuItem
+			// 
+			this->gramschmidtToolStripMenuItem->Name = L"gramschmidtToolStripMenuItem";
+			this->gramschmidtToolStripMenuItem->Size = System::Drawing::Size(220, 26);
+			this->gramschmidtToolStripMenuItem->Text = L"Gram-schmidt";
 			// 
 			// loadMatrixToolStripMenuItem
 			// 
+			this->loadMatrixToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(12) {
+				this->loadMatrixToolStripMenuItem1,
+					this->printMatrixToolStripMenuItem, this->calculateToolStripMenuItem1, this->rankToolStripMenuItem, this->transposeToolStripMenuItem,
+					this->solveLinearSystemToolStripMenuItem, this->determinantToolStripMenuItem, this->inverseToolStripMenuItem, this->adjointToolStripMenuItem,
+					this->eigenValueVectorToolStripMenuItem, this->powerMethodToolStripMenuItem, this->leastSquareToolStripMenuItem
+			});
 			this->loadMatrixToolStripMenuItem->Name = L"loadMatrixToolStripMenuItem";
-			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(104, 24);
-			this->loadMatrixToolStripMenuItem->Text = L"Load Matrix";
-			this->loadMatrixToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::loadMatrixToolStripMenuItem_Click);
+			this->loadMatrixToolStripMenuItem->Size = System::Drawing::Size(65, 24);
+			this->loadMatrixToolStripMenuItem->Text = L"Matrix";
+			// 
+			// loadMatrixToolStripMenuItem1
+			// 
+			this->loadMatrixToolStripMenuItem1->Name = L"loadMatrixToolStripMenuItem1";
+			this->loadMatrixToolStripMenuItem1->Size = System::Drawing::Size(224, 26);
+			this->loadMatrixToolStripMenuItem1->Text = L"Load Matrix";
+			this->loadMatrixToolStripMenuItem1->Click += gcnew System::EventHandler(this, &WindowsForm::loadMatrixToolStripMenuItem1_Click);
+			// 
+			// printMatrixToolStripMenuItem
+			// 
+			this->printMatrixToolStripMenuItem->Name = L"printMatrixToolStripMenuItem";
+			this->printMatrixToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->printMatrixToolStripMenuItem->Text = L"Print Matrix";
+			// 
+			// calculateToolStripMenuItem1
+			// 
+			this->calculateToolStripMenuItem1->Name = L"calculateToolStripMenuItem1";
+			this->calculateToolStripMenuItem1->Size = System::Drawing::Size(224, 26);
+			this->calculateToolStripMenuItem1->Text = L"Calculate";
+			// 
+			// rankToolStripMenuItem
+			// 
+			this->rankToolStripMenuItem->Name = L"rankToolStripMenuItem";
+			this->rankToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->rankToolStripMenuItem->Text = L"Rank";
+			// 
+			// transposeToolStripMenuItem
+			// 
+			this->transposeToolStripMenuItem->Name = L"transposeToolStripMenuItem";
+			this->transposeToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->transposeToolStripMenuItem->Text = L"Transpose";
+			// 
+			// solveLinearSystemToolStripMenuItem
+			// 
+			this->solveLinearSystemToolStripMenuItem->Name = L"solveLinearSystemToolStripMenuItem";
+			this->solveLinearSystemToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->solveLinearSystemToolStripMenuItem->Text = L"Solve Linear System";
+			// 
+			// determinantToolStripMenuItem
+			// 
+			this->determinantToolStripMenuItem->Name = L"determinantToolStripMenuItem";
+			this->determinantToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->determinantToolStripMenuItem->Text = L"Determinants";
+			// 
+			// inverseToolStripMenuItem
+			// 
+			this->inverseToolStripMenuItem->Name = L"inverseToolStripMenuItem";
+			this->inverseToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->inverseToolStripMenuItem->Text = L"Inverse";
+			// 
+			// adjointToolStripMenuItem
+			// 
+			this->adjointToolStripMenuItem->Name = L"adjointToolStripMenuItem";
+			this->adjointToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->adjointToolStripMenuItem->Text = L"Adjoint";
+			// 
+			// eigenValueVectorToolStripMenuItem
+			// 
+			this->eigenValueVectorToolStripMenuItem->Name = L"eigenValueVectorToolStripMenuItem";
+			this->eigenValueVectorToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->eigenValueVectorToolStripMenuItem->Text = L"Eigen Value Vector";
+			// 
+			// powerMethodToolStripMenuItem
+			// 
+			this->powerMethodToolStripMenuItem->Name = L"powerMethodToolStripMenuItem";
+			this->powerMethodToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->powerMethodToolStripMenuItem->Text = L"Power Method";
+			// 
+			// leastSquareToolStripMenuItem
+			// 
+			this->leastSquareToolStripMenuItem->Name = L"leastSquareToolStripMenuItem";
+			this->leastSquareToolStripMenuItem->Size = System::Drawing::Size(224, 26);
+			this->leastSquareToolStripMenuItem->Text = L"Least Square";
 			// 
 			// clearInputToolStripMenuItem
 			// 
@@ -288,7 +517,7 @@ namespace WindowsFormsApplication_cpp {
 			this->Controls->Add(this->menuStrip2);
 			this->Margin = System::Windows::Forms::Padding(4);
 			this->Name = L"WindowsForm";
-			this->Text = L"VectorExample";
+			this->Text = L"Project1";
 			this->Load += gcnew System::EventHandler(this, &WindowsForm::WindowsForm_Load);
 			this->menuStrip2->ResumeLayout(false);
 			this->menuStrip2->PerformLayout();
@@ -311,13 +540,15 @@ namespace WindowsFormsApplication_cpp {
 		System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
 		System::Void openFileDialog2_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
 
-		System::Void loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-		System::Void loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+
+		System::Void loadVectorToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void loadMatrixToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void clearInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void clearOutputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 
 		System::Void Input_TextChanged(System::Object^  sender, System::EventArgs^  e);
-		
+
+
 };
 
 	//

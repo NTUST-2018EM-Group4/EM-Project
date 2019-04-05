@@ -198,11 +198,11 @@ namespace WindowsFormsApplication_cpp
 		return Cmd;
 	}
 
-	System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
-	{
-		//開啟Dialog
-		openFileDialog1->ShowDialog();
-	}
+	//System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	//{
+	//	//開啟Dialog
+	//	openFileDialog1->ShowDialog();
+	//}
 	System::Void WindowsForm::openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e)
 	{
 		//在Dialog按下OK便會進入此函式
@@ -241,7 +241,17 @@ namespace WindowsFormsApplication_cpp
 			Output->Text += "---Vector datas have been loaded---" + Environment::NewLine;
 		}
 	}
-	System::Void WindowsForm::loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	System::Void WindowsForm::loadVectorToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		//開啟Dialog
+		openFileDialog1->ShowDialog();
+	}
+	//System::Void WindowsForm::loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	//{
+	//	//開啟Dialog
+	//	openFileDialog2->ShowDialog();
+	//}
+	System::Void WindowsForm::loadMatrixToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		//開啟Dialog
 		openFileDialog2->ShowDialog();
