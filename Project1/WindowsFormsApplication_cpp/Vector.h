@@ -50,4 +50,13 @@ struct Vector
 	bool dimCheck(const Vector& Vb);
 	bool dimCheck(const Vector& Vb, char op) const;
 	System::String^ outputStr();
+
+	//
+	// Simulate vector function
+	//
+	int size();
+	void push_back(double& num);
+	double operator [] (const int& index);
+
+
 };

@@ -26,6 +26,7 @@ struct Matrix
 	const Matrix operator + (const Matrix& Mb);
 	const Matrix operator - (const Matrix& Mb);
 	const Matrix operator * (const Matrix& Mb);
+	const Matrix operator * (const double& num);
 	const Matrix operator / (const Matrix& Mb);
 
 	//
@@ -36,6 +37,12 @@ struct Matrix
 	const double rank();
 	const double det();
 	const Matrix inverse();
+	const Matrix adjoint();
+	const Matrix leastSquare(const Matrix& Mb);
+
+	//
+	// Calculate Vector Function
+	//
 	friend const Matrix Ob(const int normal, const std::vector<Vector> ui);
 	friend const bool isLI(const int normal, const std::vector<Vector> ui);
 
@@ -44,5 +51,12 @@ struct Matrix
 	//
 	System::String^ outputStr();
 	bool dimCheck(const Matrix Mb, char op) const;
+
+	//
+	// Simulate vector function
+	//
+	int size();
+	void push_back(Vector& num);
+	Vector operator [] (const int& index);
 };
 

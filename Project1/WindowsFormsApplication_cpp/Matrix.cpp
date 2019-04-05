@@ -89,6 +89,20 @@ const Matrix Matrix::operator*(const Matrix & Mb)
 	else throw "---Operator * process ERROR!---";
 }
 
+const Matrix Matrix::operator*(const double & num)
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+
+	for (int i = 0; i < temp.Data.size(); i++)
+	{
+		temp.Data[i] = temp.Data[i] * num;
+	}
+	return temp;
+	throw "---Operator * process ERROR!---";
+}
+
 const Matrix Matrix::operator/(const Matrix & Mb)
 {
 	if (dimCheck(Mb, '\\'))
@@ -280,6 +294,36 @@ const Matrix Matrix::inverse()
 	throw "---Inverse process error---";
 }
 
+const Matrix Matrix::adjoint()
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+	
+	temp = temp.inverse();
+	temp = temp * this->det();
+
+	return temp;
+	throw "---Adjoint process error---";
+}
+
+const Matrix Matrix::leastSquare(const Matrix & Mb)
+{
+	Matrix temp = *this;
+	// error handling
+	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (Mb.Data.empty()) throw "---Empty Matrix---";
+
+	temp = this->trans();
+	temp = temp * *this;
+	temp = temp.inverse();
+	temp = temp * this->trans();
+	temp = temp * Mb;
+
+	return temp;
+	throw "---LeastSquare process error---";
+}
+
 const Matrix Ob(const int normal, const std::vector<Vector> ui)
 {
 	std::vector<Vector> Vi(normal);
@@ -401,4 +445,19 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 		return false;
 		break;
 	}
+}
+
+int Matrix::size()
+{
+	return Data.size();
+}
+
+void Matrix::push_back(Vector & num)
+{
+	Data.push_back(num);
+}
+
+Vector Matrix::operator[](const int & index)
+{
+	return Data.at(index);
 }
