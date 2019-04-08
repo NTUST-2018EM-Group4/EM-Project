@@ -1078,6 +1078,7 @@ namespace WindowsFormsApplication_cpp
 				{
 					Matrix result;
 					std::string VarNameTemp = "";
+					std::vector<double> eigenVal;
 					// TODO: if Count == 0
 					if (funcFormula->Count == 1) throw "---No parameter---";
 					else
@@ -1130,7 +1131,16 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "eigen")
 							{
-								throw "---Eigen not finished---";
+								//todo
+								eigenVal = matrices[index].eigenVal();
+								Output->Text += "eigenVal = ";
+								for (int i = 0; i < matrices[index].size(); i++)
+								{
+									Output->Text += eigenVal[i] + " ";
+								}
+								Output->Text += Environment::NewLine;
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "eigen(" + matrices[index].Name +")";
 							}
 							else if (funcFormula[0] == "pm")
 							{

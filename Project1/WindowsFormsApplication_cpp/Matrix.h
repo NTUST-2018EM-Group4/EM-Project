@@ -39,6 +39,8 @@ struct Matrix
 	const Matrix inverse();
 	const Matrix adjoint();
 	const Matrix leastSquare(const Matrix& Mb);
+	const std::vector<double> eigenVal() const;
+	const Matrix eigenVec(const std::vector<double>& val) const;
 
 	//
 	// Calculate Vector Function
@@ -55,7 +57,7 @@ struct Matrix
 	//
 	// Simulate vector function
 	//
-	int size();
+	int size() const;
 	void push_back(Vector& num);
 	Vector operator [] (const int& index);
 };

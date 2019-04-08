@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <cmath>
 
 Matrix::Matrix() :Name("")
 {
@@ -324,6 +325,92 @@ const Matrix Matrix::leastSquare(const Matrix & Mb)
 	throw "---LeastSquare process error---";
 }
 
+const std::vector<double> Matrix::eigenVal() const
+{
+	// error handling
+	if (this->Data.empty()) throw "---Empty Matrix---";
+
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
+	//get polynomial for lambda
+	int dim = this->Data.size();
+	std::vector<double> coe(dim + 1);
+	//todo (3D matrix)
+	std::vector<double> result;
+	double D;
+	switch (this->size())
+	{
+	case 1:
+		result.push_back(this->Data[0].Data[0]);
+		break;
+	case 2:
+		//get polynomial for lambda
+		/***explosion***/
+		coe[2] = 1;	//lambda^2 = 1
+		coe[1] = -this->Data[0].Data[0] - this->Data[1].Data[1];	//lambda
+		coe[0] += this->Data[0].Data[0] * this->Data[1].Data[1];	//constant
+		coe[0] -= this->Data[1].Data[0] * this->Data[0].Data[1];	//constant
+		D = std::pow(coe[1], 2) - 4 * coe[2] * coe[0];	//D = b^2 - 4ac
+		result.push_back((-coe[1] + std::sqrt(D)) / (2 * coe[2]));	//x = (-b+D) / 2a
+		result.push_back((-coe[1] - std::sqrt(D)) / (2 * coe[2]));	//x = (-b-D) / 2a
+		break;
+	case 3:
+		break;
+	default:
+		throw "---Dimension not support---";
+		break;
+	}
+	return result;
+}
+
+const Matrix Matrix::eigenVec(const std::vector<double>& val) const
+{
+	Matrix result, tempM;
+	result.Data.resize(this->size());
+	//set result to n*n
+	for (int i = 0; i < this->size(); i++)
+	{
+		result.Data[i].Data.resize(this->size());
+	}
+	if (this->size() == 1)
+	{
+		result.Data[0].Data[0] = 1;
+		return result;
+	}
+	for (int i = 0; i < this->size(); i++)
+	{
+		tempM = *this;
+		for (int j = 0; j < this->size(); j++)
+		{
+			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
+		}
+		tempM = tempM.gaussian();
+
+		for (int j = 0; j < this->size(); j++)
+		{
+			double temp = tempM.Data[j].Data[j];
+			for (int k = j; k < this->size() && tempM.Data[j].Data[j] != 0; k++)
+			{
+				tempM.Data[j].Data[k] /= temp;
+				if (tempM.Data[j].Data[k] != 1)
+				{
+					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];
+				}
+			}
+		}
+		
+		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
+		{
+			result.Data[i].Data[j] = tempM.Data[0].Data[k];	//get eigen vector to return
+		}
+		result.Data[i] = result.Data[i].Normal();	//normalization
+	}
+
+	return result;
+}
+
 const Matrix Ob(const int normal, const std::vector<Vector> ui)
 {
 	std::vector<Vector> Vi(normal);
@@ -447,7 +534,7 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 	}
 }
 
-int Matrix::size()
+int Matrix::size() const
 {
 	return Data.size();
 }
