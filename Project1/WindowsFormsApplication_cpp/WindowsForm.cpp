@@ -409,6 +409,7 @@ namespace WindowsFormsApplication_cpp
 					calStack.pop();
 
 					// output
+					MarshalString(userCommand[1], result.Name);
 					Output->Text += result.outputStr();
 				}
 				catch (const std::exception&)
@@ -614,6 +615,7 @@ namespace WindowsFormsApplication_cpp
 					calStack.pop();
 
 					// output
+					MarshalString(userCommand[1], result.Name);
 					Output->Text += result.outputStr();
 				}
 				catch (const std::exception&)
@@ -683,16 +685,16 @@ namespace WindowsFormsApplication_cpp
 							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
 
 							if (funcFormula[0] == "isorthogonal")
-							{
-								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+							{	
 								result = vectors[indexA] * vectors[indexB];
+								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
 								if (result.Data[0] == 0)
 								{
-									result.Name = " : Yes";
+									result.Name += " : Yes";
 								}
 								else
 								{
-									result.Name = " : No";
+									result.Name += " : No";
 								}
 #ifdef DEBUG
 								Output->Text += "isOrthogonal called" + Environment::NewLine;
@@ -747,16 +749,16 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "isparallel")
 							{
-								result.Name = "Com(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+								result.Name = "isParallel(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
 								double angleValue = vectors[indexA].Angle(vectors[indexB]);
 
 								if (angleValue == 0 || angleValue == 180)
 								{
-									result.Name = " : Yes";
+									result.Name += " : Yes";
 								}
 								else
 								{
-									result.Name = " : No";
+									result.Name += " : No";
 								}
 #ifdef DEBUG
 								Output->Text += "isParallel called" + Environment::NewLine;
@@ -1095,32 +1097,36 @@ namespace WindowsFormsApplication_cpp
 							if (funcFormula[0] == "trans")
 							{
 								result = matrices[index].trans();
+								result.Name = "Trans(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "gauss")
 							{
 								result = matrices[index].gaussian();
+								result.Name = "Gauss(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "rank")
 							{
 								double rankValue = matrices[index].rank();
 								result.Data.resize(1);
 								result.Data[0].Data.push_back(rankValue);
-								result.Name = "Rank Value";
+								result.Name = "Rank(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "det")
 							{
 								double detValue = matrices[index].det();
 								result.Data.resize(1);
 								result.Data[0].Data.push_back(detValue);
-								result.Name = "Determinant Value";
+								result.Name = "Det(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "inverse")
 							{
 								result = matrices[index].inverse();
+								result.Name = "Inverse(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "adj")
 							{
 								result = matrices[index].adjoint();
+								result.Name = "Adj(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "eigen")
 							{
@@ -1141,6 +1147,7 @@ namespace WindowsFormsApplication_cpp
 							if (funcFormula[0] == "leastsquare")
 							{
 								result = matrices[indexA].leastSquare(matrices[indexB]);
+								result.Name = "LeastSquare(" + matrices[indexA].Name + "," + matrices[indexB].Name +")";
 							}
 							break;
 						default:
