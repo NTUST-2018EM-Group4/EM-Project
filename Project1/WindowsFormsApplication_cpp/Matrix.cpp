@@ -67,7 +67,7 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 	else throw "---Operator - process ERROR!---";
 }
 
-const Matrix Matrix::operator*(const Matrix & Mb)
+const Matrix Matrix::operator*(const Matrix & Mb) const
 {
 	if (dimCheck(Mb, '*'))
 	{
@@ -368,8 +368,8 @@ const std::vector<double> Matrix::eigenVal() const
 const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 {
 	Matrix result, tempM;
-	result.Data.resize(this->size());
 	//set result to n*n
+	result.Data.resize(this->size());
 	for (int i = 0; i < this->size(); i++)
 	{
 		result.Data[i].Data.resize(this->size());
@@ -387,16 +387,16 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
 		tempM = tempM.gaussian();
-
+		//首項變為一
 		for (int j = 0; j < this->size(); j++)
 		{
 			double temp = tempM.Data[j].Data[j];
-			for (int k = j; k < this->size() && tempM.Data[j].Data[j] != 0; k++)
+			for (int k = j; k < this->size() && temp != 0; k++)
 			{
 				tempM.Data[j].Data[k] /= temp;
 				if (tempM.Data[j].Data[k] != 1)
 				{
-					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];
+					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
 				}
 			}
 		}
@@ -409,6 +409,36 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 	}
 
 	return result;
+}
+
+const double Matrix::pm() const
+{
+	Matrix A = *this, X, temp;
+	// set temp to n*1 and set all to 1
+	X.Data.resize(this->size());
+	for (int i = 0; i < this->size(); i++)
+	{
+		X.Data[i].Data.push_back(1);
+	}
+	//approaching
+	for (int i = 0; i < 10; i++)
+	{
+		X = A * X;
+	}
+	double max = 0;
+	for (int i = 0; i < this->size(); i++)
+	{
+		max = (X.Data[i].Data[0] > max) ? X.Data[i].Data[0] : max;
+	}
+	//zoom
+	for (int i = 0; i < this->size(); i++)
+	{
+		X.Data[i] = X.Data[i] / max;
+	}
+	temp = A * X;	//AX
+	temp = temp.trans() * X;		//AX dot X = AX^t * X
+	X = X.trans() * X;		//X*X
+	return (temp.Data[0].Data[0] / X.Data[0].Data[0]);
 }
 
 const Matrix Ob(const int normal, const std::vector<Vector> ui)

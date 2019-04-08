@@ -25,7 +25,7 @@ struct Matrix
 	//
 	const Matrix operator + (const Matrix& Mb);
 	const Matrix operator - (const Matrix& Mb);
-	const Matrix operator * (const Matrix& Mb);
+	const Matrix operator * (const Matrix& Mb) const;
 	const Matrix operator * (const double& num);
 	const Matrix operator / (const Matrix& Mb);
 
@@ -41,6 +41,7 @@ struct Matrix
 	const Matrix leastSquare(const Matrix& Mb);
 	const std::vector<double> eigenVal() const;
 	const Matrix eigenVec(const std::vector<double>& val) const;
+	const double pm() const;
 
 	//
 	// Calculate Vector Function

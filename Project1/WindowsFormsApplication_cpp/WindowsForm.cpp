@@ -1134,7 +1134,7 @@ namespace WindowsFormsApplication_cpp
 								//todo
 								eigenVal = matrices[index].eigenVal();
 								Output->Text += "eigenVal = ";
-								for (int i = 0; i < matrices[index].size(); i++)
+								for (int i = 0; i < eigenVal.size(); i++)
 								{
 									Output->Text += eigenVal[i] + " ";
 								}
@@ -1144,7 +1144,14 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "pm")
 							{
-								throw "---PM not finished---";
+								//todo
+								eigenVal.push_back(matrices[index].pm());
+								for (int i = 0; i < eigenVal.size(); i++)
+								{
+									Output->Text += eigenVal[i] + " ";
+								}
+								Output->Text += Environment::NewLine;
+								result.Name = "pm(" + matrices[index].Name + ")";
 							}
 							else throw "---Function of binary not exist---";
 							break;
