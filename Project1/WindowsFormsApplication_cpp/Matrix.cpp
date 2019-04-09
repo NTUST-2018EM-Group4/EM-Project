@@ -192,9 +192,30 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
 				}
 			}
-		}
 
+			// Check zero row is under
+			for (int i = 0; i < temp.size(); i++)
+			{
+				bool zeroCheck = true;
+				for (int j = 0; j < temp[i].size(); j++)
+				{
+					if (temp[i][j] != 0)
+					{
+						zeroCheck = false;
+						break;
+					}
+				}
+				if (zeroCheck && i != temp.size() - 1)
+				{
+					Vector tempVec = temp[i];
+					temp.Data.erase(temp.Data.begin() + i);
+					temp.push_back(tempVec);
+				}
+			}
+		}
 	}
+
+
 	return temp;
 	throw "---Gaussian process error---";
 }
