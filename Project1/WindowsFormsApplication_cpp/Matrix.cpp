@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <cmath>
 
 Matrix::Matrix() :Name("")
 {
@@ -66,7 +67,7 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 	else throw "---Operator - process ERROR!---";
 }
 
-const Matrix Matrix::operator*(const Matrix & Mb)
+const Matrix Matrix::operator*(const Matrix & Mb) const
 {
 	if (dimCheck(Mb, '*'))
 	{
@@ -132,7 +133,7 @@ const Matrix Matrix::trans()
 	return temp;
 }
 
-const Matrix Matrix::gaussian()
+const Matrix Matrix::gaussian(int sign, bool mode) const
 {
 	Matrix temp = *this;
 	// error handling
@@ -155,7 +156,7 @@ const Matrix Matrix::gaussian()
 				if (temp.Data[j].Data[i] != 0)
 				{
 					// swap(Data[i], Data[j])
-					Vector tempVec = temp.Data[i];
+					Vector tempVec = temp.Data[i] * sign;
 					temp.Data[i] = temp.Data[j];
 					temp.Data[j] = tempVec;
 					break;
@@ -165,15 +166,34 @@ const Matrix Matrix::gaussian()
 		// 如果首項係數都是零，那就略過。
 		if (temp.Data[i].Data[i] == 0) continue;
 
-		// 抵銷下方橫條，令下方橫條的首項係數化成零。
-		for (int j = i + 1; j < temp.Data.size(); j++)
+		if (mode == true) // default Gaussian Method
 		{
-			if (temp.Data[j].Data[i] != 0)
+			// 抵銷下方橫條，令下方橫條的首項係數化成零。
+			for (int j = i + 1; j < temp.Data.size(); j++)
 			{
-				double t = temp.Data[j].Data[i] / temp.Data[i].Data[i];
-				temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				if (temp.Data[j].Data[i] != 0)
+				{
+					double t = temp.Data[j].Data[i] / temp.Data[i].Data[i];
+					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				}
 			}
 		}
+		else // Gauss-Jordan Method
+		{
+			// 將橫條首項變成1
+			double t = temp.Data[i].Data[i];
+			temp.Data[i] = temp.Data[i] / t;
+
+			for (int j = 0; j < temp.Data.size(); j++)
+			{
+				if (i != j && temp.Data[j].Data[i] != 0)
+				{
+					double t = temp.Data[j].Data[i];
+					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				}
+			}
+		}
+
 	}
 	return temp;
 	throw "---Gaussian process error---";
@@ -184,7 +204,7 @@ const double Matrix::rank()
 	// error handling
 	if (this->Data.empty()) throw "---Empty Matrix---";
 	double rankValue = 0;
-	Matrix gauss = this->gaussian();
+	Matrix gauss = this->gaussian(1, true);
 	for (int i = 0; i < gauss.Data.size(); i++)
 	{
 		for (int j = 0; j < gauss.Data[i].Data.size(); j++)
@@ -199,9 +219,9 @@ const double Matrix::rank()
 	return rankValue;
 }
 
-const double Matrix::det()
+const double Matrix::det() const
 {
-	Matrix temp = this->gaussian();
+	Matrix temp = this->gaussian(-1, true);
 	// error handling
 	if (temp.Data.empty()) throw "---Empty Matrix---";
 
@@ -322,6 +342,144 @@ const Matrix Matrix::leastSquare(const Matrix & Mb)
 
 	return temp;
 	throw "---LeastSquare process error---";
+}
+
+const std::vector<double> Matrix::eigenVal() const
+{
+	// error handling
+	if (this->Data.empty()) throw "---Empty Matrix---";
+
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
+	//get polynomial for lambda
+	int dim = this->Data.size();
+	std::vector<double> coe(dim + 1);
+	//todo (3D matrix)
+	std::vector<double> result;
+	switch (this->size())
+	{
+	case 1:
+		result.push_back(this->Data[0].Data[0]);
+		break;
+	case 2:
+		//get polynomial for lambda
+		/***explosion***/
+		coe[2] = 1;	//lambda^2 = 1
+		coe[1] = -this->Data[0].Data[0] - this->Data[1].Data[1];	//lambda
+		coe[0] += this->Data[0].Data[0] * this->Data[1].Data[1];	//constant
+		coe[0] -= this->Data[1].Data[0] * this->Data[0].Data[1];	//constant
+		//use quadratic eqution get eigen value
+		double D;
+		D = std::pow(coe[1], 2) - 4 * coe[2] * coe[0];	//D = b^2 - 4ac
+		result.push_back((-coe[1] + std::sqrt(D)) / (2 * coe[2]));	//x = (-b+D) / 2a
+		result.push_back((-coe[1] - std::sqrt(D)) / (2 * coe[2]));	//x = (-b-D) / 2a
+		break;
+	case 3:
+		//get polynomial for lambda
+		/***explosion***/
+		coe[3] = -1;
+		for (int i = 0; i< 3; i++)
+		{
+			coe[2] += this->Data[i].Data[i];
+			coe[1] -= this->Data[i % 3].Data[i % 3] * this->Data[(i + 1) % 3].Data[(i + 1) % 3];
+			coe[1] += this->Data[i % 3].Data[(i + 1) % 3] * this->Data[(i + 1) % 3].Data[i % 3];
+		}
+		coe[0] = this->det();/***因m10暫時+負號***/
+		//use cubic eqution get eigen value	//x^3 + ax^2 + bx +c = 0
+		double Q, R, theta, temp;
+		Q = (pow(coe[2], 2) + 3 * coe[1]) / 9;	//Q = (a^2-3b)/9	//3次方為-1故變號
+		R = (-2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] - 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
+		temp = R / sqrt(pow(Q, 3));	//sqrt(pow(Q, 3))	pow(Q, 1.5)
+		while (temp > 2 * PI)
+			temp -= 2 * PI;	//acos argument can't > 1
+		theta = acos(temp);	
+		result.push_back(-2 * sqrt(Q)*cos(theta / 3) - coe[2] / 3);
+		result.push_back(-2 * sqrt(Q)*cos((theta + 2 * PI) / 3) - coe[2] / 3);
+		result.push_back(-2 * sqrt(Q)*cos((theta - 2 * PI) / 3) - coe[2] / 3);
+		break;
+	default:
+		throw "---Dimension not support---";
+		break;
+	}
+	return result;
+}
+
+const Matrix Matrix::eigenVec(const std::vector<double>& val) const
+{
+	Matrix result, tempM;
+	//set result to n*n
+	result.Data.resize(this->size());
+	for (int i = 0; i < this->size(); i++)
+	{
+		result.Data[i].Data.resize(this->size());
+	}
+	if (this->size() == 1)
+	{
+		result.Data[0].Data[0] = 1;
+		return result;
+	}
+	for (int i = 0; i < this->size(); i++)
+	{
+		tempM = *this;
+		for (int j = 0; j < this->size(); j++)
+		{
+			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
+		}
+		tempM = tempM.gaussian(1, true);
+		//首項變為一
+		for (int j = 0; j < this->size(); j++)
+		{
+			double temp = tempM.Data[j].Data[j];
+			for (int k = j; k < this->size() && temp != 0; k++)
+			{
+				tempM.Data[j].Data[k] /= temp;
+				if (tempM.Data[j].Data[k] != 1)
+				{
+					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
+				}
+			}
+		}
+		
+		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
+		{
+			result.Data[i].Data[j] = tempM.Data[0].Data[k];	//get eigen vector to return
+		}
+		result.Data[i] = result.Data[i].Normal();	//normalization
+	}
+
+	return result;
+}
+
+const double Matrix::pm() const
+{
+	Matrix A = *this, X, temp;
+	// set temp to n*1 and set all to 1
+	X.Data.resize(this->size());
+	for (int i = 0; i < this->size(); i++)
+	{
+		X.Data[i].Data.push_back(1);
+	}
+	//approaching
+	for (int i = 0; i < 10; i++)
+	{
+		X = A * X;
+	}
+	double max = 0;
+	for (int i = 0; i < this->size(); i++)
+	{
+		max = (X.Data[i].Data[0] > max) ? X.Data[i].Data[0] : max;
+	}
+	//zoom
+	for (int i = 0; i < this->size(); i++)
+	{
+		X.Data[i] = X.Data[i] / max;
+	}
+	temp = A * X;	//AX
+	temp = temp.trans() * X;		//AX dot X = AX^t * X
+	X = X.trans() * X;		//X*X
+	return (temp.Data[0].Data[0] / X.Data[0].Data[0]);
 }
 
 const Matrix Ob(const int normal, const std::vector<Vector> ui)
@@ -447,7 +605,7 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 	}
 }
 
-int Matrix::size()
+int Matrix::size() const
 {
 	return Data.size();
 }

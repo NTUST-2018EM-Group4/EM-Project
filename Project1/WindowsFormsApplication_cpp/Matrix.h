@@ -25,7 +25,7 @@ struct Matrix
 	//
 	const Matrix operator + (const Matrix& Mb);
 	const Matrix operator - (const Matrix& Mb);
-	const Matrix operator * (const Matrix& Mb);
+	const Matrix operator * (const Matrix& Mb) const;
 	const Matrix operator * (const double& num);
 	const Matrix operator / (const Matrix& Mb);
 
@@ -33,12 +33,15 @@ struct Matrix
 	// Calculate Function
 	//
 	const Matrix trans();
-	const Matrix gaussian();
+	const Matrix gaussian(int sign, bool mode) const;
 	const double rank();
-	const double det();
+	const double det() const;
 	const Matrix inverse();
 	const Matrix adjoint();
 	const Matrix leastSquare(const Matrix& Mb);
+	const std::vector<double> eigenVal() const;
+	const Matrix eigenVec(const std::vector<double>& val) const;
+	const double pm() const;
 
 	//
 	// Calculate Vector Function
@@ -55,7 +58,7 @@ struct Matrix
 	//
 	// Simulate vector function
 	//
-	int size();
+	int size() const;
 	void push_back(Vector& num);
 	Vector operator [] (const int& index);
 };

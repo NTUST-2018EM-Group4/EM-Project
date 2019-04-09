@@ -1078,6 +1078,7 @@ namespace WindowsFormsApplication_cpp
 				{
 					Matrix result;
 					std::string VarNameTemp = "";
+					std::vector<double> eigenVal;
 					// TODO: if Count == 0
 					if (funcFormula->Count == 1) throw "---No parameter---";
 					else
@@ -1101,7 +1102,7 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "gauss")
 							{
-								result = matrices[index].gaussian();
+								result = matrices[index].gaussian(1, true);
 								result.Name = "Gauss(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "rank")
@@ -1130,11 +1131,27 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "eigen")
 							{
-								throw "---Eigen not finished---";
+								//todo
+								eigenVal = matrices[index].eigenVal();
+								Output->Text += "eigenVal = ";
+								for (int i = 0; i < eigenVal.size(); i++)
+								{
+									Output->Text += eigenVal[i] + " ";
+								}
+								Output->Text += Environment::NewLine;
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "eigen(" + matrices[index].Name +")";
 							}
 							else if (funcFormula[0] == "pm")
 							{
-								throw "---PM not finished---";
+								//todo
+								eigenVal.push_back(matrices[index].pm());
+								for (int i = 0; i < eigenVal.size(); i++)
+								{
+									Output->Text += eigenVal[i] + " ";
+								}
+								Output->Text += Environment::NewLine;
+								result.Name = "pm(" + matrices[index].Name + ")";
 							}
 							else throw "---Function of binary not exist---";
 							break;
