@@ -190,6 +190,12 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 				{
 					double t = temp.Data[j].Data[i];
 					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+					//zeroing to ignore the deviation
+					for (int k = 0; k < temp.Data[j].size(); k++)
+					{
+						if (abs(temp.Data[j].Data[k]) < 1.5E-6)
+							temp.Data[j].Data[k] = 0;
+					}
 				}
 			}
 
