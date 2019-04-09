@@ -367,11 +367,16 @@ const std::vector<double> Matrix::eigenVal() const
 			coe[1] -= this->Data[i % 3].Data[i % 3] * this->Data[(i + 1) % 3].Data[(i + 1) % 3];
 			coe[1] += this->Data[i % 3].Data[(i + 1) % 3] * this->Data[(i + 1) % 3].Data[i % 3];
 		}
-		coe[0] = this->det();/***因m10暫時+負號***/
+		coe[0] = this->det();
+		//同乘-1
+		for (int i = 0; i < 4;i++)
+		{
+			coe[i] = -coe[i];
+		}
 		//use cubic eqution get eigen value	//x^3 + ax^2 + bx +c = 0
 		double Q, R, theta, temp;
-		Q = (pow(coe[2], 2) + 3 * coe[1]) / 9;	//Q = (a^2-3b)/9	//3次方為-1故變號
-		R = (-2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] - 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
+		Q = (pow(coe[2], 2) - 3 * coe[1]) / 9;	//Q = (a^2-3b)/9
+		R = (2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] + 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
 		temp = R / sqrt(pow(Q, 3));	//sqrt(pow(Q, 3))	pow(Q, 1.5)
 		while (temp > 2 * PI)
 			temp -= 2 * PI;	//acos argument can't > 1
@@ -409,19 +414,27 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
 		tempM = tempM.gaussian();
-		//首項變為一
-		for (int j = 0; j < this->size(); j++)
-		{
-			double temp = tempM.Data[j].Data[j];
-			for (int k = j; k < this->size() && temp != 0; k++)
-			{
-				tempM.Data[j].Data[k] /= temp;
-				if (tempM.Data[j].Data[k] != 1)
-				{
-					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
-				}
-			}
-		}
+		////首項變為1
+		//for (int j = 0; j < this->size(); j++)
+		//{
+		//	double temp = 0;
+		//	for (int k = j; k < this->size(); k++)
+		//	{
+		//		if (tempM.Data[j].Data[k] != 0)
+		//		{
+		//			temp = tempM.Data[j].Data[k];
+		//			break;
+		//		}
+		//	}
+		//	for (int k = j; k < this->size() && temp != 0; k++)
+		//	{
+		//		tempM.Data[j].Data[k] /= temp;
+		//		if (tempM.Data[j].Data[k] != 1)
+		//		{
+		//			tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
+		//		}
+		//	}
+		//}
 		
 		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
 		{
@@ -443,7 +456,7 @@ const double Matrix::pm() const
 		X.Data[i].Data.push_back(1);
 	}
 	//approaching
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		X = A * X;
 	}
