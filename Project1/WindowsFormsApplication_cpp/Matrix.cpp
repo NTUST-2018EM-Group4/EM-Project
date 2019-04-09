@@ -148,7 +148,7 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 	// Gaussian
 	for (int i = 0; i < dim; i++)
 	{
-		// ¶p™GæÓ±¯™∫≠∫∂µ´Yº∆¨∞πs°Aπ¡∏’ªP§U§ËæÓ±¯•Ê¥´°C
+		// Â¶ÇÊûúÊ©´Ê¢ùÁöÑÈ¶ñÈ†Ö‰øÇÊï∏ÁÇ∫Èõ∂ÔºåÂòóË©¶Ëàá‰∏ãÊñπÊ©´Ê¢ù‰∫§Êèõ„ÄÇ
 		if (temp.Data[i].Data[i] == 0)
 		{
 			for (int j = i + 1; j < temp.Data.size(); j++)
@@ -163,12 +163,12 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 				}
 			}
 		}
-		// ¶p™G≠∫∂µ´Yº∆≥£¨Oπs°A®∫¥N≤§πL°C
+		// Â¶ÇÊûúÈ¶ñÈ†Ö‰øÇÊï∏ÈÉΩÊòØÈõ∂ÔºåÈÇ£Â∞±Áï•ÈÅé„ÄÇ
 		if (temp.Data[i].Data[i] == 0) continue;
 
 		if (mode == true) // default Gaussian Method
 		{
-			// ©ËæP§U§ËæÓ±¯°A•O§U§ËæÓ±¯™∫≠∫∂µ´Yº∆§∆¶®πs°C
+			// ÊäµÈä∑‰∏ãÊñπÊ©´Ê¢ùÔºå‰ª§‰∏ãÊñπÊ©´Ê¢ùÁöÑÈ¶ñÈ†Ö‰øÇÊï∏ÂåñÊàêÈõ∂„ÄÇ
 			for (int j = i + 1; j < temp.Data.size(); j++)
 			{
 				if (temp.Data[j].Data[i] != 0)
@@ -180,7 +180,7 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 		}
 		else // Gauss-Jordan Method
 		{
-			// ±NæÓ±¯≠∫∂µ≈‹¶®1
+			// Â∞áÊ©´Ê¢ùÈ¶ñÈ†ÖËÆäÊàê1
 			double t = temp.Data[i].Data[i];
 			temp.Data[i] = temp.Data[i] / t;
 
@@ -250,7 +250,7 @@ const Matrix Matrix::inverse()
 	{
 		throw "---Matrix not square---";
 	}
-	// ∂Ò¶n∞—º∆§∆™∫≥°§¿
+	// Â°´Â•ΩÂèÉÊï∏ÂåñÁöÑÈÉ®ÂàÜ
 	Matrix inver;
 	inver.Data.resize(temp.Data.size());
 	for (int i = 0; i < inver.Data.size(); i++)
@@ -268,8 +268,8 @@ const Matrix Matrix::inverse()
 		}
 	}
 
-	// ∂}©l∂i¶Ê∞™¥µ≥ÏµnÆ¯•h™k
-	// §∫Æe¥X•GªP∞™¥µÆ¯•h™k¨€¶P
+	// ÈñãÂßãÈÄ≤Ë°åÈ´òÊñØÂñ¨ÁôªÊ∂àÂéªÊ≥ï
+	// ÂÖßÂÆπÂπæ‰πéËàáÈ´òÊñØÊ∂àÂéªÊ≥ïÁõ∏Âêå
 	for (int i = 0; i < temp.Data.size(); i++)
 	{
 		if (temp.Data[i].Data[i] == 0)
@@ -291,10 +291,10 @@ const Matrix Matrix::inverse()
 				}
 			}
 		}
-		// §œØx∞}§£¶s¶b
+		// ÂèçÁü©Èô£‰∏çÂ≠òÂú®
 		if (temp.Data[i].Data[i] == 0) throw "---Inverse Matrix not exist---";
 
-		// ±NæÓ±¯≠∫∂µ≈‹¶®1
+		// Â∞áÊ©´Ê¢ùÈ¶ñÈ†ÖËÆäÊàê1
 		double t = temp.Data[i].Data[i];
 		temp.Data[i] = temp.Data[i] / t;
 		inver.Data[i] = inver.Data[i] / t;
@@ -386,11 +386,16 @@ const std::vector<double> Matrix::eigenVal() const
 			coe[1] -= this->Data[i % 3].Data[i % 3] * this->Data[(i + 1) % 3].Data[(i + 1) % 3];
 			coe[1] += this->Data[i % 3].Data[(i + 1) % 3] * this->Data[(i + 1) % 3].Data[i % 3];
 		}
-		coe[0] = this->det();/***¶]m10º»Æ…+≠t∏π***/
+		coe[0] = this->det();
+		//Âêå‰πò-1
+		for (int i = 0; i < 4;i++)
+		{
+			coe[i] = -coe[i];
+		}
 		//use cubic eqution get eigen value	//x^3 + ax^2 + bx +c = 0
 		double Q, R, theta, temp;
-		Q = (pow(coe[2], 2) + 3 * coe[1]) / 9;	//Q = (a^2-3b)/9	//3¶∏§Ë¨∞-1¨G≈‹∏π
-		R = (-2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] - 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
+		Q = (pow(coe[2], 2) - 3 * coe[1]) / 9;	//Q = (a^2-3b)/9
+		R = (2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] + 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
 		temp = R / sqrt(pow(Q, 3));	//sqrt(pow(Q, 3))	pow(Q, 1.5)
 		while (temp > 2 * PI)
 			temp -= 2 * PI;	//acos argument can't > 1
@@ -427,20 +432,45 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 		{
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
-		tempM = tempM.gaussian(1, true);
-		//≠∫∂µ≈‹¨∞§@
-		for (int j = 0; j < this->size(); j++)
-		{
-			double temp = tempM.Data[j].Data[j];
-			for (int k = j; k < this->size() && temp != 0; k++)
-			{
-				tempM.Data[j].Data[k] /= temp;
-				if (tempM.Data[j].Data[k] != 1)
-				{
-					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//≤æ∂µ•[≠t∏π
-				}
-			}
-		}
+//<<<<<<< Project1_Martix
+//		tempM = tempM.gaussian();
+		////È¶ñÈ†ÖËÆäÁÇ∫1
+		//for (int j = 0; j < this->size(); j++)
+		//{
+		//	double temp = 0;
+		//	for (int k = j; k < this->size(); k++)
+		//	{
+		//		if (tempM.Data[j].Data[k] != 0)
+		//		{
+		//			temp = tempM.Data[j].Data[k];
+		//			break;
+		//		}
+		//	}
+		//	for (int k = j; k < this->size() && temp != 0; k++)
+		//	{
+		//		tempM.Data[j].Data[k] /= temp;
+		//		if (tempM.Data[j].Data[k] != 1)
+		//		{
+		//			tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//ÁßªÈ†ÖÂä†Ë≤†Ëôü
+		//		}
+		//	}
+		//}
+// =======
+//		tempM = tempM.gaussian(1, true);
+//		//È¶ñÈ†ÖËÆäÁÇ∫‰∏Ä
+//		for (int j = 0; j < this->size(); j++)
+//		{
+//			double temp = tempM.Data[j].Data[j];
+//			for (int k = j; k < this->size() && temp != 0; k++)
+//			{
+//				tempM.Data[j].Data[k] /= temp;
+//				if (tempM.Data[j].Data[k] != 1)
+//				{
+//					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//ÁßªÈ†ÖÂä†Ë≤†Ëôü
+//				}
+//			}
+//		}
+// >>>>>>> Project1
 		
 		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
 		{
@@ -462,7 +492,7 @@ const double Matrix::pm() const
 		X.Data[i].Data.push_back(1);
 	}
 	//approaching
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		X = A * X;
 	}
@@ -489,7 +519,7 @@ const Matrix Ob(const int normal, const std::vector<Vector> ui)
 
 	Vi[0] = ui[0];
 	ans[0] = Vi[0].Normal();
-	//formula from wikipedia "Gram°VSchmidt process"
+	//formula from wikipedia "Gram‚ÄìSchmidt process"
 	for (int i = 1; i < normal; i++)
 	{
 		Vector sum, temp;
