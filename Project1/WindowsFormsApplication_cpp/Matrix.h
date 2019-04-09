@@ -33,9 +33,9 @@ struct Matrix
 	// Calculate Function
 	//
 	const Matrix trans();
-	const Matrix gaussian();
+	const Matrix gaussian() const;
 	const double rank();
-	const double det();
+	const double det() const;
 	const Matrix inverse();
 	const Matrix adjoint();
 	const Matrix leastSquare(const Matrix& Mb);

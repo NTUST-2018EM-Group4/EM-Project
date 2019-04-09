@@ -133,7 +133,7 @@ const Matrix Matrix::trans()
 	return temp;
 }
 
-const Matrix Matrix::gaussian()
+const Matrix Matrix::gaussian() const
 {
 	Matrix temp = *this;
 	// error handling
@@ -200,7 +200,7 @@ const double Matrix::rank()
 	return rankValue;
 }
 
-const double Matrix::det()
+const double Matrix::det() const
 {
 	Matrix temp = this->gaussian();
 	// error handling
@@ -339,7 +339,6 @@ const std::vector<double> Matrix::eigenVal() const
 	std::vector<double> coe(dim + 1);
 	//todo (3D matrix)
 	std::vector<double> result;
-	double D;
 	switch (this->size())
 	{
 	case 1:
@@ -352,11 +351,34 @@ const std::vector<double> Matrix::eigenVal() const
 		coe[1] = -this->Data[0].Data[0] - this->Data[1].Data[1];	//lambda
 		coe[0] += this->Data[0].Data[0] * this->Data[1].Data[1];	//constant
 		coe[0] -= this->Data[1].Data[0] * this->Data[0].Data[1];	//constant
+		//use quadratic eqution get eigen value
+		double D;
 		D = std::pow(coe[1], 2) - 4 * coe[2] * coe[0];	//D = b^2 - 4ac
 		result.push_back((-coe[1] + std::sqrt(D)) / (2 * coe[2]));	//x = (-b+D) / 2a
 		result.push_back((-coe[1] - std::sqrt(D)) / (2 * coe[2]));	//x = (-b-D) / 2a
 		break;
 	case 3:
+		//get polynomial for lambda
+		/***explosion***/
+		coe[3] = -1;
+		for (int i = 0; i< 3; i++)
+		{
+			coe[2] += this->Data[i].Data[i];
+			coe[1] -= this->Data[i % 3].Data[i % 3] * this->Data[(i + 1) % 3].Data[(i + 1) % 3];
+			coe[1] += this->Data[i % 3].Data[(i + 1) % 3] * this->Data[(i + 1) % 3].Data[i % 3];
+		}
+		coe[0] = this->det();/***因m10暫時+負號***/
+		//use cubic eqution get eigen value	//x^3 + ax^2 + bx +c = 0
+		double Q, R, theta, temp;
+		Q = (pow(coe[2], 2) + 3 * coe[1]) / 9;	//Q = (a^2-3b)/9	//3次方為-1故變號
+		R = (-2 * pow(coe[2], 3) - 9 * coe[2] * coe[1] - 27 * coe[0]) / 54;	//R = (2a^3-9ab+27c)/54
+		temp = R / sqrt(pow(Q, 3));	//sqrt(pow(Q, 3))	pow(Q, 1.5)
+		while (temp > 2 * PI)
+			temp -= 2 * PI;	//acos argument can't > 1
+		theta = acos(temp);	
+		result.push_back(-2 * sqrt(Q)*cos(theta / 3) - coe[2] / 3);
+		result.push_back(-2 * sqrt(Q)*cos((theta + 2 * PI) / 3) - coe[2] / 3);
+		result.push_back(-2 * sqrt(Q)*cos((theta - 2 * PI) / 3) - coe[2] / 3);
 		break;
 	default:
 		throw "---Dimension not support---";
