@@ -429,74 +429,55 @@ const std::vector<double> Matrix::eigenVal() const
 		throw "---Dimension not support---";
 		break;
 	}
+	//set precision
+	for (int i = 0; i < result.size(); i++)
+	{
+		result[i] = Round(result[i], 6);
+	}
 	return result;
 }
 
 const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 {
+	double dim = this->size();
 	Matrix result, tempM;
 	//set result to n*n
-	result.Data.resize(this->size());
-	for (int i = 0; i < this->size(); i++)
+	result.Data.resize(dim);
+	for (int i = 0; i < dim; i++)
 	{
 		result.Data[i].Data.resize(this->size());
 	}
-	if (this->size() == 1)
+	if (dim == 1)
 	{
 		result.Data[0].Data[0] = 1;
 		return result;
 	}
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < dim; i++)
 	{
 		tempM = *this;
-		for (int j = 0; j < this->size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
-//<<<<<<< Project1_Martix
-//		tempM = tempM.gaussian();
-		////首項變為1
-		//for (int j = 0; j < this->size(); j++)
-		//{
-		//	double temp = 0;
-		//	for (int k = j; k < this->size(); k++)
-		//	{
-		//		if (tempM.Data[j].Data[k] != 0)
-		//		{
-		//			temp = tempM.Data[j].Data[k];
-		//			break;
-		//		}
-		//	}
-		//	for (int k = j; k < this->size() && temp != 0; k++)
-		//	{
-		//		tempM.Data[j].Data[k] /= temp;
-		//		if (tempM.Data[j].Data[k] != 1)
-		//		{
-		//			tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
-		//		}
-		//	}
-		//}
-// =======
-//		tempM = tempM.gaussian(1, true);
-//		//首項變為一
-//		for (int j = 0; j < this->size(); j++)
-//		{
-//			double temp = tempM.Data[j].Data[j];
-//			for (int k = j; k < this->size() && temp != 0; k++)
-//			{
-//				tempM.Data[j].Data[k] /= temp;
-//				if (tempM.Data[j].Data[k] != 1)
-//				{
-//					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
-//				}
-//			}
-//		}
-// >>>>>>> Project1
-		
-		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
+		tempM = tempM.gaussian(1, 0);
+
+		for (int j = 0, k = dim - 1; j < dim; j++)
 		{
-			result.Data[i].Data[j] = tempM.Data[0].Data[k];	//get eigen vector to return
+			if (tempM.Data[j].Data[k] != 0)	//avoid -0
+			{	
+				//get eigen vector to return
+				if (tempM.Data[j].Data[j] == 1)	//移項加負號	
+				{
+					result.Data[i].Data[j] = -tempM.Data[j].Data[k];
+					result.Data[i].Data[dim - 1] = 1;	//最後一項自由變數補1
+				}
+				else if (tempM.Data[j].Data[j] == 0)	//0 輸出原向量
+				{
+					result.Data[i].Data[j] = tempM.Data[j].Data[k];
+				}
+			}
 		}
+		
 		result.Data[i] = result.Data[i].Normal();	//normalization
 	}
 
@@ -531,6 +512,31 @@ const double Matrix::pm() const
 	temp = temp.trans() * X;		//AX dot X = AX^t * X
 	X = X.trans() * X;		//X*X
 	return (temp.Data[0].Data[0] / X.Data[0].Data[0]);
+}
+
+double Round(double num, int index)
+{
+	bool isNegative = false; // whether is negative number or not
+
+	if (num < 0) // if this number is negative, then convert to positive number
+	{
+		isNegative = true;
+		num = -num;
+	}
+
+	if (index >= 0)
+	{
+		int multiplier;
+		multiplier = pow(10, index);
+		num = (int)(num * multiplier + 0.5) / (multiplier * 1.0);
+	}
+
+	if (isNegative) // if this number is negative, then convert to negative number
+	{
+		num = -num;
+	}
+
+	return num;
 }
 
 const Matrix Ob(const int normal, const std::vector<Vector> ui)

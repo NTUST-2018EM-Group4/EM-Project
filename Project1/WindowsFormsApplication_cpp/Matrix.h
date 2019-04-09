@@ -3,6 +3,9 @@
 #include <vector>
 #include "Vector.h"
 
+//set precision
+double Round(double num, int index);
+
 //Defined Struct Matrix
 struct Matrix
 {
