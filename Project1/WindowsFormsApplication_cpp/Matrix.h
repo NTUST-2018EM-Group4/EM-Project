@@ -33,7 +33,7 @@ struct Matrix
 	// Calculate Function
 	//
 	const Matrix trans();
-	const Matrix gaussian() const;
+	const Matrix gaussian(int sign, bool mode) const;
 	const double rank();
 	const double det() const;
 	const Matrix inverse();
