@@ -1102,7 +1102,7 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "gauss")
 							{
-								result = matrices[index].gaussian();
+								result = matrices[index].gaussian(1, true);
 								result.Name = "Gauss(" + matrices[index].Name + ")";
 							}
 							else if (funcFormula[0] == "rank")

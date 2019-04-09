@@ -133,7 +133,7 @@ const Matrix Matrix::trans()
 	return temp;
 }
 
-const Matrix Matrix::gaussian() const
+const Matrix Matrix::gaussian(int sign, bool mode) const
 {
 	Matrix temp = *this;
 	// error handling
@@ -156,7 +156,7 @@ const Matrix Matrix::gaussian() const
 				if (temp.Data[j].Data[i] != 0)
 				{
 					// swap(Data[i], Data[j])
-					Vector tempVec = temp.Data[i];
+					Vector tempVec = temp.Data[i] * sign;
 					temp.Data[i] = temp.Data[j];
 					temp.Data[j] = tempVec;
 					break;
@@ -166,15 +166,34 @@ const Matrix Matrix::gaussian() const
 		// 如果首項係數都是零，那就略過。
 		if (temp.Data[i].Data[i] == 0) continue;
 
-		// 抵銷下方橫條，令下方橫條的首項係數化成零。
-		for (int j = i + 1; j < temp.Data.size(); j++)
+		if (mode == true) // default Gaussian Method
 		{
-			if (temp.Data[j].Data[i] != 0)
+			// 抵銷下方橫條，令下方橫條的首項係數化成零。
+			for (int j = i + 1; j < temp.Data.size(); j++)
 			{
-				double t = temp.Data[j].Data[i] / temp.Data[i].Data[i];
-				temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				if (temp.Data[j].Data[i] != 0)
+				{
+					double t = temp.Data[j].Data[i] / temp.Data[i].Data[i];
+					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				}
 			}
 		}
+		else // Gauss-Jordan Method
+		{
+			// 將橫條首項變成1
+			double t = temp.Data[i].Data[i];
+			temp.Data[i] = temp.Data[i] / t;
+
+			for (int j = 0; j < temp.Data.size(); j++)
+			{
+				if (i != j && temp.Data[j].Data[i] != 0)
+				{
+					double t = temp.Data[j].Data[i];
+					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+				}
+			}
+		}
+
 	}
 	return temp;
 	throw "---Gaussian process error---";
@@ -185,7 +204,7 @@ const double Matrix::rank()
 	// error handling
 	if (this->Data.empty()) throw "---Empty Matrix---";
 	double rankValue = 0;
-	Matrix gauss = this->gaussian();
+	Matrix gauss = this->gaussian(1, true);
 	for (int i = 0; i < gauss.Data.size(); i++)
 	{
 		for (int j = 0; j < gauss.Data[i].Data.size(); j++)
@@ -202,7 +221,7 @@ const double Matrix::rank()
 
 const double Matrix::det() const
 {
-	Matrix temp = this->gaussian();
+	Matrix temp = this->gaussian(-1, true);
 	// error handling
 	if (temp.Data.empty()) throw "---Empty Matrix---";
 
@@ -408,7 +427,7 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 		{
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
-		tempM = tempM.gaussian();
+		tempM = tempM.gaussian(1, true);
 		//首項變為一
 		for (int j = 0; j < this->size(); j++)
 		{
