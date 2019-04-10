@@ -649,44 +649,86 @@ namespace WindowsFormsApplication_cpp
 					Vector result;
 					std::string VarNameTemp = "";
 					// TODO: if Count == 0
-					if (funcFormula->Count == 1) throw "---No parameter---";
-					else
+					if (funcFormula->Count == 0) throw "---No Function command---";
+					else if (funcFormula->Count == 1) throw "---No parameter---";
+					else if (funcFormula->Count == 2)
 					{
-						// TODO: Change rename method
-						switch (funcFormula->Count)
+						// record parameter index of array
+						MarshalString(funcFormula[1], VarNameTemp);
+						int index = dataManager->findVector(VarNameTemp);
+
+						if (funcFormula[0] == "norm")
 						{
-							// record parameter index of array
-							int index, indexA, indexB;
+							double normValue = vectors[index].Norm();
+							result.Data.push_back(normValue);
+							result.Name = "Norm(" + vectors[index].Name + ")";
+#ifdef DEBUG
+							Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
+						}
+						else if (funcFormula[0] == "normal")
+						{
+							result = vectors[index].Normal();
+							result.Name = "Normal(" + vectors[index].Name + ")";
+#ifdef DEBUG
+							Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+						}
+						else throw "---Function of unary not exist---";
+					}
+					else if (funcFormula->Count >= 3)
+					{
+						// record parameter index of array
+						int index, indexA, indexB;
 
-						// unary parameter function case
-						case 2:
+						if (funcFormula[0] == "ob" || funcFormula[0] == "isli")
+						{
+							// Ob function or isLI function PreProcess
+							MarshalString(funcFormula[1], nameTemp);
+							index = dataManager->findVector(nameTemp);
 
-							MarshalString(funcFormula[1], VarNameTemp);
-							index = dataManager->findVector(VarNameTemp);
+							std::vector<Vector> ui;
+							ui.push_back(vectors[index]);
+							int normal = ui[0].Data.size();
+							ui.resize(normal);
 
-							if (funcFormula[0] == "norm")
+							for (int i = 2; i <= normal; i++)
 							{
-								double normValue = vectors[index].Norm();
-								result.Data.push_back(normValue);
-								result.Name = "Norm(" + vectors[index].Name + ")";
-#ifdef DEBUG
-								Output->Text += "Norm called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "normal")
-						 	{
-								result = vectors[index].Normal();
-								result.Name = "Normal(" + vectors[index].Name + ")";
-#ifdef DEBUG
-								Output->Text += "Normalization called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else throw "---Function of unary not exist---";
-							break;
+								MarshalString(funcFormula[i], nameTemp);
+								index = dataManager->findVector(nameTemp);
 
-						// binary parameter function case
-						case 3:
+								if (vectors[index].dimCheck(ui[0]))
+								{
+									ui[i - 1] = vectors[index];	//get vector data into ui
+								}
+							}
 
+							// TODO: Ob isLI output not support
+							if (funcFormula[0] == "ob")
+							{
+								//if (dimFlag && foundFlag)
+								//	{
+#ifdef DEBUG
+								Output->Text += "Ob called" + Environment::NewLine;
+#endif // DEBUG
+								Matrix ans;
+								ans = Ob(normal, ui);
+
+								Output->Text += ans.outputStr();
+								//}
+							}
+							else if (funcFormula[0] == "isli")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								String^ outputTemp;
+								outputTemp = (isLI(normal, ui)) ? "Yes" : "No";
+								Output->Text += outputTemp + Environment::NewLine;
+							}
+						}
+						else if (funcFormula->Count == 3)
+						{
 							MarshalString(funcFormula[1], VarNameTemp);
 							indexA = dataManager->findVector(VarNameTemp);
 							MarshalString(funcFormula[2], VarNameTemp);
@@ -703,10 +745,10 @@ namespace WindowsFormsApplication_cpp
 							}
 
 							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
- 
+
 
 							if (funcFormula[0] == "isorthogonal")
-							{	
+							{
 								result = vectors[indexA] * vectors[indexB];
 								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
 								if (result.Data[0] == 0)
@@ -796,70 +838,8 @@ namespace WindowsFormsApplication_cpp
 							}
 
 							else throw "---Function of binary not exist---";
-							break;
-						// Ob function or error
-						default:
-
-							/*bool*/ /*foundFlag = 0,*/ /*funcFound = 1,*/ /*dimFlag = 0;*/
-							MarshalString(/*userCommand[2]*/ funcFormula[1], nameTemp);
-							index = dataManager->findVector(nameTemp);
-							//foundFlag = 1;
-							std::vector<Vector> ui;
-							ui.push_back(vectors[index]);
-							int normal = ui[0].Data.size();
-							ui.resize(normal);
-							/*for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)*/
-							for (int i = 2; i <= normal; i++)
-							{
-								/*MarshalString(userCommand[i], nameTemp);*/
-								MarshalString(funcFormula[i], nameTemp);
-								index = dataManager->findVector(nameTemp);
-
-								//if (index == -1)
-								//{
-								//	foundFlag = 0;
-								//	break;
-								//}
-								//if (vectors[index].Data.size() != normal)
-								//{
-								//	dimFlag = 0;
-								//	break;
-								//}
-
-								//dimFlag = 1;
-								//ui[j] = vectors[index];	//get vector data into ui
-
-								if (vectors[index].dimCheck(ui[0]))
-								{
-									ui[i-1] = vectors[index];	//get vector data into ui
-								}
-							}
-							// TODO: Ob isLI output not support
-							if (funcFormula[0] == "ob")
-							{
-								//if (dimFlag && foundFlag)
-								//	{
-#ifdef DEBUG
-										Output->Text += "Ob called" + Environment::NewLine;
-#endif // DEBUG
-										Matrix ans;
-										ans = Ob(normal, ui);
-
-										Output->Text += ans.outputStr();
-									//}
-							}
-							else if (funcFormula[0] == "isli")
-							{
-#ifdef DEBUG
-								Output->Text += "isLI called" + Environment::NewLine;
-#endif // DEBUG
-								String^ outputTemp;
-								outputTemp = (isLI(normal, ui)) ? "Yes" : "No";
-								Output->Text += outputTemp + Environment::NewLine;
-							}
-							else throw  "---Parameter amount error / Function not found---";
-							break;
 						}
+						else throw  "---Parameter amount error / Function not found---";
 					}
 					// TODO: Output 
 					// test version
