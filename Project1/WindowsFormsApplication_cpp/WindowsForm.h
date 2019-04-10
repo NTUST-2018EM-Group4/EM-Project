@@ -187,84 +187,98 @@ namespace WindowsFormsApplication_cpp {
 			this->printVectorToolStripMenuItem->Name = L"printVectorToolStripMenuItem";
 			this->printVectorToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->printVectorToolStripMenuItem->Text = L"Print Vector";
+			this->printVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::printVectorToolStripMenuItem_Click);
 			// 
 			// calculateToolStripMenuItem
 			// 
 			this->calculateToolStripMenuItem->Name = L"calculateToolStripMenuItem";
 			this->calculateToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->calculateToolStripMenuItem->Text = L"Calculate";
+			this->calculateToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::calculateToolStripMenuItem_Click);
 			// 
 			// normToolStripMenuItem
 			// 
 			this->normToolStripMenuItem->Name = L"normToolStripMenuItem";
 			this->normToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->normToolStripMenuItem->Text = L"Norm";
+			this->normToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::normToolStripMenuItem_Click);
 			// 
 			// normalToolStripMenuItem
 			// 
 			this->normalToolStripMenuItem->Name = L"normalToolStripMenuItem";
 			this->normalToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->normalToolStripMenuItem->Text = L"Normalization";
+			this->normalToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::normalToolStripMenuItem_Click);
 			// 
 			// crossToolStripMenuItem
 			// 
 			this->crossToolStripMenuItem->Name = L"crossToolStripMenuItem";
 			this->crossToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->crossToolStripMenuItem->Text = L"Cross";
+			this->crossToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::crossToolStripMenuItem_Click);
 			// 
 			// componentToolStripMenuItem
 			// 
 			this->componentToolStripMenuItem->Name = L"componentToolStripMenuItem";
 			this->componentToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->componentToolStripMenuItem->Text = L"Component";
+			this->componentToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::componentToolStripMenuItem_Click);
 			// 
 			// projectionToolStripMenuItem
 			// 
 			this->projectionToolStripMenuItem->Name = L"projectionToolStripMenuItem";
 			this->projectionToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->projectionToolStripMenuItem->Text = L"Projection";
+			this->projectionToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::projectionToolStripMenuItem_Click);
 			// 
 			// triangleAreaToolStripMenuItem
 			// 
 			this->triangleAreaToolStripMenuItem->Name = L"triangleAreaToolStripMenuItem";
 			this->triangleAreaToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->triangleAreaToolStripMenuItem->Text = L"Triangle area";
+			this->triangleAreaToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::triangleAreaToolStripMenuItem_Click);
 			// 
 			// parallelToolStripMenuItem
 			// 
 			this->parallelToolStripMenuItem->Name = L"parallelToolStripMenuItem";
 			this->parallelToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->parallelToolStripMenuItem->Text = L"Parallel";
+			this->parallelToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::parallelToolStripMenuItem_Click);
 			// 
 			// orthogonalToolStripMenuItem
 			// 
 			this->orthogonalToolStripMenuItem->Name = L"orthogonalToolStripMenuItem";
 			this->orthogonalToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->orthogonalToolStripMenuItem->Text = L"Orthogonal";
+			this->orthogonalToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::orthogonalToolStripMenuItem_Click);
 			// 
 			// angleToolStripMenuItem
 			// 
 			this->angleToolStripMenuItem->Name = L"angleToolStripMenuItem";
 			this->angleToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->angleToolStripMenuItem->Text = L"Angle";
+			this->angleToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::angleToolStripMenuItem_Click);
 			// 
 			// planeToolStripMenuItem
 			// 
 			this->planeToolStripMenuItem->Name = L"planeToolStripMenuItem";
 			this->planeToolStripMenuItem->Size = System::Drawing::Size(220, 26);
-			this->planeToolStripMenuItem->Text = L"Plane";
+			this->planeToolStripMenuItem->Text = L"Plane Normal";
+			this->planeToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::planeToolStripMenuItem_Click);
 			// 
 			// linearIndependentToolStripMenuItem
 			// 
 			this->linearIndependentToolStripMenuItem->Name = L"linearIndependentToolStripMenuItem";
 			this->linearIndependentToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->linearIndependentToolStripMenuItem->Text = L"Linear independent";
+			this->linearIndependentToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::linearIndependentToolStripMenuItem_Click);
 			// 
 			// gramschmidtToolStripMenuItem
 			// 
 			this->gramschmidtToolStripMenuItem->Name = L"gramschmidtToolStripMenuItem";
 			this->gramschmidtToolStripMenuItem->Size = System::Drawing::Size(220, 26);
 			this->gramschmidtToolStripMenuItem->Text = L"Gram-schmidt";
+			this->gramschmidtToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::gramschmidtToolStripMenuItem_Click);
 			// 
 			// loadMatrixToolStripMenuItem
 			// 
@@ -290,66 +304,77 @@ namespace WindowsFormsApplication_cpp {
 			this->printMatrixToolStripMenuItem->Name = L"printMatrixToolStripMenuItem";
 			this->printMatrixToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->printMatrixToolStripMenuItem->Text = L"Print Matrix";
+			this->printMatrixToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::printMatrixToolStripMenuItem_Click);
 			// 
 			// calculateToolStripMenuItem1
 			// 
 			this->calculateToolStripMenuItem1->Name = L"calculateToolStripMenuItem1";
 			this->calculateToolStripMenuItem1->Size = System::Drawing::Size(224, 26);
 			this->calculateToolStripMenuItem1->Text = L"Calculate";
+			this->calculateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &WindowsForm::calculateToolStripMenuItem1_Click);
 			// 
 			// rankToolStripMenuItem
 			// 
 			this->rankToolStripMenuItem->Name = L"rankToolStripMenuItem";
 			this->rankToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->rankToolStripMenuItem->Text = L"Rank";
+			this->rankToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::rankToolStripMenuItem_Click);
 			// 
 			// transposeToolStripMenuItem
 			// 
 			this->transposeToolStripMenuItem->Name = L"transposeToolStripMenuItem";
 			this->transposeToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->transposeToolStripMenuItem->Text = L"Transpose";
+			this->transposeToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::transposeToolStripMenuItem_Click);
 			// 
 			// solveLinearSystemToolStripMenuItem
 			// 
 			this->solveLinearSystemToolStripMenuItem->Name = L"solveLinearSystemToolStripMenuItem";
 			this->solveLinearSystemToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->solveLinearSystemToolStripMenuItem->Text = L"Solve Linear System";
+			this->solveLinearSystemToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::solveLinearSystemToolStripMenuItem_Click);
 			// 
 			// determinantToolStripMenuItem
 			// 
 			this->determinantToolStripMenuItem->Name = L"determinantToolStripMenuItem";
 			this->determinantToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->determinantToolStripMenuItem->Text = L"Determinants";
+			this->determinantToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::determinantToolStripMenuItem_Click);
 			// 
 			// inverseToolStripMenuItem
 			// 
 			this->inverseToolStripMenuItem->Name = L"inverseToolStripMenuItem";
 			this->inverseToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->inverseToolStripMenuItem->Text = L"Inverse";
+			this->inverseToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::inverseToolStripMenuItem_Click);
 			// 
 			// adjointToolStripMenuItem
 			// 
 			this->adjointToolStripMenuItem->Name = L"adjointToolStripMenuItem";
 			this->adjointToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->adjointToolStripMenuItem->Text = L"Adjoint";
+			this->adjointToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::adjointToolStripMenuItem_Click);
 			// 
 			// eigenValueVectorToolStripMenuItem
 			// 
 			this->eigenValueVectorToolStripMenuItem->Name = L"eigenValueVectorToolStripMenuItem";
 			this->eigenValueVectorToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->eigenValueVectorToolStripMenuItem->Text = L"Eigen Value Vector";
+			this->eigenValueVectorToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::eigenValueVectorToolStripMenuItem_Click);
 			// 
 			// powerMethodToolStripMenuItem
 			// 
 			this->powerMethodToolStripMenuItem->Name = L"powerMethodToolStripMenuItem";
 			this->powerMethodToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->powerMethodToolStripMenuItem->Text = L"Power Method";
+			this->powerMethodToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::powerMethodToolStripMenuItem_Click);
 			// 
 			// leastSquareToolStripMenuItem
 			// 
 			this->leastSquareToolStripMenuItem->Name = L"leastSquareToolStripMenuItem";
 			this->leastSquareToolStripMenuItem->Size = System::Drawing::Size(224, 26);
 			this->leastSquareToolStripMenuItem->Text = L"Least Square";
+			this->leastSquareToolStripMenuItem->Click += gcnew System::EventHandler(this, &WindowsForm::leastSquareToolStripMenuItem_Click);
 			// 
 			// clearInputToolStripMenuItem
 			// 
@@ -552,6 +577,31 @@ namespace WindowsFormsApplication_cpp {
 
 		System::Void VectorList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
 		System::Void MatrixList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
+		System::Void printVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void calculateToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void normToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void normalToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void crossToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void componentToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void projectionToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void triangleAreaToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void parallelToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void orthogonalToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void angleToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void planeToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void linearIndependentToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void gramschmidtToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void printMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void calculateToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void rankToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void transposeToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void solveLinearSystemToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void determinantToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void inverseToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void adjointToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void eigenValueVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void powerMethodToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void leastSquareToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 
 	//

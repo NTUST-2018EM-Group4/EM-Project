@@ -1215,4 +1215,104 @@ namespace WindowsFormsApplication_cpp
 			Input->Text = Input->Text->Insert(Input->SelectionStart, "$m" + MatrixList->SelectedIndex.ToString());
 		}
 	}
+	System::Void WindowsForm::printVectorToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "printV ");
+	}
+	System::Void WindowsForm::calculateToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "calV ");
+	}
+	System::Void WindowsForm::normToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Norm( )");
+	}
+	System::Void WindowsForm::normalToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Normal( )");
+	}
+	System::Void WindowsForm::crossToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Cross( , )");
+	}
+	System::Void WindowsForm::componentToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Com( , )");
+	}
+	System::Void WindowsForm::projectionToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Proj( , )");
+	}
+	System::Void WindowsForm::triangleAreaToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Area( , )");
+	}
+	System::Void WindowsForm::parallelToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV isParallel( , )");
+	}
+	System::Void WindowsForm::orthogonalToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV isOrthogonal( , )");
+	}
+	System::Void WindowsForm::angleToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Angle( , )");
+	}
+	System::Void WindowsForm::planeToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV pN( , )");
+	}
+	System::Void WindowsForm::linearIndependentToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV isLI( , )");
+	}
+	System::Void WindowsForm::gramschmidtToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcV Ob( , )");
+	}
+	System::Void WindowsForm::printMatrixToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "printM ");
+	}
+	System::Void WindowsForm::calculateToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "calM ");
+	}
+	System::Void WindowsForm::rankToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Rank( )");
+	}
+	System::Void WindowsForm::transposeToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Trans( )");
+	}
+	System::Void WindowsForm::solveLinearSystemToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "calM ( \ )");
+	}
+	System::Void WindowsForm::determinantToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Det( )");
+	}
+	System::Void WindowsForm::inverseToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Inverse( )");
+	}
+	System::Void WindowsForm::adjointToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Adj( )");
+	}
+	System::Void WindowsForm::eigenValueVectorToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM Eigen( )");
+	}
+	System::Void WindowsForm::powerMethodToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM PM( )");
+	}
+	System::Void WindowsForm::leastSquareToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM leastSquare( , )");
+	}
 }
