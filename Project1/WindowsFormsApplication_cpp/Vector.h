@@ -49,6 +49,8 @@ struct Vector
 	//
 	bool dimCheck(const Vector& Vb);
 	bool dimCheck(const Vector& Vb, char op) const;
+	bool zeroCheck();
+	void zeroExpand(int dim);
 	System::String^ outputStr();
 
 	//

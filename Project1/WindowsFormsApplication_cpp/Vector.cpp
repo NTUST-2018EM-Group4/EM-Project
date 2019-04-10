@@ -70,6 +70,28 @@ bool Vector::dimCheck(const Vector & Vb, char op) const
 	}
 }
 
+bool Vector::zeroCheck()
+{
+	// check Vector is zero vector or not
+
+	bool isZero = true;
+	for (int i = 0; i < this->size(); i++)
+	{
+		if (this->Data[i] != 0)
+		{
+			isZero = false;
+			break;
+		}
+	}
+	return isZero;
+}
+
+void Vector::zeroExpand(int dim)
+{
+	this->Data.clear();
+	this->Data.resize(dim, 0);
+}
+
 const double Vector::Norm() const
 {
 	double ans = 0;
@@ -181,6 +203,11 @@ const Vector Vector::operator+(const Vector& Vb) const
 		for (int i = 0; i < this->Data.size(); i++)
 		{
 			result.Data.push_back(this->Data[i] + Vb.Data[i]);
+
+			if (abs(result[i]) < 1E-6)
+			{
+				result.Data[i] = 0;
+			}
 		}
 		return result;
 	}
@@ -198,6 +225,11 @@ const Vector Vector::operator-(const Vector & Vb) const
 		for (int i = 0; i < this->Data.size(); i++)
 		{
 			result.Data.push_back(this->Data[i] - Vb.Data[i]);
+
+			if (abs(result[i]) < 1E-6)
+			{
+				result.Data[i] = 0;
+			}
 		}
 		return result;
 	}

@@ -392,6 +392,16 @@ namespace WindowsFormsApplication_cpp
 							Vector Va = calStack.top();
 							calStack.pop();
 
+							// Check zero vector first
+							if (Va.zeroCheck())
+							{
+								Va.zeroExpand(Vb.size());
+							}
+							else if (Vb.zeroCheck())
+							{
+								Vb.zeroExpand(Va.size());
+							}
+
 							// push calculated result
 							calStack.push(Vector(opTemp[0], Va, Vb));
 						}
@@ -682,7 +692,18 @@ namespace WindowsFormsApplication_cpp
 							MarshalString(funcFormula[2], VarNameTemp);
 							indexB = dataManager->findVector(VarNameTemp);
 
+							// Check zero vector first
+							if (vectors[indexA].zeroCheck())
+							{
+								vectors[indexA].zeroExpand(vectors[indexB].size());
+							}
+							else if (vectors[indexB].zeroCheck())
+							{
+								vectors[indexB].zeroExpand(vectors[indexA].size());
+							}
+
 							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
+ 
 
 							if (funcFormula[0] == "isorthogonal")
 							{	
