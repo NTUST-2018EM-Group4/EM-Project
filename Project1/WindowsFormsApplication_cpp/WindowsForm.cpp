@@ -1152,7 +1152,9 @@ namespace WindowsFormsApplication_cpp
 									Output->Text += eigenVal[i] + " ";
 								}
 								Output->Text += Environment::NewLine;
+								result = matrices[index].eigenVec(eigenVal);
 								result.Name = "pm(" + matrices[index].Name + ")";
+
 							}
 							else throw "---Function of binary not exist---";
 							break;

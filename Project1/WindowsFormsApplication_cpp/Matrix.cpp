@@ -190,6 +190,12 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 				{
 					double t = temp.Data[j].Data[i];
 					temp.Data[j] = temp.Data[j] - temp.Data[i] * t;
+					//zeroing to ignore the deviation
+					for (int k = 0; k < temp.Data[j].size(); k++)
+					{
+						if (abs(temp.Data[j].Data[k]) < 1.5E-6)
+							temp.Data[j].Data[k] = 0;
+					}
 				}
 			}
 
@@ -335,17 +341,64 @@ const Matrix Matrix::inverse()
 	throw "---Inverse process error---";
 }
 
+const Matrix Matrix::minor(const int i, const int j) const
+{
+	Matrix result;
+	int dim = this->Data.size() - 1;
+	//set result to n-1*n-1 matrix
+	result.Data.resize(dim);
+	for (int m = 0;m < dim; m++)
+	{
+		result.Data[m].Data.resize(dim);
+	}
+
+	for (int m = 0, I = 0; m < dim + 1; m++)
+	{
+		if (m != i)
+		{
+			for (int n = 0, J = 0; n < dim + 1; n++)
+			{
+				if (n != j)
+					result.Data[I].Data[J++] = this->Data[m].Data[n];
+			}
+			I++;
+		}
+	}
+	return result;
+}
+
+const double Matrix::cofactor(const int i, const int j) const
+{
+	//-1^i+j * det(minor(i,j))
+	return pow(-1, i + j) * this->minor(i, j).det();
+}
+
 const Matrix Matrix::adjoint()
 {
-	Matrix temp = *this;
+	Matrix result;
+	int dim = this->size();
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (this->Data.empty()) throw "---Empty Matrix---";
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
 	
-	temp = temp.inverse();
-	temp = temp * this->det();
+	//set result to n-1*n-1 matrix
+	result.Data.resize(dim);
+	for (int m = 0; m < dim; m++)
+	{
+		result.Data[m].Data.resize(dim);
+	}
 
-	return temp;
-	throw "---Adjoint process error---";
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < dim; j++)
+		{
+			result.Data[i].Data[j] = this->cofactor(i, j);
+		}
+	}
+	return result.trans();
 }
 
 const Matrix Matrix::leastSquare(const Matrix & Mb)
@@ -429,74 +482,55 @@ const std::vector<double> Matrix::eigenVal() const
 		throw "---Dimension not support---";
 		break;
 	}
+	//set precision
+	for (int i = 0; i < result.size(); i++)
+	{
+		result[i] = Round(result[i], 6);
+	}
 	return result;
 }
 
 const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 {
+	double dim = this->size();
 	Matrix result, tempM;
-	//set result to n*n
-	result.Data.resize(this->size());
-	for (int i = 0; i < this->size(); i++)
+	//set result to n(1)*n
+	result.Data.resize(val.size());
+	for (int i = 0; i < val.size(); i++)
 	{
-		result.Data[i].Data.resize(this->size());
+		result.Data[i].Data.resize(dim);
 	}
-	if (this->size() == 1)
+	if (dim == 1)
 	{
 		result.Data[0].Data[0] = 1;
 		return result;
 	}
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < val.size(); i++)
 	{
 		tempM = *this;
-		for (int j = 0; j < this->size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			tempM.Data[j].Data[j] -= val[i];	//(A - lambda I)v = 0
 		}
-//<<<<<<< Project1_Martix
-//		tempM = tempM.gaussian();
-		////首項變為1
-		//for (int j = 0; j < this->size(); j++)
-		//{
-		//	double temp = 0;
-		//	for (int k = j; k < this->size(); k++)
-		//	{
-		//		if (tempM.Data[j].Data[k] != 0)
-		//		{
-		//			temp = tempM.Data[j].Data[k];
-		//			break;
-		//		}
-		//	}
-		//	for (int k = j; k < this->size() && temp != 0; k++)
-		//	{
-		//		tempM.Data[j].Data[k] /= temp;
-		//		if (tempM.Data[j].Data[k] != 1)
-		//		{
-		//			tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
-		//		}
-		//	}
-		//}
-// =======
-//		tempM = tempM.gaussian(1, true);
-//		//首項變為一
-//		for (int j = 0; j < this->size(); j++)
-//		{
-//			double temp = tempM.Data[j].Data[j];
-//			for (int k = j; k < this->size() && temp != 0; k++)
-//			{
-//				tempM.Data[j].Data[k] /= temp;
-//				if (tempM.Data[j].Data[k] != 1)
-//				{
-//					tempM.Data[j].Data[k] = -tempM.Data[j].Data[k];	//移項加負號
-//				}
-//			}
-//		}
-// >>>>>>> Project1
-		
-		for (int j = 0, k = this->size() - 1; j < this->size(); j++, k--)
+		tempM = tempM.gaussian(1, 0);
+
+		for (int j = 0, k = dim - 1; j < dim; j++)
 		{
-			result.Data[i].Data[j] = tempM.Data[0].Data[k];	//get eigen vector to return
+			if (tempM.Data[j].Data[k] != 0)	//avoid -0
+			{	
+				//get eigen vector to return
+				if (tempM.Data[j].Data[j] == 1)	//移項加負號	
+				{
+					result.Data[i].Data[j] = -tempM.Data[j].Data[k];
+					result.Data[i].Data[dim - 1] = 1;	//最後一項自由變數補1
+				}
+				else if (tempM.Data[j].Data[j] == 0)	//0 輸出原向量
+				{
+					result.Data[i].Data[j] = tempM.Data[j].Data[k];
+				}
+			}
 		}
+		
 		result.Data[i] = result.Data[i].Normal();	//normalization
 	}
 
@@ -505,32 +539,73 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 
 const double Matrix::pm() const
 {
+	// error handling
+	if (this->Data.empty()) throw "---Empty Matrix---";
+
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
 	Matrix A = *this, X, temp;
+	double lastEigen, max = 0;
+	bool foundEigen;
 	// set temp to n*1 and set all to 1
 	X.Data.resize(this->size());
+	//X.Data[0].Data.push_back(1);
 	for (int i = 0; i < this->size(); i++)
 	{
 		X.Data[i].Data.push_back(1);
 	}
+	foundEigen = false;
 	//approaching
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 500 && !foundEigen; i++)
 	{
 		X = A * X;
-	}
-	double max = 0;
-	for (int i = 0; i < this->size(); i++)
-	{
-		max = (X.Data[i].Data[0] > max) ? X.Data[i].Data[0] : max;
-	}
-	//zoom
-	for (int i = 0; i < this->size(); i++)
-	{
-		X.Data[i] = X.Data[i] / max;
+		lastEigen = max;
+		max = 0;
+		for (int j = 0; j < this->size(); j++)
+		{
+			max = (abs(X.Data[j].Data[0]) > abs(max)) ? X.Data[j].Data[0] : max;
+		}
+		//zoom
+		for (int j = 0; j < this->size(); j++)
+		{
+			X.Data[j] = X.Data[j] / max;
+		}
+		if (abs(lastEigen - max) < 1E-10)
+		{
+			foundEigen = true;
+		}
 	}
 	temp = A * X;	//AX
 	temp = temp.trans() * X;		//AX dot X = AX^t * X
 	X = X.trans() * X;		//X*X
 	return (temp.Data[0].Data[0] / X.Data[0].Data[0]);
+}
+
+double Round(double num, int index)
+{
+	bool isNegative = false; // whether is negative number or not
+
+	if (num < 0) // if this number is negative, then convert to positive number
+	{
+		isNegative = true;
+		num = -num;
+	}
+
+	if (index >= 0)
+	{
+		int multiplier;
+		multiplier = pow(10, index);
+		num = (int)(num * multiplier + 0.5) / (multiplier * 1.0);
+	}
+
+	if (isNegative) // if this number is negative, then convert to negative number
+	{
+		num = -num;
+	}
+
+	return num;
 }
 
 const Matrix Ob(const int normal, const std::vector<Vector> ui)
