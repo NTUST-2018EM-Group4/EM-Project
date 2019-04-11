@@ -341,17 +341,64 @@ const Matrix Matrix::inverse()
 	throw "---Inverse process error---";
 }
 
+const Matrix Matrix::minor(const int i, const int j) const
+{
+	Matrix result;
+	int dim = this->Data.size() - 1;
+	//set result to n-1*n-1 matrix
+	result.Data.resize(dim);
+	for (int m = 0;m < dim; m++)
+	{
+		result.Data[m].Data.resize(dim);
+	}
+
+	for (int m = 0, I = 0; m < dim + 1; m++)
+	{
+		if (m != i)
+		{
+			for (int n = 0, J = 0; n < dim + 1; n++)
+			{
+				if (n != j)
+					result.Data[I].Data[J++] = this->Data[m].Data[n];
+			}
+			I++;
+		}
+	}
+	return result;
+}
+
+const double Matrix::cofactor(const int i, const int j) const
+{
+	//-1^i+j * det(minor(i,j))
+	return pow(-1, i + j) * this->minor(i, j).det();
+}
+
 const Matrix Matrix::adjoint()
 {
-	Matrix temp = *this;
+	Matrix result;
+	int dim = this->size();
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (this->Data.empty()) throw "---Empty Matrix---";
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
 	
-	temp = temp.inverse();
-	temp = temp * this->det();
+	//set result to n-1*n-1 matrix
+	result.Data.resize(dim);
+	for (int m = 0; m < dim; m++)
+	{
+		result.Data[m].Data.resize(dim);
+	}
 
-	return temp;
-	throw "---Adjoint process error---";
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < dim; j++)
+		{
+			result.Data[i].Data[j] = this->cofactor(i, j);
+		}
+	}
+	return result.trans();
 }
 
 const Matrix Matrix::leastSquare(const Matrix & Mb)

@@ -40,6 +40,8 @@ struct Matrix
 	const double rank();
 	const double det() const;
 	const Matrix inverse();
+	const Matrix minor(const int i, const int j) const;
+	const double cofactor(const int i, const int j) const;
 	const Matrix adjoint();
 	const Matrix leastSquare(const Matrix& Mb);
 	const std::vector<double> eigenVal() const;
