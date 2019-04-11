@@ -494,18 +494,18 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 {
 	double dim = this->size();
 	Matrix result, tempM;
-	//set result to n*n
-	result.Data.resize(dim);
-	for (int i = 0; i < dim; i++)
+	//set result to n(1)*n
+	result.Data.resize(val.size());
+	for (int i = 0; i < val.size(); i++)
 	{
-		result.Data[i].Data.resize(this->size());
+		result.Data[i].Data.resize(dim);
 	}
 	if (dim == 1)
 	{
 		result.Data[0].Data[0] = 1;
 		return result;
 	}
-	for (int i = 0; i < dim; i++)
+	for (int i = 0; i < val.size(); i++)
 	{
 		tempM = *this;
 		for (int j = 0; j < dim; j++)
@@ -539,27 +539,43 @@ const Matrix Matrix::eigenVec(const std::vector<double>& val) const
 
 const double Matrix::pm() const
 {
+	// error handling
+	if (this->Data.empty()) throw "---Empty Matrix---";
+
+	if (this->Data.size() != this->Data[0].Data.size())
+	{
+		throw "---Matrix not square---";
+	}
 	Matrix A = *this, X, temp;
+	double lastEigen, max = 0;
+	bool foundEigen;
 	// set temp to n*1 and set all to 1
 	X.Data.resize(this->size());
+	//X.Data[0].Data.push_back(1);
 	for (int i = 0; i < this->size(); i++)
 	{
 		X.Data[i].Data.push_back(1);
 	}
+	foundEigen = false;
 	//approaching
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 500 && !foundEigen; i++)
 	{
 		X = A * X;
-	}
-	double max = 0;
-	for (int i = 0; i < this->size(); i++)
-	{
-		max = (X.Data[i].Data[0] > max) ? X.Data[i].Data[0] : max;
-	}
-	//zoom
-	for (int i = 0; i < this->size(); i++)
-	{
-		X.Data[i] = X.Data[i] / max;
+		lastEigen = max;
+		max = 0;
+		for (int j = 0; j < this->size(); j++)
+		{
+			max = (abs(X.Data[j].Data[0]) > abs(max)) ? X.Data[j].Data[0] : max;
+		}
+		//zoom
+		for (int j = 0; j < this->size(); j++)
+		{
+			X.Data[j] = X.Data[j] / max;
+		}
+		if (abs(lastEigen - max) < 1E-10)
+		{
+			foundEigen = true;
+		}
 	}
 	temp = A * X;	//AX
 	temp = temp.trans() * X;		//AX dot X = AX^t * X
