@@ -316,12 +316,13 @@ namespace WindowsFormsApplication_cpp
 	System::Void WindowsForm::Input_TextChanged(System::Object^  sender, System::EventArgs^  e)
 	{
 		//當Input textbox中的輸入改變時，便會進入此函式
-		//取得向量資料
-		std::vector<Vector> vectors = dataManager->GetVectors();
-		std::vector<Matrix> matrices = dataManager->GetMatrices();
+
 		//判斷輸入自元為'\n'，並防止取到字串-1位置
 		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
 		{
+			//取得向量資料
+			std::vector<Vector> vectors = dataManager->GetVectors();
+			std::vector<Matrix> matrices = dataManager->GetMatrices();
 			//將使用者輸入字串(在userInput中)，依空白作切割
 			array<String^> ^userCommand = userInput->Split(' ');
 			std::string nameTemp;
