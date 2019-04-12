@@ -706,25 +706,39 @@ namespace WindowsFormsApplication_cpp
 							// TODO: Ob isLI output not support
 							if (funcFormula[0] == "ob")
 							{
-								//if (dimFlag && foundFlag)
-								//	{
 #ifdef DEBUG
 								Output->Text += "Ob called" + Environment::NewLine;
 #endif // DEBUG
-								Matrix ans;
-								ans = Ob(normal, ui);
-
-								Output->Text += ans.outputStr();
-								//}
+								Matrix ObResult;
+								ObResult = Ob(normal, ui);
+								ObResult.Name = "Ob(";
+								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
+								{
+									if (varIndex != 1)
+									{
+										ObResult.Name += ",";
+									}
+									ObResult.Name += vectors[varIndex].Name;
+								}
+								ObResult.Name += ")";
+								Output->Text += ObResult.outputStr();
 							}
 							else if (funcFormula[0] == "isli")
 							{
 #ifdef DEBUG
 								Output->Text += "isLI called" + Environment::NewLine;
 #endif // DEBUG
-								String^ outputTemp;
-								outputTemp = (isLI(normal, ui)) ? "Yes" : "No";
-								Output->Text += outputTemp + Environment::NewLine;
+								result.Name = "isLI(";
+								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
+								{
+									if (varIndex != 1)
+									{
+										result.Name += ",";
+									}
+									result.Name += vectors[varIndex].Name;
+								}
+								result.Name += ") : ";
+								result.Name += (isLI(normal, ui)) ? "Yes" : "No";
 							}
 						}
 						else if (funcFormula->Count == 3)
