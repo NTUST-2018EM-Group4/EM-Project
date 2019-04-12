@@ -640,6 +640,13 @@ System::String^ Matrix::outputStr()
 {
 	System::String^ Temp;
 	Temp = gcnew System::String(Name.c_str());
+
+	if (this->size() == 0)
+	{
+		Temp += System::Environment::NewLine;
+		return Temp;
+	}
+
 	Temp += " = " + System::Environment::NewLine;
 
 	for (int i = 0; i < Data.size(); i++)

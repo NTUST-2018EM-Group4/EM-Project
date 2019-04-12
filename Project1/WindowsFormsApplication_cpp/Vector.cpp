@@ -163,6 +163,13 @@ System::String ^ Vector::outputStr()
 {
 	System::String^ Temp;
 	Temp = gcnew System::String(Name.c_str());
+
+	if (this->size() == 0)
+	{
+		Temp += System::Environment::NewLine;
+		return Temp;
+	}
+
 	Temp += " = [";
 
 	std::string temp = "";
