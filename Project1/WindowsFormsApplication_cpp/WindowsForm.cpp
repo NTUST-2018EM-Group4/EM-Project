@@ -1146,29 +1146,37 @@ namespace WindowsFormsApplication_cpp
 							}
 							else if (funcFormula[0] == "eigen")
 							{
-								//todo
 								eigenVal = matrices[index].eigenVal();
-								Output->Text += "eigenVal = ";
+
+								// store eigen Vector
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "eigen Vector(" + matrices[index].Name +")";
+
+								Matrix valResult;
+								valResult.Data.resize(eigenVal.size());
 								for (int i = 0; i < eigenVal.size(); i++)
 								{
-									Output->Text += eigenVal[i] + " ";
+									valResult.Data[i].Data.push_back(eigenVal[i]);
 								}
-								Output->Text += Environment::NewLine;
-								result = matrices[index].eigenVec(eigenVal);
-								result.Name = "eigen(" + matrices[index].Name +")";
+								valResult.Name = "eigen Value(" + matrices[index].Name + ")";
+								Output->Text += valResult.outputStr();
 							}
 							else if (funcFormula[0] == "pm")
 							{
-								//todo
 								eigenVal.push_back(matrices[index].pm());
+
+								// store eigen Vector
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "PM eigen Vector(" + matrices[index].Name + ")";
+
+								Matrix valResult;
+								valResult.Data.resize(eigenVal.size());
 								for (int i = 0; i < eigenVal.size(); i++)
 								{
-									Output->Text += eigenVal[i] + " ";
+									valResult.Data[i].Data.push_back(eigenVal[i]);
 								}
-								Output->Text += Environment::NewLine;
-								result = matrices[index].eigenVec(eigenVal);
-								result.Name = "pm(" + matrices[index].Name + ")";
-
+								valResult.Name = "PM eigen Value(" + matrices[index].Name + ")";
+								Output->Text += valResult.outputStr();
 							}
 							else throw "---Function of binary not exist---";
 							break;
