@@ -4,6 +4,7 @@
 using namespace System;
 using namespace System::Windows::Forms;
 [STAThread]
+
 void main(array<String^>^ args)
 {
 	Application::EnableVisualStyles();
@@ -11,7 +12,6 @@ void main(array<String^>^ args)
 	WindowsFormsApplication_cpp::WindowsForm windowsForm;
 	Application::Run(%windowsForm);
 }
-
 
 namespace WindowsFormsApplication_cpp
 {
@@ -27,23 +27,11 @@ namespace WindowsFormsApplication_cpp
 			return 0;
 		}
 	}
+	
 	int priority(std::string op)
 	{
 		String^ temp = gcnew String(op.c_str());
 		return priority(temp);
-	}
-	String^ printVector(String^ s, const Vector& v)
-	{
-		s += "[";
-		for (int i = 0; i < v.Data.size(); i++)
-		{
-			/*不知道怎麼限制6位*/
-			s += v.Data[i].ToString();
-			if (i != v.Data.size() - 1)
-				s += ", ";
-		}
-		s += "]" + Environment::NewLine;
-		return s;
 	}
 
 	Generic::List<String^>^ inToPostfix(array<String^>^ formulaList)
@@ -198,11 +186,6 @@ namespace WindowsFormsApplication_cpp
 		return Cmd;
 	}
 
-	//System::Void WindowsForm::loadVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
-	//{
-	//	//開啟Dialog
-	//	openFileDialog1->ShowDialog();
-	//}
 	System::Void WindowsForm::openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e)
 	{
 		//在Dialog按下OK便會進入此函式
@@ -241,29 +224,7 @@ namespace WindowsFormsApplication_cpp
 			Output->Text += "---Vector datas have been loaded---" + Environment::NewLine;
 		}
 	}
-	System::Void WindowsForm::loadVectorToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
-	{
-		//開啟Dialog
-		openFileDialog1->ShowDialog();
-	}
-	//System::Void WindowsForm::loadMatrixToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
-	//{
-	//	//開啟Dialog
-	//	openFileDialog2->ShowDialog();
-	//}
-	System::Void WindowsForm::loadMatrixToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
-	{
-		//開啟Dialog
-		openFileDialog2->ShowDialog();
-	}
-	System::Void WindowsForm::clearInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
-	{
-		Input->Text = "";
-	}
-	System::Void WindowsForm::clearOutputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
-	{
-		Output->Text = "";
-	}
+
 	System::Void WindowsForm::openFileDialog2_FileOk(System::Object ^ sender, System::ComponentModel::CancelEventArgs ^ e)
 	{
 		//在Dialog按下OK便會進入此函式
@@ -313,924 +274,28 @@ namespace WindowsFormsApplication_cpp
 		}
 	}
 
-	System::Void WindowsForm::Input_TextChanged(System::Object^  sender, System::EventArgs^  e)
+	System::Void WindowsForm::loadVectorToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
-		//當Input textbox中的輸入改變時，便會進入此函式
-
-		//判斷輸入自元為'\n'，並防止取到字串-1位置
-		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
-		{
-			//取得向量資料
-			std::vector<Vector> vectors = dataManager->GetVectors();
-			std::vector<Matrix> matrices = dataManager->GetMatrices();
-			//將使用者輸入字串(在userInput中)，依空白作切割
-			array<String^> ^userCommand = userInput->Split(' ');
-			std::string nameTemp;
-			//字串比較，若指令為"print"的情況
-			if (userCommand[0] == "printV")
-			{
-				try
-				{
-					MarshalString(userCommand[1], nameTemp);
-					// find Matrix index
-					int index = dataManager->findVector(nameTemp);
-					// Output
-					Output->Text += vectors[index].outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-			}
-			else if (userCommand[0] == "printM")
-			{
-				try
-				{
-					MarshalString(userCommand[1], nameTemp);
-					// find Matrix index
-					int index = dataManager->findMatrix(nameTemp);
-					// Output
-					Output->Text += matrices[index].outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-			}
-
-			// calculate Vector
-			else if (userCommand[0] == "calV")
-			{	
-				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
-#ifdef DEBUG
-				Output->Text += "postfix =";
-				for (int i = 0; i < postfixFormula->Count; i++)
-				{
-					Output->Text += " " + postfixFormula[i];
-				}
-				Output->Text += Environment::NewLine;
-#endif // DEBUG
-				// store temp Vector
-				std::stack<Vector> calStack;
-				try
-				{
-					for (int i = 0; i < postfixFormula->Count; i++)
-					{
-						// if detect operator
-						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
-						{
-							std::string opTemp = "";
-							MarshalString(postfixFormula[i], opTemp);
-
-							// pop two Vector
-							Vector Vb = calStack.top();
-							calStack.pop();
-							Vector Va = calStack.top();
-							calStack.pop();
-
-							// Check zero vector first
-							if (Va.zeroCheck())
-							{
-								Va.zeroExpand(Vb.size());
-							}
-							else if (Vb.zeroCheck())
-							{
-								Vb.zeroExpand(Va.size());
-							}
-
-							// push calculated result
-							calStack.push(Vector(opTemp[0], Va, Vb));
-						}
-						// not operator push vector into stack 
-						else
-						{
-							std::string formulaTemp = "";
-							MarshalString(postfixFormula[i], formulaTemp);
-							int index = dataManager->findVector(formulaTemp);
-							calStack.push(vectors[index]);
-						}
-					}
-					// pop final calculate result vector 
-					Vector result = calStack.top();
-					calStack.pop();
-
-					// output
-					MarshalString(userCommand[1], result.Name);
-					Output->Text += result.outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-//				Vector ans, Va, Vb;
-//				std::stack<Vector> calStack;
-//				bool dimFlag, foundFlag;
-//				for (int i = 0; i < postfixFormula->Count; i++)
-//				{
-//					dimFlag = 0;
-//					foundFlag = 0;
-//					Va = Vector();
-//					Vb = Vector();
-//					if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
-//					{
-//						std::string temp;
-//						double scalar;
-//
-//						//check scalar or not
-//						System::String^ Temp = postfixFormula[i - 2];
-//						MarshalString(Temp, temp);
-//						if (temp[0] != '$')
-//							scalar = strtod(temp.c_str(), NULL);
-//
-//						Temp = postfixFormula[i - 1];
-//						MarshalString(Temp, temp);
-//						if (temp[0] != '$')
-//							scalar = strtod(temp.c_str(), NULL);
-//
-//						//find vector to calculate
-//						MarshalString(postfixFormula[i - 2], nameTemp);
-//						int index = dataManager->findVector(nameTemp);
-//						if (index != -1)
-//							Va = vectors[index];
-//
-//						MarshalString(postfixFormula[i - 1], nameTemp);
-//						index = dataManager->findVector(nameTemp);
-//						if (index != -1)
-//							Vb = vectors[index];
-//
-//						//從算式stack中獲得運算子
-//						if (Vb.Name == "" && !calStack.empty())
-//						{
-//							Vb = calStack.top();
-//							calStack.pop();
-//						}
-//
-//						if (Va.Name == "" && !calStack.empty())
-//						{
-//							Va = calStack.top();
-//							calStack.pop();
-//						}
-//
-//						//found check
-//						if (!Va.Data.empty() && !Vb.Data.empty())
-//							foundFlag = 1;
-//						else if (Va.Data.empty() && Vb.Data.empty()) break;
-//
-//						//dimesion check
-//						if (Va.dimCheck(Vb)) {
-//							dimFlag = 1;
-//
-//							if (postfixFormula[i] == "+")
-//							{
-//								//call Addition
-//#ifdef DEBUG
-//								Output->Text += "Addition called" + Environment::NewLine;
-//#endif // DEBUG
-//								ans = Va + Vb;
-//							}
-//							else if (postfixFormula[i] == "-")
-//							{
-//								//call Subtraction
-//#ifdef DEBUG
-//								Output->Text += "Subtraction called" + Environment::NewLine;
-//#endif // DEBUG
-//								ans = Va - Vb;
-//							}
-//							else if (postfixFormula[i] == "*")
-//							{
-//								//call dot
-//#ifdef DEBUG
-//								Output->Text += "Dot called" + Environment::NewLine;
-//#endif // DEBUG
-//								ans = Va * Vb;
-//							}
-//							//push into calStack
-//							calStack.push(ans);
-//
-//							postfixFormula->RemoveAt(i - 2);
-//							postfixFormula->RemoveAt(i - 2);
-//							i -= 2;
-//
-//						}
-//						else
-//						{
-//							if (Va.Data.empty() || Vb.Data.empty() || \
-//								(!Va.Data.empty() && !Vb.Data.empty()))
-//							{
-//								if (Va.Data.empty() && postfixFormula[i - 2][0] == '$' || \
-//									Vb.Data.empty() && postfixFormula[i - 1][0] == '$')
-//									continue;
-//								dimFlag = 1;
-//								foundFlag = 1;
-//								//call scalar
-//#ifdef DEBUG
-//								Output->Text += "Scalar called" + Environment::NewLine;
-//#endif // DEBUG
-//								if (Va.Data.size() < Vb.Data.size())
-//								{
-//									if (!Va.Data.empty())
-//										scalar = Va.Data[0];
-//									ans = scalar * Vb;
-//								}
-//								else
-//								{
-//									if (!Vb.Data.empty())
-//										scalar = Vb.Data[0];
-//									ans = scalar * Va;
-//								}
-//								//push into calStack
-//								calStack.push(ans);
-//								postfixFormula->RemoveAt(i - 2);
-//								postfixFormula->RemoveAt(i - 2);
-//								i -= 2;
-//							}
-//							else break;
-//						}
-//					}
-//				}
-//
-//				if (!foundFlag)
-//					Output->Text += "-Vector not found-" + Environment::NewLine;
-//				else if (!dimFlag)
-//					Output->Text += "-Dimension not same-" + Environment::NewLine;
-//				else
-//				{
-//					//格式無誤，輸出結果
-//
-//					String^ outputTemp;
-//					//將輸出資料存入暫存
-//					ans = calStack.top();
-//					calStack.pop();
-//					outputTemp = printVector(outputTemp, ans);
-//					//輸出暫存資訊
-//					Output->Text += gcnew String(userCommand[1] + " = " + outputTemp);
-//				}
-			}
-
-			// calculate Matrix
-			else if (userCommand[0] == "calM")
-			{
-				// normalization postfix formula
-				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
-#ifdef DEBUG
-				// Output postfix formula
-				Output->Text += "postfix =";
-				for (int i = 0; i < postfixFormula->Count; i++)
-				{
-					Output->Text += " " + postfixFormula[i];
-				}
-				Output->Text += Environment::NewLine;
-#endif // DEBUG
-				// store temp Matrix
-				std::stack<Matrix> calStack;
-				try
-				{
-					for (int i = 0; i < postfixFormula->Count; i++)
-					{
-						// if detect operator
-						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*" || postfixFormula[i] == "\\")
-						{
-							std::string opTemp = "";
-							MarshalString(postfixFormula[i], opTemp);
-
-							// pop two Matrix
-							Matrix Mb = calStack.top();
-							calStack.pop();
-							Matrix Ma = calStack.top();
-							calStack.pop();
-
-							// push calculated result
-							calStack.push(Matrix(opTemp[0], Ma, Mb));
-						}
-						// not operator push matrix into stack 
-						else
-						{
-							std::string formulaTemp = "";
-							MarshalString(postfixFormula[i], formulaTemp);
-							int index = dataManager->findMatrix(formulaTemp);
-							calStack.push(matrices[index]);
-						}
-					}
-					// pop final calculate result matrix 
-					Matrix result = calStack.top();
-					calStack.pop();
-
-					// output
-					MarshalString(userCommand[1], result.Name);
-					Output->Text += result.outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-			}
-
-			// Vector Function
-			else if (userCommand[0] == "funcV")
-			{
-				// normalization the command name and parameter
-				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
-				try
-				{
-					Vector result;
-					std::string VarNameTemp = "";
-					// TODO: if Count == 0
-					if (funcFormula->Count == 0) throw "---No Function command---";
-					else if (funcFormula->Count == 1) throw "---No parameter---";
-					else if (funcFormula->Count == 2)
-					{
-						// record parameter index of array
-						MarshalString(funcFormula[1], VarNameTemp);
-						int index = dataManager->findVector(VarNameTemp);
-
-						if (funcFormula[0] == "norm")
-						{
-							double normValue = vectors[index].Norm();
-							result.Data.push_back(normValue);
-							result.Name = "Norm(" + vectors[index].Name + ")";
-#ifdef DEBUG
-							Output->Text += "Norm called" + Environment::NewLine;
-#endif // DEBUG
-						}
-						else if (funcFormula[0] == "normal")
-						{
-							result = vectors[index].Normal();
-							result.Name = "Normal(" + vectors[index].Name + ")";
-#ifdef DEBUG
-							Output->Text += "Normalization called" + Environment::NewLine;
-#endif // DEBUG
-						}
-						else throw "---Function of unary not exist---";
-					}
-					else if (funcFormula->Count >= 3)
-					{
-						// record parameter index of array
-						int index, indexA, indexB;
-
-						if (funcFormula[0] == "ob" || funcFormula[0] == "isli")
-						{
-							// Ob function or isLI function PreProcess
-							MarshalString(funcFormula[1], nameTemp);
-							index = dataManager->findVector(nameTemp);
-
-							std::vector<Vector> ui;
-							ui.push_back(vectors[index]);
-							int normal = ui[0].Data.size();
-							ui.resize(normal);
-
-							for (int i = 2; i <= normal; i++)
-							{
-								MarshalString(funcFormula[i], nameTemp);
-								index = dataManager->findVector(nameTemp);
-
-								if (vectors[index].dimCheck(ui[0]))
-								{
-									ui[i - 1] = vectors[index];	//get vector data into ui
-								}
-							}
-
-							// TODO: Ob isLI output not support
-							if (funcFormula[0] == "ob")
-							{
-#ifdef DEBUG
-								Output->Text += "Ob called" + Environment::NewLine;
-#endif // DEBUG
-								Matrix ObResult;
-								ObResult = Ob(normal, ui);
-								ObResult.Name = "Ob(";
-								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
-								{
-									if (varIndex != 1)
-									{
-										ObResult.Name += ",";
-									}
-									ObResult.Name += vectors[varIndex].Name;
-								}
-								ObResult.Name += ")";
-								Output->Text += ObResult.outputStr();
-							}
-							else if (funcFormula[0] == "isli")
-							{
-#ifdef DEBUG
-								Output->Text += "isLI called" + Environment::NewLine;
-#endif // DEBUG
-								result.Name = "isLI(";
-								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
-								{
-									if (varIndex != 1)
-									{
-										result.Name += ",";
-									}
-									result.Name += vectors[varIndex].Name;
-								}
-								result.Name += ") : ";
-								result.Name += (isLI(normal, ui)) ? "Yes" : "No";
-							}
-						}
-						else if (funcFormula->Count == 3)
-						{
-							MarshalString(funcFormula[1], VarNameTemp);
-							indexA = dataManager->findVector(VarNameTemp);
-							MarshalString(funcFormula[2], VarNameTemp);
-							indexB = dataManager->findVector(VarNameTemp);
-
-							// Check zero vector first
-							if (vectors[indexA].zeroCheck())
-							{
-								vectors[indexA].zeroExpand(vectors[indexB].size());
-							}
-							else if (vectors[indexB].zeroCheck())
-							{
-								vectors[indexB].zeroExpand(vectors[indexA].size());
-							}
-
-							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
-
-
-							if (funcFormula[0] == "isorthogonal")
-							{
-								result = vectors[indexA] * vectors[indexB];
-								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-								if (result.Data[0] == 0)
-								{
-									result.Name += " : Yes";
-								}
-								else
-								{
-									result.Name += " : No";
-								}
-#ifdef DEBUG
-								Output->Text += "isOrthogonal called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "angle")
-							{
-								double angleValue = vectors[indexA].Angle(vectors[indexB]);
-								result.Data.push_back(angleValue);
-								result.Name = "Angle(" + vectors[indexA].Name + "," + vectors[indexB].Name + ") theta";
-#ifdef DEBUG
-								Output->Text += "Angle called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "com")
-							{
-								double comValue = vectors[indexA].Com(vectors[indexB]);
-								result.Data.push_back(comValue);
-								result.Name = "Com(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-#ifdef DEBUG
-								Output->Text += "Com called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "proj")
-							{
-								result = vectors[indexA].Proj(vectors[indexB]);
-								result.Name = "Proj(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-#ifdef DEBUG
-								Output->Text += "Proj called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "cross" || funcFormula[0] == "pn")
-							{
-								if (vectors[indexA].Data.size() == 3)
-								{
-									// TODO: Command tolower
-									result = vectors[indexA].Cross(vectors[indexB]);
-									if (funcFormula[0] == "cross")
-									{
-										result.Name = "Cross";
-									}
-									else if (funcFormula[0] == "pn")
-									{
-										result.Name = "pN";
-									}
-									result.Name += "(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-								}
-								else throw "---Cross / pN Dimension error---";
-#ifdef DEBUG
-								Output->Text += "Cross / pN called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "isparallel")
-							{
-								result.Name = "isParallel(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-								double angleValue = vectors[indexA].Angle(vectors[indexB]);
-
-								if (angleValue == 0 || angleValue == 180)
-								{
-									result.Name += " : Yes";
-								}
-								else
-								{
-									result.Name += " : No";
-								}
-#ifdef DEBUG
-								Output->Text += "isParallel called" + Environment::NewLine;
-#endif // DEBUG
-							}
-							else if (funcFormula[0] == "area")
-							{
-								double areaValue = vectors[indexA].Area(vectors[indexB]);
-								result.Data.push_back(areaValue);
-								result.Name = "Area(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
-#ifdef DEBUG
-								Output->Text += "Area called" + Environment::NewLine;
-#endif // DEBUG
-							}
-
-							else throw "---Function of binary not exist---";
-						}
-						else throw  "---Parameter amount error / Function not found---";
-					}
-					// TODO: Output 
-					// test version
-					Output->Text += result.outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-
-//				Vector Va, Vb;
-//				bool foundFlag = 0, funcFound = 1, dimFlag = 0;
-//				if ((userCommand[1] == "Norm(" || userCommand[1] == "Normal(")\
-//					&& userCommand[3] == ")")	//unary "funcName( $v )"
-//				{
-//					dimFlag = 1;
-//					MarshalString(userCommand[2], nameTemp);
-//					int index = findVector(nameTemp, vectors);
-//					if (index != -1)
-//					{
-//						foundFlag = 1;
-//						Va = vectors[index];
-//						if (userCommand[1] == "Norm(")
-//						{
-//#ifdef DEBUG
-//							Output->Text += "Norm called" + Environment::NewLine;
-//#endif // DEBUG
-//
-//							double ans = Va.Norm();
-//							Output->Text += "Norm(" + userCommand[2] + ") = " + ans + Environment::NewLine;
-//						}
-//						else if (userCommand[1] == "Normal(")
-//						{
-//#ifdef DEBUG
-//							Output->Text += "Normalization called" + Environment::NewLine;
-//#endif // DEBUG
-//							Vector ans = Va.Normal();
-//							String^ outputTemp = printVector(outputTemp, ans);
-//							Output->Text += "Normal(" + userCommand[2] + ") = " + outputTemp;
-//						}
-//					}
-//				}
-//				else if ((userCommand[1] == "isOrthogonal(" || userCommand[1] == "Angle("	\
-//					|| userCommand[1] == "Com(" || userCommand[1] == "Proj(")			\
-//					|| userCommand[1] == "Cross(" || userCommand[1] == "isParallel("		\
-//					|| userCommand[1] == "Area(" || userCommand[1] == "pN("				\
-//					|| userCommand[1] == "isLI("	\
-//					&& userCommand[3] == ","		&& userCommand[5] == ")")	//binary "funcName( $va , $vb )"
-//				{
-//					MarshalString(userCommand[2], nameTemp);
-//					int indexA = findVector(nameTemp, vectors);
-//					MarshalString(userCommand[4], nameTemp);
-//					int indexB = findVector(nameTemp, vectors);
-//					if (indexA != -1 && indexB != -1)
-//					{
-//						foundFlag = 1;
-//						Va = vectors[indexA];
-//						Vb = vectors[indexB];
-//						if (Va.dimCheck(Vb))	//dinmension check
-//						{
-//							dimFlag = 1;
-//							if (userCommand[1] == "isOrthogonal(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "isOrthogonal called" + Environment::NewLine;
-//#endif // DEBUG
-//								String^ outputTemp = ((Va * Vb) == 0) ? "Yes" : "No";
-//								Output->Text += outputTemp + Environment::NewLine;
-//
-//							}
-//							else if (userCommand[1] == "Angle(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "Angle called" + Environment::NewLine;
-//#endif // DEBUG
-//								double ans = Va.Angle(Vb);
-//								Output->Text += "theta = " + ans + Environment::NewLine;
-//							}
-//							else if (userCommand[1] == "Com(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "Com called" + Environment::NewLine;
-//#endif // DEBUG
-//
-//								double ans = Va.Com(Vb);
-//								Output->Text += ans + Environment::NewLine;
-//							}
-//							else if (userCommand[1] == "Proj(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "Proj called" + Environment::NewLine;
-//#endif // DEBUG
-//								Vector ans = Va.Proj(Vb);
-//								String^ outputTemp = "";
-//								for (int i = 1; i <= 5; i++)
-//									outputTemp += userCommand[i];
-//								outputTemp += " = ";
-//								outputTemp = printVector(outputTemp, ans);
-//								Output->Text += outputTemp;
-//							}
-//							else if (userCommand[1] == "Cross(" || userCommand[1] == "pN(")
-//							{
-//								if (Va.Data.size() == 3)
-//								{
-//#ifdef DEBUG
-//									Output->Text += "Cross / pN called" + Environment::NewLine;
-//#endif // DEBUG
-//									Vector ans = Va.Cross(Vb);
-//									String^ outputTemp = "";
-//									for (int i = 1; i <= 5; i++)
-//										outputTemp += userCommand[i];
-//									outputTemp += " = ";
-//									outputTemp = printVector(outputTemp, ans);
-//									Output->Text += outputTemp;
-//								}
-//								else
-//									Output->Text += "-Dimension error-" + Environment::NewLine;
-//							}
-//							else if (userCommand[1] == "isParallel(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "isParallel called" + Environment::NewLine;
-//#endif // DEBUG
-//
-//								String^ outputTemp;
-//								double angle = Va.Angle(Vb);
-//								if (angle == 0 || angle == 180)
-//									outputTemp = "Yes";
-//								else
-//									outputTemp = "No";
-//								Output->Text += outputTemp + Environment::NewLine;
-//							}
-//							else if (userCommand[1] == "Area(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "Area called" + Environment::NewLine;
-//#endif // DEBUG
-//
-//								double ans = Va.Area(Vb);
-//								Output->Text += ans + Environment::NewLine;
-//							}
-//							else if (userCommand[1] == "isLI(")
-//							{
-//#ifdef DEBUG
-//								Output->Text += "isLI called" + Environment::NewLine;
-//#endif // DEBUG
-//								//todo
-//							}
-//						}
-//					}
-//				}
-
-//				else if (userCommand[1] == "Ob(")
-//				{
-//					MarshalString(userCommand[2], nameTemp);
-//					int index = findVector(nameTemp, vectors);
-//					if (index != -1)
-//					{
-//						foundFlag = 1;
-//						std::vector<Vector> ui;
-//						ui.push_back(vectors[index]);
-//						int normal = ui[0].Data.size();
-//						std::vector<Vector> Vi(normal);
-//						std::vector<Vector> ni(normal);
-//						ui.resize(normal);
-//						Vi[0] = ui[0];
-//						ni[0] = Vi[0].Normal();
-//						for (int i = 4, j = 1; i <= 2 * normal; i += 2, j++)
-//						{
-//							MarshalString(userCommand[i], nameTemp);
-//							index = findVector(nameTemp, vectors);
-//							if (index == -1)
-//							{
-//								foundFlag = 0;
-//								break;
-//							}
-//							if (vectors[index].Data.size() != normal)
-//							{
-//								dimFlag = 0;
-//								break;
-//							}
-//							dimFlag = 1;
-//							ui[j] = vectors[index];	//get vector data into ui
-//						}
-//						if (dimFlag && foundFlag)
-//						{
-//#ifdef DEBUG
-//							Output->Text += "Ob called" + Environment::NewLine;
-//#endif // DEBUG
-//							//formula from wikipedia "Gram–Schmidt process"
-//							for (int i = 1; foundFlag && i < normal; i++)
-//							{
-//								Vector sum;
-//								sum.Data.resize(normal);
-//								for (int j = 0; j <= i - 1; j++)
-//								{
-//									sum = sum + ((ui[i] * ni[j]) * ni[j]);
-//								}
-//								Vi[i] = ui[i] - sum;
-//								ni[i] = Vi[i].Normal();
-//							}
-//							String^ outputTemp = "";
-//							for (int i = 1; i <= normal * 2 + 1; i++)
-//								outputTemp += userCommand[i];
-//							outputTemp += " :" + Environment::NewLine;
-//							for (int i = 0; i < normal; i++)
-//							{
-//								outputTemp = printVector(outputTemp, ni[i]);
-//							}
-//							Output->Text += outputTemp;
-//						}
-//					}
-//				}
-//				else
-//				{
-//					funcFound = 0;
-//					Output->Text += "-Function not found-" + Environment::NewLine;
-//				}
-//				if (funcFound && !foundFlag)
-//					Output->Text += "-Vector not found-" + Environment::NewLine;
-//				else if (funcFound && !dimFlag)
-//					Output->Text += "-dimension not same-" + Environment::NewLine;
-			}
-
-			// Matrix Function
-			else if (userCommand[0] == "funcM")
-			{
-				// normalization the command name and parameter
-				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
-
-				try
-				{
-					Matrix result;
-					std::string VarNameTemp = "";
-					std::vector<double> eigenVal;
-					// TODO: if Count == 0
-					if (funcFormula->Count == 1) throw "---No parameter---";
-					else
-					{
-						// TODO: Change rename method
-						switch (funcFormula->Count)
-						{
-							// record parameter index of array
-							int index, indexA, indexB;
-
-							// unary parameter function case
-						case 2:
-							MarshalString(funcFormula[1], VarNameTemp);
-							// find matrix
-							index = dataManager->findMatrix(VarNameTemp);
-
-							if (funcFormula[0] == "trans")
-							{
-								result = matrices[index].trans();
-								result.Name = "Trans(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "gauss")
-							{
-								result = matrices[index].gaussian(1, true);
-								result.Name = "Gauss(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "rank")
-							{
-								double rankValue = matrices[index].rank();
-								result.Data.resize(1);
-								result.Data[0].Data.push_back(rankValue);
-								result.Name = "Rank(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "det")
-							{
-								double detValue = matrices[index].det();
-								result.Data.resize(1);
-								result.Data[0].Data.push_back(detValue);
-								result.Name = "Det(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "inverse")
-							{
-								result = matrices[index].inverse();
-								result.Name = "Inverse(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "adj")
-							{
-								result = matrices[index].adjoint();
-								result.Name = "Adj(" + matrices[index].Name + ")";
-							}
-							else if (funcFormula[0] == "eigen")
-							{
-								eigenVal = matrices[index].eigenVal();
-
-								// store eigen Vector
-								result = matrices[index].eigenVec(eigenVal);
-								result.Name = "eigen Vector(" + matrices[index].Name +")";
-
-								Matrix valResult;
-								valResult.Data.resize(eigenVal.size());
-								for (int i = 0; i < eigenVal.size(); i++)
-								{
-									valResult.Data[i].Data.push_back(eigenVal[i]);
-								}
-								valResult.Name = "eigen Value(" + matrices[index].Name + ")";
-								Output->Text += valResult.outputStr();
-							}
-							else if (funcFormula[0] == "pm")
-							{
-								eigenVal.push_back(matrices[index].pm());
-
-								// store eigen Vector
-								result = matrices[index].eigenVec(eigenVal);
-								result.Name = "PM eigen Vector(" + matrices[index].Name + ")";
-
-								Matrix valResult;
-								valResult.Data.resize(eigenVal.size());
-								for (int i = 0; i < eigenVal.size(); i++)
-								{
-									valResult.Data[i].Data.push_back(eigenVal[i]);
-								}
-								valResult.Name = "PM eigen Value(" + matrices[index].Name + ")";
-								Output->Text += valResult.outputStr();
-							}
-							else throw "---Function of binary not exist---";
-							break;
-						case 3:
-							MarshalString(funcFormula[1], VarNameTemp);
-							indexA = dataManager->findMatrix(VarNameTemp);
-							MarshalString(funcFormula[2], VarNameTemp);
-							indexB = dataManager->findMatrix(VarNameTemp);
-
-							if (funcFormula[0] == "leastsquare")
-							{
-								result = matrices[indexA].leastSquare(matrices[indexB]);
-								result.Name = "LeastSquare(" + matrices[indexA].Name + "," + matrices[indexB].Name +")";
-							}
-							break;
-						default:
-							throw  "---Parameter amount error / Function not found---";
-							break;
-						}
-					}
-					
-					// output result
-					Output->Text += result.outputStr();
-				}
-				catch (const std::exception&)
-				{
-					std::cout << "ERROR" << std::endl;
-				}
-				catch (const char* ERRMSG)
-				{
-					std::cout << ERRMSG << std::endl;
-					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
-				}
-			}
-			//反之則判斷找不到指令
-			else
-			{
-				Output->Text += "---Command not found---" + Environment::NewLine;
-			}
-		}
-		else
-		{
-			//將使用者輸入字串(在Text box中)，依'\n'作切割
-			array<String^> ^userCommand = Input->Text->Split('\n');
-			//並將最後一行，作為目前使用者輸入指令
-			userInput = userCommand[userCommand->Length - 1];
-		}
+		//開啟Dialog
+		openFileDialog1->ShowDialog();
 	}
+
+	System::Void WindowsForm::loadMatrixToolStripMenuItem1_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		//開啟Dialog
+		openFileDialog2->ShowDialog();
+	}
+
+	System::Void WindowsForm::clearInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		Input->Text = "";
+	}
+
+	System::Void WindowsForm::clearOutputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		Output->Text = "";
+	}
+
 	System::Void WindowsForm::VectorList_DoubleClick(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		if (VectorList->SelectedItem != NULL)
@@ -1344,5 +409,588 @@ namespace WindowsFormsApplication_cpp
 	System::Void WindowsForm::leastSquareToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		Input->Text = Input->Text->Insert(Input->SelectionStart, "funcM leastSquare( , )");
+	}
+
+	System::Void WindowsForm::Output_TextChanged(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Output->SelectionStart = Output->Text->Length;
+		Output->ScrollToCaret();
+	}
+
+	System::Void WindowsForm::Input_TextChanged(System::Object^  sender, System::EventArgs^  e)
+	{
+		//當Input textbox中的輸入改變時，便會進入此函式
+
+		//判斷輸入自元為'\n'，並防止取到字串-1位置
+		if (Input->Text->Length - 1 >= 0 && Input->Text[Input->Text->Length - 1] == '\n')
+		{
+			//取得向量資料
+			std::vector<Vector> vectors = dataManager->GetVectors();
+			std::vector<Matrix> matrices = dataManager->GetMatrices();
+
+			//將使用者輸入字串(在userInput中)，依空白作切割
+			array<String^> ^userCommand = userInput->Split(' ');
+			std::string nameTemp;
+
+			// print Vector
+			if (userCommand[0] == "printV")
+			{
+				try
+				{
+					MarshalString(userCommand[1], nameTemp);
+					// find Matrix index
+					int index = dataManager->findVector(nameTemp);
+					// Output
+					Output->Text += vectors[index].outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			// print Matrix
+			else if (userCommand[0] == "printM")
+			{
+				try
+				{
+					MarshalString(userCommand[1], nameTemp);
+					// find Matrix index
+					int index = dataManager->findMatrix(nameTemp);
+					// Output
+					Output->Text += matrices[index].outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			// calculate Vector
+			else if (userCommand[0] == "calV")
+			{	
+				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
+#ifdef DEBUG
+				Output->Text += "postfix =";
+				for (int i = 0; i < postfixFormula->Count; i++)
+				{
+					Output->Text += " " + postfixFormula[i];
+				}
+				Output->Text += Environment::NewLine;
+#endif // DEBUG
+				// store temp Vector
+				std::stack<Vector> calStack;
+				try
+				{
+					for (int i = 0; i < postfixFormula->Count; i++)
+					{
+						// if detect operator
+						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*")
+						{
+							std::string opTemp = "";
+							MarshalString(postfixFormula[i], opTemp);
+
+							// pop two Vector
+							Vector Vb = calStack.top();
+							calStack.pop();
+							Vector Va = calStack.top();
+							calStack.pop();
+
+							// Check zero vector first
+							if (Va.zeroCheck())
+							{
+								Va.zeroExpand(Vb.size());
+							}
+							else if (Vb.zeroCheck())
+							{
+								Vb.zeroExpand(Va.size());
+							}
+
+							// push calculated result
+							calStack.push(Vector(opTemp[0], Va, Vb));
+						}
+						// not operator push vector into stack 
+						else
+						{
+							std::string formulaTemp = "";
+							MarshalString(postfixFormula[i], formulaTemp);
+							int index = dataManager->findVector(formulaTemp);
+							calStack.push(vectors[index]);
+						}
+					}
+
+					// Avoid empty stack
+					if (calStack.empty()) throw "---Formula is empty---";
+
+					// pop final calculate result vector 
+					Vector result = calStack.top();
+					calStack.pop();
+
+					// output
+					MarshalString(userCommand[1], result.Name);
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			// calculate Matrix
+			else if (userCommand[0] == "calM")
+			{
+				// normalization postfix formula
+				Generic::List<String^>^ postfixFormula = inToPostfix(userCommand);
+#ifdef DEBUG
+				// Output postfix formula
+				Output->Text += "postfix =";
+				for (int i = 0; i < postfixFormula->Count; i++)
+				{
+					Output->Text += " " + postfixFormula[i];
+				}
+				Output->Text += Environment::NewLine;
+#endif // DEBUG
+				// store temp Matrix
+				std::stack<Matrix> calStack;
+				try
+				{
+					for (int i = 0; i < postfixFormula->Count; i++)
+					{
+						// if detect operator
+						if (postfixFormula[i] == "+" || postfixFormula[i] == "-" || postfixFormula[i] == "*" || postfixFormula[i] == "\\")
+						{
+							std::string opTemp = "";
+							MarshalString(postfixFormula[i], opTemp);
+
+							// pop two Matrix
+							Matrix Mb = calStack.top();
+							calStack.pop();
+							Matrix Ma = calStack.top();
+							calStack.pop();
+
+							// push calculated result
+							calStack.push(Matrix(opTemp[0], Ma, Mb));
+						}
+						// not operator push matrix into stack 
+						else
+						{
+							std::string formulaTemp = "";
+							MarshalString(postfixFormula[i], formulaTemp);
+							int index = dataManager->findMatrix(formulaTemp);
+							calStack.push(matrices[index]);
+						}
+					}
+
+					// Avoid empty stack
+					if (calStack.empty()) throw "---Formula is empty---";
+
+					// pop final calculate result matrix 
+					Matrix result = calStack.top();
+					calStack.pop();
+
+					// output
+					MarshalString(userCommand[1], result.Name);
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			// Vector Function
+			else if (userCommand[0] == "funcV")
+			{
+				// normalization the command name and parameter
+				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
+				try
+				{
+					Vector result;
+					std::string VarNameTemp = "";
+					if (funcFormula->Count == 0) throw "---No Function command---";
+					else if (funcFormula->Count == 1) throw "---No parameter---";
+					else if (funcFormula->Count == 2)
+					{
+						// record parameter index of array
+						MarshalString(funcFormula[1], VarNameTemp);
+						int index = dataManager->findVector(VarNameTemp);
+
+						if (funcFormula[0] == "norm")
+						{
+							double normValue = vectors[index].Norm();
+							result.Data.push_back(normValue);
+							result.Name = "Norm(" + vectors[index].Name + ")";
+#ifdef DEBUG
+							Output->Text += "Norm called" + Environment::NewLine;
+#endif // DEBUG
+						}
+						else if (funcFormula[0] == "normal")
+						{
+							result = vectors[index].Normal();
+							result.Name = "Normal(" + vectors[index].Name + ")";
+#ifdef DEBUG
+							Output->Text += "Normalization called" + Environment::NewLine;
+#endif // DEBUG
+						}
+						else throw "---Function of unary not exist---";
+					}
+					else if (funcFormula->Count >= 3)
+					{
+						// record parameter index of array
+						int index, indexA, indexB;
+
+						if (funcFormula[0] == "ob" || funcFormula[0] == "isli")
+						{
+							// Ob function or isLI function PreProcess
+							MarshalString(funcFormula[1], nameTemp);
+							index = dataManager->findVector(nameTemp);
+
+							std::vector<Vector> ui;
+							ui.push_back(vectors[index]);
+							int normal = ui[0].Data.size();
+							ui.resize(normal);
+
+							for (int i = 2; i <= normal; i++)
+							{
+								MarshalString(funcFormula[i], nameTemp);
+								index = dataManager->findVector(nameTemp);
+
+								if (vectors[index].dimCheck(ui[0]))
+								{
+									ui[i - 1] = vectors[index];	//get vector data into ui
+								}
+							}
+
+							if (funcFormula[0] == "ob")
+							{
+#ifdef DEBUG
+								Output->Text += "Ob called" + Environment::NewLine;
+#endif // DEBUG
+								Matrix ObResult;
+								ObResult = Ob(normal, ui);
+								ObResult.Name = "Ob(";
+								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
+								{
+									if (varIndex != 1)
+									{
+										ObResult.Name += ",";
+									}
+									MarshalString(funcFormula[varIndex], nameTemp);
+									ObResult.Name += nameTemp;
+								}
+								ObResult.Name += ")";
+								Output->Text += ObResult.outputStr();
+							}
+							else if (funcFormula[0] == "isli")
+							{
+#ifdef DEBUG
+								Output->Text += "isLI called" + Environment::NewLine;
+#endif // DEBUG
+								result.Name = "isLI(";
+								for (int varIndex = 1; varIndex < funcFormula->Count; varIndex++)
+								{
+									if (varIndex != 1)
+									{
+										result.Name += ",";
+									}
+									MarshalString(funcFormula[varIndex], nameTemp);
+									result.Name += nameTemp;
+								}
+								result.Name += ") : ";
+								result.Name += (isLI(normal, ui)) ? "Yes" : "No";
+							}
+						}
+						else if (funcFormula->Count == 3)
+						{
+							MarshalString(funcFormula[1], VarNameTemp);
+							indexA = dataManager->findVector(VarNameTemp);
+							MarshalString(funcFormula[2], VarNameTemp);
+							indexB = dataManager->findVector(VarNameTemp);
+
+							// Check zero vector first
+							if (vectors[indexA].zeroCheck())
+							{
+								vectors[indexA].zeroExpand(vectors[indexB].size());
+							}
+							else if (vectors[indexB].zeroCheck())
+							{
+								vectors[indexB].zeroExpand(vectors[indexA].size());
+							}
+
+							if (!vectors[indexA].dimCheck(vectors[indexB])) throw "---Dimension not same---";
+
+
+							if (funcFormula[0] == "isorthogonal")
+							{
+								result = vectors[indexA] * vectors[indexB];
+								result.Name = "isOrthogonal(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+								if (result.Data[0] == 0)
+								{
+									result.Name += " : Yes";
+								}
+								else
+								{
+									result.Name += " : No";
+								}
+#ifdef DEBUG
+								Output->Text += "isOrthogonal called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "angle")
+							{
+								double angleValue = vectors[indexA].Angle(vectors[indexB]);
+								result.Data.push_back(angleValue);
+								result.Name = "Angle(" + vectors[indexA].Name + "," + vectors[indexB].Name + ") theta";
+#ifdef DEBUG
+								Output->Text += "Angle called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "com")
+							{
+								double comValue = vectors[indexA].Com(vectors[indexB]);
+								result.Data.push_back(comValue);
+								result.Name = "Com(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+#ifdef DEBUG
+								Output->Text += "Com called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "proj")
+							{
+								result = vectors[indexA].Proj(vectors[indexB]);
+								result.Name = "Proj(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+#ifdef DEBUG
+								Output->Text += "Proj called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "cross" || funcFormula[0] == "pn")
+							{
+								if (vectors[indexA].Data.size() == 3)
+								{
+									result = vectors[indexA].Cross(vectors[indexB]);
+									if (funcFormula[0] == "cross")
+									{
+										result.Name = "Cross";
+									}
+									else if (funcFormula[0] == "pn")
+									{
+										result.Name = "pN";
+									}
+									result.Name += "(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+								}
+								else throw "---Cross / pN Dimension error---";
+#ifdef DEBUG
+								Output->Text += "Cross / pN called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "isparallel")
+							{
+								result.Name = "isParallel(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+								double angleValue = vectors[indexA].Angle(vectors[indexB]);
+
+								if (angleValue == 0 || angleValue == 180)
+								{
+									result.Name += " : Yes";
+								}
+								else
+								{
+									result.Name += " : No";
+								}
+#ifdef DEBUG
+								Output->Text += "isParallel called" + Environment::NewLine;
+#endif // DEBUG
+							}
+							else if (funcFormula[0] == "area")
+							{
+								double areaValue = vectors[indexA].Area(vectors[indexB]);
+								result.Data.push_back(areaValue);
+								result.Name = "Area(" + vectors[indexA].Name + "," + vectors[indexB].Name + ")";
+#ifdef DEBUG
+								Output->Text += "Area called" + Environment::NewLine;
+#endif // DEBUG
+							}
+
+							else throw "---Function of binary not exist---";
+						}
+						else throw  "---Parameter amount error / Function not found---";
+					}
+					// test version
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			// Matrix Function
+			else if (userCommand[0] == "funcM")
+			{
+				// normalization the command name and parameter
+				Generic::List<String^> ^funcFormula = CmdProcess(userCommand);
+
+				try
+				{
+					Matrix result;
+					std::string VarNameTemp = "";
+					std::vector<double> eigenVal;
+
+					if (funcFormula->Count == 0) throw "---No Function command---";
+					else if (funcFormula->Count == 1) throw "---No parameter---";
+					else
+					{
+						switch (funcFormula->Count)
+						{
+							// record parameter index of array
+							int index, indexA, indexB;
+
+							// unary parameter function case
+						case 2:
+							MarshalString(funcFormula[1], VarNameTemp);
+							// find matrix
+							index = dataManager->findMatrix(VarNameTemp);
+
+							if (funcFormula[0] == "trans")
+							{
+								result = matrices[index].trans();
+								result.Name = "Trans(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "gauss")
+							{
+								result = matrices[index].gaussian(1, true);
+								result.Name = "Gauss(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "rank")
+							{
+								double rankValue = matrices[index].rank();
+								result.Data.resize(1);
+								result.Data[0].Data.push_back(rankValue);
+								result.Name = "Rank(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "det")
+							{
+								double detValue = matrices[index].det();
+								result.Data.resize(1);
+								result.Data[0].Data.push_back(detValue);
+								result.Name = "Det(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "inverse")
+							{
+								result = matrices[index].inverse();
+								result.Name = "Inverse(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "adj")
+							{
+								result = matrices[index].adjoint();
+								result.Name = "Adj(" + matrices[index].Name + ")";
+							}
+							else if (funcFormula[0] == "eigen")
+							{
+								eigenVal = matrices[index].eigenVal();
+
+								// store eigen Vector
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "eigen Vector(" + matrices[index].Name +")";
+
+								Matrix valResult;
+								valResult.Data.resize(eigenVal.size());
+								for (int i = 0; i < eigenVal.size(); i++)
+								{
+									valResult.Data[i].Data.push_back(eigenVal[i]);
+								}
+								valResult.Name = "eigen Value(" + matrices[index].Name + ")";
+								Output->Text += valResult.outputStr();
+							}
+							else if (funcFormula[0] == "pm")
+							{
+								eigenVal.push_back(matrices[index].pm());
+
+								// store eigen Vector
+								result = matrices[index].eigenVec(eigenVal);
+								result.Name = "PM eigen Vector(" + matrices[index].Name + ")";
+
+								Matrix valResult;
+								valResult.Data.resize(eigenVal.size());
+								for (int i = 0; i < eigenVal.size(); i++)
+								{
+									valResult.Data[i].Data.push_back(eigenVal[i]);
+								}
+								valResult.Name = "PM eigen Value(" + matrices[index].Name + ")";
+								Output->Text += valResult.outputStr();
+							}
+							else throw "---Function of binary not exist---";
+							break;
+						case 3:
+							MarshalString(funcFormula[1], VarNameTemp);
+							indexA = dataManager->findMatrix(VarNameTemp);
+							MarshalString(funcFormula[2], VarNameTemp);
+							indexB = dataManager->findMatrix(VarNameTemp);
+
+							if (funcFormula[0] == "leastsquare")
+							{
+								result = matrices[indexA].leastSquare(matrices[indexB]);
+								result.Name = "LeastSquare(" + matrices[indexA].Name + "," + matrices[indexB].Name +")";
+							}
+							break;
+						default:
+							throw  "---Parameter amount error / Function not found---";
+							break;
+						}
+					}
+					
+					// output result
+					Output->Text += result.outputStr();
+				}
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
+			}
+
+			//反之則判斷找不到指令
+			else
+			{
+				Output->Text += "---Command not found---" + Environment::NewLine;
+			}
+		}
+		else
+		{
+			//將使用者輸入字串(在Text box中)，依'\n'作切割
+			array<String^> ^userCommand = Input->Text->Split('\n');
+
+			//並將最後一行，作為目前使用者輸入指令
+			userInput = userCommand[userCommand->Length - 1];
+		}
+		Input->SelectionStart = Input->Text->Length;
+		Input->ScrollToCaret();
 	}
 }

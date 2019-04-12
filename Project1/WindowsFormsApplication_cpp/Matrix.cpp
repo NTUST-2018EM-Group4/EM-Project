@@ -547,7 +547,7 @@ const double Matrix::pm() const
 	bool foundEigen;
 	// set temp to n*1 and set all to 1
 	X.Data.resize(this->size());
-	//X.Data[0].Data.push_back(1);
+
 	for (int i = 0; i < this->size(); i++)
 	{
 		X.Data[i].Data.push_back(1);
@@ -568,17 +568,18 @@ const double Matrix::pm() const
 		{
 			X.Data[j] = X.Data[j] / max;
 		}
-		if (abs(lastEigen - max) < 1E-10)
+		if (abs(lastEigen - max) < 1E-12)
 		{
 			foundEigen = true;
 		}
 	}
-	temp = A * X;	//AX
+	temp = A * X;					//AX
 	temp = temp.trans() * X;		//AX dot X = AX^t * X
-	X = X.trans() * X;		//X*X
+	X = X.trans() * X;				//X*X
 	return (temp.Data[0].Data[0] / X.Data[0].Data[0]);
 }
 
+// Ref: https://dotblogs.com.tw/forloop/2016/07/31/rounding
 double Round(double num, int index)
 {
 	bool isNegative = false; // whether is negative number or not
@@ -615,7 +616,6 @@ const Matrix Ob(const int normal, const std::vector<Vector> ui)
 	for (int i = 1; i < normal; i++)
 	{
 		Vector sum, temp;
-		double tempD;
 		sum.Data.resize(normal);
 		for (int j = 0; j <= i - 1; j++)
 		{

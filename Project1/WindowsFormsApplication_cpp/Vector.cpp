@@ -281,18 +281,6 @@ const Vector Vector::operator*(const Vector & Vb) const
 	}
 }
 
-//dot
-//const double Vector::operator*(const Vector & Vb)
-//{
-//
-//	double ans = 0;
-//	for (int i = 0; i < Vb.Data.size(); i++)
-//	{
-//		ans += this->Data[i] * Vb.Data[i];
-//	}
-//	return ans;
-//}
-
 const Vector Vector::operator*(const double & num)
 {
 	Vector temp = *this;
@@ -315,17 +303,3 @@ const Vector Vector::operator/(const double & num)
 	return temp;
 }
 
-//scalar
-//const Vector operator*(const Vector & Va, const Vector & Vb)
-//{
-//	std::vector<double> ans;
-//
-//	for (int i = 0; i < Va.Data.size(); i++)
-//	{
-//		for (int j = 0; j < Vb.Data.size(); j++)
-//		{
-//			ans.push_back(Va.Data[i] * Vb.Data[j]);
-//		}
-//	}
-//	return Vector("ans", ans);
-//}

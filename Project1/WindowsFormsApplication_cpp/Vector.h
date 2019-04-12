@@ -59,6 +59,4 @@ struct Vector
 	int size();
 	void push_back(double& num);
 	double operator [] (const int& index);
-
-
 };

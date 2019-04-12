@@ -1,5 +1,5 @@
 #pragma once
-#define DEBUG
+//#define DEBUG
 #include "DataManager.h"
 #include "DotNetUtilities.h"
 
@@ -84,7 +84,7 @@ namespace WindowsFormsApplication_cpp {
 			 System::Windows::Forms::ToolStripMenuItem^  linearIndependentToolStripMenuItem;
 			 System::Windows::Forms::ToolStripMenuItem^  gramschmidtToolStripMenuItem;
 			 System::Windows::Forms::ToolStripMenuItem^  printVectorToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  printMatrixToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  printMatrixToolStripMenuItem;
 
 			 /// </summary>
 			 System::ComponentModel::Container ^components;
@@ -432,6 +432,7 @@ namespace WindowsFormsApplication_cpp {
 				 this->Output->ScrollBars = System::Windows::Forms::ScrollBars::Both;
 				 this->Output->Size = System::Drawing::Size(867, 124);
 				 this->Output->TabIndex = 1;
+				 this->Output->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Output_TextChanged);
 				 // 
 				 // groupBox1
 				 // 
@@ -567,13 +568,11 @@ namespace WindowsFormsApplication_cpp {
 		System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
 		System::Void openFileDialog2_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
 
-
 		System::Void loadVectorToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void loadMatrixToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+
 		System::Void clearInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void clearOutputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-
-		System::Void Input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 
 		System::Void VectorList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
 		System::Void MatrixList_DoubleClick(System::Object^  sender, System::EventArgs^  e);
@@ -602,16 +601,17 @@ namespace WindowsFormsApplication_cpp {
 		System::Void eigenValueVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void powerMethodToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void leastSquareToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-	};
+
+		System::Void Output_TextChanged(System::Object^  sender, System::EventArgs^  e);
+
+		System::Void Input_TextChanged(System::Object^  sender, System::EventArgs^  e);
+};
 
 	//
 	// function
 	//
 	int priority(String^ op);
 	int priority(std::string op);
-	String^ printVector(String^ s, const Vector& v);
-	//int findVector(std::string name, const std::vector<Vector>& v);
-	//int findMatrix(std::string name, const std::vector<Matrix>& m);
 	Generic::List<String^> ^inToPostfix(array<String^>^ formulaList);
 	Generic::List<String^> ^CmdProcess(array<String^>^ CmdList);
 }

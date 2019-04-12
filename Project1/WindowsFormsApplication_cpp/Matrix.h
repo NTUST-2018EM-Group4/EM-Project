@@ -67,4 +67,3 @@ struct Matrix
 	void push_back(Vector& num);
 	Vector operator [] (const int& index);
 };
-
