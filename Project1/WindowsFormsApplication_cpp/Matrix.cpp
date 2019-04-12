@@ -37,8 +37,6 @@ const Matrix Matrix::operator+(const Matrix & Mb)
 	if (dimCheck(Mb, '+'))
 	{
 		Matrix result;
-		result.Data.resize(this->Data.size());
-
 		for (int i = 0; i < this->Data.size(); i++)
 		{
 			result.Data.push_back(this->Data[i] + Mb.Data[i]);
@@ -56,8 +54,6 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 	if (dimCheck(Mb, '-'))
 	{
 		Matrix result;
-		result.Data.resize(this->Data.size());
-
 		for (int i = 0; i < this->Data.size(); i++)
 		{
 			result.Data.push_back(this->Data[i] + Mb.Data[i]);
