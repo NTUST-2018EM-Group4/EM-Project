@@ -49,7 +49,7 @@ namespace WindowsFormsApplication_cpp {
 			 System::Windows::Forms::GroupBox^  groupBox2;
 			 System::Windows::Forms::TextBox^  Output;
 			 System::Windows::Forms::GroupBox^  groupBox1;
-			 System::Windows::Forms::TextBox^  Input;
+
 			 System::Windows::Forms::ListBox^  VectorList;
 			 System::Windows::Forms::ListBox^  MatrixList;
 			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
@@ -85,6 +85,7 @@ namespace WindowsFormsApplication_cpp {
 			 System::Windows::Forms::ToolStripMenuItem^  gramschmidtToolStripMenuItem;
 			 System::Windows::Forms::ToolStripMenuItem^  printVectorToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  printMatrixToolStripMenuItem;
+	private: System::Windows::Forms::ComboBox^  Input;
 
 			 /// </summary>
 			System::ComponentModel::Container ^components;
@@ -134,12 +135,12 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->Output = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->Input = (gcnew System::Windows::Forms::TextBox());
 			this->VectorList = (gcnew System::Windows::Forms::ListBox());
 			this->MatrixList = (gcnew System::Windows::Forms::ListBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
 			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->Input = (gcnew System::Windows::Forms::ComboBox());
 			this->menuStrip2->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox1->SuspendLayout();
@@ -445,19 +446,6 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Input";
 			// 
-			// Input
-			// 
-			this->Input->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->Input->Font = (gcnew System::Drawing::Font(L"·L³n¥¿¶ÂÅé", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->Input->Location = System::Drawing::Point(3, 23);
-			this->Input->Margin = System::Windows::Forms::Padding(4);
-			this->Input->Multiline = true;
-			this->Input->Name = L"Input";
-			this->Input->Size = System::Drawing::Size(867, 46);
-			this->Input->TabIndex = 1;
-			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
-			// 
 			// VectorList
 			// 
 			this->VectorList->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -535,6 +523,16 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"Matrix";
 			// 
+			// Input
+			// 
+			this->Input->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->Input->FormattingEnabled = true;
+			this->Input->Location = System::Drawing::Point(3, 23);
+			this->Input->Name = L"Input";
+			this->Input->Size = System::Drawing::Size(867, 27);
+			this->Input->TabIndex = 0;
+			this->Input->TextChanged += gcnew System::EventHandler(this, &WindowsForm::Input_TextChanged);
+			// 
 			// WindowsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
@@ -551,7 +549,6 @@ namespace WindowsFormsApplication_cpp {
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
-			this->groupBox1->PerformLayout();
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->groupBox3->ResumeLayout(false);
 			this->groupBox4->ResumeLayout(false);
@@ -602,6 +599,7 @@ namespace WindowsFormsApplication_cpp {
 		System::Void eigenValueVectorToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void powerMethodToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void leastSquareToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+
 };
 
 	//

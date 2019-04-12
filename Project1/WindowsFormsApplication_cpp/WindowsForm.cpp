@@ -328,18 +328,23 @@ namespace WindowsFormsApplication_cpp
 			//字串比較，若指令為"print"的情況
 			if (userCommand[0] == "printV")
 			{
-				//定義輸出暫存
-				String^ outputTemp = "";
-
-				MarshalString(userCommand[1], nameTemp);
-				int index = dataManager->findVector(nameTemp);
-				if (index != -1)
+				try
 				{
-					outputTemp = printVector(outputTemp, vectors[index]);
-					Output->Text += gcnew String(vectors[index].Name.c_str()) + " = " + outputTemp;
+					MarshalString(userCommand[1], nameTemp);
+					// find Matrix index
+					int index = dataManager->findVector(nameTemp);
+					// Output
+					Output->Text += vectors[index].outputStr();
 				}
-				else
-					Output->Text += "-Vector not found-" + Environment::NewLine;
+				catch (const std::exception&)
+				{
+					std::cout << "ERROR" << std::endl;
+				}
+				catch (const char* ERRMSG)
+				{
+					std::cout << ERRMSG << std::endl;
+					Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
+				}
 			}
 			else if (userCommand[0] == "printM")
 			{
