@@ -135,6 +135,10 @@
   <ItemGroup>
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DotNetUtilities.cpp" />
+    <ClCompile Include="Equation.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="Vector.cpp" />
@@ -142,6 +146,10 @@
   <ItemGroup>
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="DotNetUtilities.h" />
+    <ClInclude Include="Equation.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
