@@ -543,9 +543,9 @@ namespace Project2 {
 			this->Step->AutoSize = true;
 			this->Step->Location = System::Drawing::Point(183, 5);
 			this->Step->Name = L"Step";
-			this->Step->Size = System::Drawing::Size(128, 23);
+			this->Step->Size = System::Drawing::Size(137, 23);
 			this->Step->TabIndex = 2;
-			this->Step->Text = L"Step Descent";
+			this->Step->Text = L"Steep Descent";
 			this->Step->UseVisualStyleBackColor = true;
 			// 
 			// Quasi

@@ -131,7 +131,7 @@ System::String ^ Equation::Newton()
 	return this->FormulaOutputStr();
 }
 
-System::String ^ Equation::Step()
+System::String ^ Equation::Steep()
 {
 	// TODO
 	return this->FormulaOutputStr();

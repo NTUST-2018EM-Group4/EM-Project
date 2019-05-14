@@ -27,7 +27,7 @@ public:
 	//
 	System::String^ Powell();
 	System::String^ Newton();
-	System::String^ Step();
+	System::String^ Steep();
 	System::String^ Quasi();
 	System::String^ Conjuate();
 

@@ -65,7 +65,7 @@ namespace Project2
 			}
 			else if (Step->Checked)
 			{
-				Output->Text += formula.Step();
+				Output->Text += formula.Steep();
 			}
 			else if (Quasi->Checked)
 			{
