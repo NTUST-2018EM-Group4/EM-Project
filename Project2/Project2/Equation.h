@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <stack>
+#include "Parameter.h"
 #define OPSIZE 6
 
 class Equation
@@ -20,16 +21,16 @@ public:
 	//
 	std::vector<std::string> inToPostfix();
 	System::String^ FormulaOutputStr();
-	double Calculate();
+	double f(std::vector<Parameter> paras);
 
 	//
 	// Compute Function
 	//
-	System::String^ Powell();
-	System::String^ Newton();
-	System::String^ Steep();
-	System::String^ Quasi();
-	System::String^ Conjuate();
+	System::String^ Powell(std::vector<Parameter> paras);
+	System::String^ Newton(std::vector<Parameter> paras);
+	System::String^ Steep(std::vector<Parameter> paras);
+	System::String^ Quasi(std::vector<Parameter> paras);
+	System::String^ Conjuate(std::vector<Parameter> paras);
 
 private:
 	std::string formula;

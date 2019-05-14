@@ -141,6 +141,7 @@
     </ClCompile>
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,10 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Parameter.h">
+      <SubType>
+      </SubType>
     </ClInclude>
     <ClInclude Include="Vector.h" />
   </ItemGroup>

@@ -113,40 +113,55 @@ System::String ^ Equation::FormulaOutputStr()
 	return Formula;
 }
 
-double Equation::Calculate()
+double Equation::f(std::vector<Parameter> paras)
 {
 	// TODO
 	return 0.0;
 }
 
-System::String ^ Equation::Powell()
+System::String ^ Equation::Powell(std::vector<Parameter> paras)
 {
+	System::String^ Result = "Powell: " + this->FormulaOutputStr();
+
 	// TODO
-	return this->FormulaOutputStr();
+
+	return Result;
 }
 
-System::String ^ Equation::Newton()
+System::String ^ Equation::Newton(std::vector<Parameter> paras)
 {
+	System::String^ Result = "Newton: " + this->FormulaOutputStr();
+
 	// TODO
-	return this->FormulaOutputStr();
+
+	return Result;
 }
 
-System::String ^ Equation::Steep()
+System::String ^ Equation::Steep(std::vector<Parameter> paras)
 {
+	System::String^ Result = "Steep: " + this->FormulaOutputStr();
+
 	// TODO
-	return this->FormulaOutputStr();
+
+	return Result;
 }
 
-System::String ^ Equation::Quasi()
+System::String ^ Equation::Quasi(std::vector<Parameter> paras)
 {
+	System::String^ Result = "Quasi: " + this->FormulaOutputStr();
+
 	// TODO
-	return this->FormulaOutputStr();
+
+	return Result;
 }
 
-System::String ^ Equation::Conjuate()
+System::String ^ Equation::Conjuate(std::vector<Parameter> paras)
 {
+	System::String^ Result = "Conjuate: " + this->FormulaOutputStr();
+
 	// TODO
-	return this->FormulaOutputStr();
+
+	return Result;
 }
 
 

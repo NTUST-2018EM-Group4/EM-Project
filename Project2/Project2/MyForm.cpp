@@ -44,36 +44,48 @@ namespace Project2
 		MarshalString(Input->Text, equation);
 		Equation formula(equation);
 
-		// Store Setting
-		double initX = System::Convert::ToDouble(xInitial->Text);
-		double beginX = System::Convert::ToDouble(xBegin->Text);
-		double endX = System::Convert::ToDouble(xEnd->Text);
+		// Store Parameter Setting
+		std::vector<Parameter> paras;
 
-		double initY = System::Convert::ToDouble(yInitial->Text);
-		double beginY = System::Convert::ToDouble(yBegin->Text);
-		double endY = System::Convert::ToDouble(yEnd->Text);
+		// if x used
+		if (xInitial->Text != "NULL")
+		{
+			double initX = System::Convert::ToDouble(xInitial->Text);
+			double beginX = System::Convert::ToDouble(xBegin->Text);
+			double endX = System::Convert::ToDouble(xEnd->Text);
+			paras.push_back(Parameter("x", initX, beginX, endX));
+		}
+
+		// if y used
+		if (yInitial->Text != "NULL")
+		{
+			double initY = System::Convert::ToDouble(yInitial->Text);
+			double beginY = System::Convert::ToDouble(yBegin->Text);
+			double endY = System::Convert::ToDouble(yEnd->Text);
+			paras.push_back(Parameter("y", initY, beginY, endY));
+		}
 
 		try
 		{
 			if (Powell->Checked)
 			{
-				Output->Text += formula.Powell();
+				Output->Text += formula.Powell(paras);
 			}
 			else if (Newton->Checked)
 			{
-				Output->Text += formula.Newton();
+				Output->Text += formula.Newton(paras);
 			}
 			else if (Step->Checked)
 			{
-				Output->Text += formula.Steep();
+				Output->Text += formula.Steep(paras);
 			}
 			else if (Quasi->Checked)
 			{
-				Output->Text += formula.Quasi();
+				Output->Text += formula.Quasi(paras);
 			}
 			else if (Conjuate->Checked)
 			{
-				Output->Text += formula.Conjuate();
+				Output->Text += formula.Conjuate(paras);
 			}
 
 		}
@@ -86,5 +98,21 @@ namespace Project2
 			std::cout << ERRMSG << std::endl;
 			Output->Text += gcnew String(ERRMSG) + Environment::NewLine;
 		}
+	}
+	System::Void MyForm::clearOutputToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Output->Text = "";
+	}
+	System::Void MyForm::resetXToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		xInitial->Text = "NULL";
+		xBegin->Text = "NULL";
+		xEnd->Text = "NULL";
+	}
+	System::Void MyForm::resetYToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		yInitial->Text = "NULL";
+		yBegin->Text = "NULL";
+		yEnd->Text = "NULL";
 	}
 }
