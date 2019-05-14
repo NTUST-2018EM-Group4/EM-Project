@@ -2,7 +2,7 @@
 //#define DEBUG
 #include "DataManager.h"
 #include "DotNetUtilities.h"
-#include "Equation.h"
+#include "Parameter.h"
 
 
 namespace Project2 {

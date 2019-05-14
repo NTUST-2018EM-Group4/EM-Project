@@ -1,5 +1,8 @@
 #include "Equation.h"
+#include "Parameter.h"
 #define DEBUG
+#define THRESHOLD 1e-8
+#define SYSENDL System::Environment::NewLine
 
 // Supported operator array
 const std::string op[OPSIZE + 2] = { "+", "-", "*", "^", "(", ")", "sin", "cos" };
@@ -66,7 +69,7 @@ Equation::Equation(std::string formula, std::vector<Parameter> paras)
 		{
 			if (nodeString == paras[i].name)
 			{
-				nodeString = "(" + paras[i].formula + ")";
+				nodeString = "(" + paras[i].equa.getString() + ")";
 				break;
 			}
 		}
@@ -75,6 +78,27 @@ Equation::Equation(std::string formula, std::vector<Parameter> paras)
 
 	this->formula = temp;
 	this->postFormula = inToPostfix();
+}
+
+// Set Formula and reset postfixArr
+void Equation::setFormula(std::string formula)
+{
+	this->formula = formula;
+	this->postFormula = inToPostfix();
+}
+
+// Return Formula (std::string)
+std::string Equation::getString()
+{
+	return this->formula;
+}
+
+// Return Formula and NewLine (System::String)
+System::String ^ Equation::getSystemString()
+{
+	System::String^ Formula = gcnew System::String(formula.c_str());
+	Formula += System::Environment::NewLine;
+	return Formula;
 }
 
 // Normalization Formula and convert to Postfix
@@ -170,14 +194,6 @@ std::vector<std::string> Equation::inToPostfix()
 	return postFormula;
 }
 
-// Output Formula String
-System::String ^ Equation::FormulaOutputStr()
-{
-	System::String^ Formula = gcnew System::String(formula.c_str());
-	Formula += System::Environment::NewLine;
-	return Formula;
-}
-
 // Get total value by parameters' value
 double Equation::f(std::vector<Parameter> paras)
 {
@@ -265,19 +281,21 @@ double Equation::f(std::vector<Parameter> paras)
 	catch (const std::exception&)
 	{
 		std::cout << "ERROR" << std::endl;
+		return 0.0;
 	}
 	catch (const char* ERRMSG)
 	{
 		std::cout << ERRMSG << std::endl;
+		return 0.0;
 	}
 }
 
 System::String ^ Equation::Powell(std::vector<Parameter> paras)
 {
-	System::String^ Result = "Powell: " + this->FormulaOutputStr();
+	System::String^ Result = "Powell: " + this->getSystemString();
 
 	// TODO
-
+	
 #ifdef DEBUG
 	// test f(x,y)
 	std::cout << this->f(paras) << std::endl;
@@ -295,7 +313,7 @@ System::String ^ Equation::Powell(std::vector<Parameter> paras)
 
 System::String ^ Equation::Newton(std::vector<Parameter> paras)
 {
-	System::String^ Result = "Newton: " + this->FormulaOutputStr();
+	System::String^ Result = "Newton: " + this->getSystemString();
 
 	// TODO
 
@@ -304,7 +322,7 @@ System::String ^ Equation::Newton(std::vector<Parameter> paras)
 
 System::String ^ Equation::Steep(std::vector<Parameter> paras)
 {
-	System::String^ Result = "Steep: " + this->FormulaOutputStr();
+	System::String^ Result = "Steep: " + this->getSystemString();
 
 	// TODO
 
@@ -313,7 +331,7 @@ System::String ^ Equation::Steep(std::vector<Parameter> paras)
 
 System::String ^ Equation::Quasi(std::vector<Parameter> paras)
 {
-	System::String^ Result = "Quasi: " + this->FormulaOutputStr();
+	System::String^ Result = "Quasi: " + this->getSystemString();
 
 	// TODO
 
@@ -322,7 +340,7 @@ System::String ^ Equation::Quasi(std::vector<Parameter> paras)
 
 System::String ^ Equation::Conjuate(std::vector<Parameter> paras)
 {
-	System::String^ Result = "Conjuate: " + this->FormulaOutputStr();
+	System::String^ Result = "Conjuate: " + this->getSystemString();
 
 	// TODO
 
