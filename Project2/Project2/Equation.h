@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <stack>
+#include <cmath>
 #include "Parameter.h"
 #define OPSIZE 6
 
@@ -15,6 +16,7 @@ public:
 	//
 	Equation();
 	Equation(std::string formula);
+	Equation(std::string formula, std::vector<Parameter> paras);
 
 	//
 	// Tool Function
@@ -37,5 +39,5 @@ private:
 	std::vector<std::string> postFormula;
 };
 
-int priority(System::String^ op);
 int priority(std::string op);
+double cal(double a, double b, char op);
