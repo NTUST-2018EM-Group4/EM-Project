@@ -32,6 +32,13 @@ Parameter::Parameter(std::string name, std::string formula)
 
 }
 
+Parameter::Parameter(std::string name, double init)
+{
+	this->name = name;
+	this->init = init;
+}
+
+
 // Create Unit Vector List
 std::vector<Vec> createUnitVectors(int size)
 {

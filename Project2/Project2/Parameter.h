@@ -13,6 +13,8 @@ struct Parameter
 	Parameter();
 	Parameter(std::string name, double init, double begin, double end);
 	Parameter(std::string name, std::string formula);
+	Parameter(std::string name, double init);
+
 
 	//
 	// Data Member

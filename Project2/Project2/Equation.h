@@ -22,7 +22,7 @@ public:
 	//
 	// Get / Set Function
 	//
-	void setFormula(std::string formula);
+	void setFormula(std::string& formula);
 	std::string getString();
 	System::String^ getSystemString();
 
@@ -30,16 +30,16 @@ public:
 	// Tool Function
 	//
 	std::vector<std::string> inToPostfix();
-	double f(std::vector<Parameter> paras);
+	double f(const std::vector<Parameter>& paras) const;
 
 	//
 	// Compute Function
 	//
-	System::String^ Powell(std::vector<Parameter> paras);
-	System::String^ Newton(std::vector<Parameter> paras);
-	System::String^ Steep(std::vector<Parameter> paras);
-	System::String^ Quasi(std::vector<Parameter> paras);
-	System::String^ Conjuate(std::vector<Parameter> paras);
+	System::String^ Powell(std::vector<Parameter>& paras);
+	System::String^ Newton(std::vector<Parameter>& paras);
+	System::String^ Steep(std::vector<Parameter>& paras);
+	System::String^ Quasi(std::vector<Parameter>& paras);
+	System::String^ Conjuate(std::vector<Parameter>& paras);
 
 private:
 	//
@@ -49,6 +49,6 @@ private:
 	std::vector<std::string> postFormula;
 };
 
-int priority(std::string op);
-double cal(double a, double b, char op);
-
+int priority(std::string& op);
+double cal(double& a, double& b, char& op);
+double derivative(const Equation& formula, const std::vector<Parameter>& paras, const std::string& diff);

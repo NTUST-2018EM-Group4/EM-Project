@@ -1,7 +1,7 @@
 #include "Equation.h"
 #include "Parameter.h"
 #define DEBUG
-#define THRESHOLD 1e-8
+#define THRESHOLD 1e-6
 #define SYSENDL System::Environment::NewLine
 
 // Supported operator array
@@ -81,7 +81,7 @@ Equation::Equation(std::string formula, std::vector<Parameter> paras)
 }
 
 // Set Formula and reset postfixArr
-void Equation::setFormula(std::string formula)
+void Equation::setFormula(std::string& formula)
 {
 	this->formula = formula;
 	this->postFormula = inToPostfix();
@@ -195,13 +195,13 @@ std::vector<std::string> Equation::inToPostfix()
 }
 
 // Get total value by parameters' value
-double Equation::f(std::vector<Parameter> paras)
+double Equation::f(const std::vector<Parameter>& paras) const
 {
 	std::vector<std::string> temp = postFormula;
 	for (int i = 0; i < temp.size(); i++)
 	{
 #ifdef DEBUG
-		std::cout << temp[i] << " ";
+		//std::cout << temp[i] << " ";
 #endif // DEBUG
 
 		for (int j = 0; j < paras.size(); j++)
@@ -214,12 +214,12 @@ double Equation::f(std::vector<Parameter> paras)
 		}
 	}
 #ifdef DEBUG
-	std::cout << std::endl;
+	/*std::cout << std::endl;
 	for (int i = 0; i < temp.size(); i++)
 	{
 		std::cout << temp[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 #endif // DEBUG
 
 	// store temp value
@@ -290,7 +290,7 @@ double Equation::f(std::vector<Parameter> paras)
 	}
 }
 
-System::String ^ Equation::Powell(std::vector<Parameter> paras)
+System::String ^ Equation::Powell(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Powell: " + this->getSystemString();
 
@@ -311,7 +311,7 @@ System::String ^ Equation::Powell(std::vector<Parameter> paras)
 	return Result;
 }
 
-System::String ^ Equation::Newton(std::vector<Parameter> paras)
+System::String ^ Equation::Newton(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Newton: " + this->getSystemString();
 
@@ -320,16 +320,22 @@ System::String ^ Equation::Newton(std::vector<Parameter> paras)
 	return Result;
 }
 
-System::String ^ Equation::Steep(std::vector<Parameter> paras)
+System::String ^ Equation::Steep(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Steep: " + this->getSystemString();
-
+#ifdef DEBUG
+	std::vector<Parameter> temp;
+	temp.push_back(Parameter("x", 2));
+	//temp.push_back(Parameter("y", 1));
+	std::cout << "derivative x = " << derivative(*this, temp, "x")  << std::endl;
+	//std::cout << "derivative y = " << derivative(*this, temp, "y") << std::endl;
+#endif // DEBUG
 	// TODO
 
 	return Result;
 }
 
-System::String ^ Equation::Quasi(std::vector<Parameter> paras)
+System::String ^ Equation::Quasi(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Quasi: " + this->getSystemString();
 
@@ -338,7 +344,7 @@ System::String ^ Equation::Quasi(std::vector<Parameter> paras)
 	return Result;
 }
 
-System::String ^ Equation::Conjuate(std::vector<Parameter> paras)
+System::String ^ Equation::Conjuate(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Conjuate: " + this->getSystemString();
 
@@ -348,7 +354,7 @@ System::String ^ Equation::Conjuate(std::vector<Parameter> paras)
 }
 
 // Use for infix to postfix
-int priority(std::string op)
+int priority(std::string& op)
 {
 	switch (op[0])
 	{
@@ -364,7 +370,7 @@ int priority(std::string op)
 }
 
 // Easy Calculate function
-double cal(double a, double b, char op)
+double cal(double& a, double& b, char& op)
 {
 	switch (op)
 	{
@@ -384,4 +390,33 @@ double cal(double a, double b, char op)
 		throw "Error in cal(double a, double b, char op): Not support op";
 		break;
 	}
+}
+
+//partial derivative
+//input: source formula, parameter values, differential target
+double derivative(const Equation & formula, const std::vector<Parameter>& paras, const std::string& diff)
+{
+	double result, fTemp;
+	std::vector<Parameter> temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init += THRESHOLD;
+			break;
+		}
+	}
+	
+	fTemp = formula.f(temp);
+	temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init -= THRESHOLD;
+			break;
+		}
+	}
+	result = (fTemp - formula.f(temp)) / (2 * THRESHOLD);
+	return result;
 }
