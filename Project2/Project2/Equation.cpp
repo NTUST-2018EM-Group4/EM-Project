@@ -1,11 +1,10 @@
 #include "Equation.h"
-#include "Parameter.h"
+
 #define DEBUG
-#define THRESHOLD 1e-8
-#define SYSENDL System::Environment::NewLine
+#define OPSIZE 6
 
 // Supported operator array
-const std::string op[OPSIZE + 2] = { "+", "-", "*", "^", "(", ")", "sin", "cos" };
+const std::string op[OPSIZE + 6] = { "+", "-", "*", "^", "(", ")", "sin", "cos" ,"tan", "sec", "csc", "cot"};
 
 // Exception Constructor
 Equation::Equation()
@@ -14,69 +13,31 @@ Equation::Equation()
 	postFormula.resize(0);
 }
 
-// Default Constructor
-Equation::Equation(std::string formula)
+// 1D Constructor
+Equation::Equation(std::string formula, std::string nameX, double initX, double beginX, double endX)
 {
 	this->formula = formula;
+	this->dim = 1;
+	this->name.push_back(nameX);
+	this->init.Data.push_back(initX);
+	this->xInterval[0] = beginX;
+	this->xInterval[1] = endX;
 	this->postFormula = inToPostfix();
 }
 
-// Use for alter Variable to formula
-// ex. f(a1+0.05) 
-Equation::Equation(std::string formula, std::vector<Parameter> paras)
+// 2D Constructor
+Equation::Equation(std::string formula, std::string nameX, double initX, double beginX, double endX, std::string nameY, double initY, double beginY, double endY)
 {
-	// insert blank between operator
-	std::string temp = "";
-	for (int i = 0; i < formula.length(); i++)
-	{
-		bool isOP = false;
-		for (int j = 0; j < OPSIZE; j++)
-		{
-			if (formula[i] == op[j][0])
-			{
-				isOP = true;
-				break;
-			}
-		}
-
-		if (isOP)
-		{
-			temp = temp + " " + formula[i] + " ";
-		}
-		else
-		{
-			temp += formula[i];
-		}
-	}
-	if (temp.size() != 0)
-	{
-		if (temp[0] == ' ') temp.erase(temp.begin());
-		if (temp[temp.length() - 1] == ' ') temp.erase(temp.end());
-	}
-	// backup the normalFormula
-	std::stringstream normalFormula(temp);
-
-	// store temp node string
-	std::string nodeString;
-	
-	// reset temp string
-	temp = "";
-
-	// alter variable name to formula
-	while (normalFormula >> nodeString)
-	{
-		for (int i = 0; i < paras.size(); i++)
-		{
-			if (nodeString == paras[i].name)
-			{
-				nodeString = "(" + paras[i].equa.getString() + ")";
-				break;
-			}
-		}
-		temp += nodeString;
-	}
-
-	this->formula = temp;
+	this->formula = formula;
+	this->dim = 2;
+	this->name.push_back(nameX);
+	this->init.Data.push_back(initX);
+	this->xInterval[0] = beginX;
+	this->xInterval[1] = endX;
+	this->name.push_back(nameY);
+	this->init.Data.push_back(initY);
+	this->yInterval[0] = beginY;
+	this->yInterval[1] = endY;
 	this->postFormula = inToPostfix();
 }
 
@@ -131,6 +92,12 @@ std::vector<std::string> Equation::inToPostfix()
 	{
 		if (temp[0] == ' ') temp.erase(temp.begin());
 		if (temp[temp.length() - 1] == ' ') temp.erase(temp.end());
+		while (true) {
+			std::string::size_type pos(0);
+			if ((pos = temp.find("  ")) != std::string::npos)
+				temp.replace(pos, 2, " ");
+			else break;
+		}
 	}
 
 	std::stringstream normalFormula(temp);
@@ -153,7 +120,11 @@ std::vector<std::string> Equation::inToPostfix()
 			|| nodeString == "*"		\
 			|| nodeString == "^"		\
 			|| nodeString == "sin"		\
-			|| nodeString == "cos")
+			|| nodeString == "cos"		\
+			|| nodeString == "tan"		\
+			|| nodeString == "sec"		\
+			|| nodeString == "csc"		\
+			|| nodeString == "cot")
 		{
 			if (!opStack.empty())
 			{
@@ -194,8 +165,75 @@ std::vector<std::string> Equation::inToPostfix()
 	return postFormula;
 }
 
+// Use for alter Variable to formula
+// ex. the variable "key" in equation change into "str"
+std::string Equation::alterFormula(std::string key, std::string str)
+{
+	// insert blank between operator
+	std::string result = "";
+	for (int i = 0; i < formula.length(); i++)
+	{
+		bool isOP = false;
+		for (int j = 0; j < OPSIZE; j++)
+		{
+			if (formula[i] == op[j][0])
+			{
+				isOP = true;
+				break;
+			}
+		}
+
+		if (isOP)
+		{
+			result = result + " " + formula[i] + " ";
+		}
+		else
+		{
+			result += formula[i];
+		}
+	}
+	if (result.size() != 0)
+	{
+		if (result[0] == ' ') result.erase(result.begin());
+		if (result[result.length() - 1] == ' ') result.erase(result.end());
+		while (true) {
+			std::string::size_type pos(0);
+			if ((pos = result.find("  ")) != std::string::npos)
+				result.replace(pos, 2, " ");
+			else break;
+		}
+	}
+	// backup the normalFormula
+	std::stringstream normalFormula(result);
+
+	// store result node string
+	std::string nodeString;
+
+	// reset result string
+	result = "";
+
+	// alter variable name to formula
+	while (normalFormula >> nodeString)
+	{
+		if (nodeString == key)
+		{
+			nodeString = "(" + str + ")";
+		}
+
+		result += nodeString;
+	}
+	return result;
+}
+
+std::string Equation::alterFormula(std::string customFormula, std::string key, std::string str)
+{
+	Equation temp = *this;
+	temp.formula = customFormula;
+	return temp.alterFormula(key, str);
+}
+
 // Get total value by parameters' value
-double Equation::f(std::vector<Parameter> paras)
+double Equation::f(Vector vec, std::vector<std::string> name)
 {
 	std::vector<std::string> temp = postFormula;
 	for (int i = 0; i < temp.size(); i++)
@@ -204,11 +242,11 @@ double Equation::f(std::vector<Parameter> paras)
 		std::cout << temp[i] << " ";
 #endif // DEBUG
 
-		for (int j = 0; j < paras.size(); j++)
+		for (int j = 0; j < name.size(); j++)
 		{
-			if (temp[i] == paras[j].name)
+			if (temp[i] == name[j])
 			{
-				temp[i] = std::to_string(paras[j].init);
+				temp[i] = std::to_string(vec.Data[j]);
 				break;
 			}
 		}
@@ -227,6 +265,7 @@ double Equation::f(std::vector<Parameter> paras)
 
 	try
 	{
+		// postfix calculate
 		for (int i = 0; i < temp.size(); i++)
 		{
 			// if detect binary operator
@@ -261,6 +300,46 @@ double Equation::f(std::vector<Parameter> paras)
 				// push calculated result
 				calStack.push(cos(a));
 			}
+			// if detect tan
+			else if (temp[i] == "tan")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
+
+				// push calculated result
+				calStack.push(tan(a));
+			}
+			// if detect csc
+			else if (temp[i] == "csc")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
+
+				// push calculated result
+				calStack.push(1 / sin(a));
+			}
+			// if detect sec
+			else if (temp[i] == "sec")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
+
+				// push calculated result
+				calStack.push(1 / cos(a));
+			}
+			// if detect cot
+			else if (temp[i] == "cot")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
+
+				// push calculated result
+				calStack.push(1 / tan(a));
+			}
 			// not operator push value into stack 
 			else
 			{
@@ -290,61 +369,116 @@ double Equation::f(std::vector<Parameter> paras)
 	}
 }
 
-System::String ^ Equation::Powell(std::vector<Parameter> paras)
+// Default Calculate
+double Equation::f()
 {
-	System::String^ Result = "Powell: " + this->getSystemString();
+	// store temp value
+	std::stack<double> calStack;
 
-	// TODO
-	
-#ifdef DEBUG
-	// test f(x,y)
-	std::cout << this->f(paras) << std::endl;
+	try
+	{
+		for (int i = 0; i < this->postFormula.size(); i++)
+		{
+			// if detect binary operator
+			if (this->postFormula[i] == "+" || this->postFormula[i] == "-" || this->postFormula[i] == "*" || this->postFormula[i] == "^")
+			{
+				// pop two value
+				double b = calStack.top();
+				calStack.pop();
+				double a = calStack.top();
+				calStack.pop();
 
-	// test f(a1+0.05,0.05)
-	std::vector<Parameter> testParas;
-	testParas.push_back(Parameter("x", "a1+0.05"));
-	testParas.push_back(Parameter("y", "0.05"));
-	Equation testEqu(formula, testParas);
-	std::cout << testEqu.formula << std::endl;
-#endif // DEBUG
+				// push calculated result
+				calStack.push(cal(a, b, this->postFormula[i][0]));
+			}
+			// if detect sin
+			else if (this->postFormula[i] == "sin")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-	return Result;
-}
+				// push calculated result
+				calStack.push(sin(a));
+			}
+			// if detect cos
+			else if (this->postFormula[i] == "cos")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-System::String ^ Equation::Newton(std::vector<Parameter> paras)
-{
-	System::String^ Result = "Newton: " + this->getSystemString();
+				// push calculated result
+				calStack.push(cos(a));
+			}
+			// if detect tan
+			else if (this->postFormula[i] == "tan")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-	// TODO
+				// push calculated result
+				calStack.push(tan(a));
+			}
+			// if detect csc
+			else if (this->postFormula[i] == "csc")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-	return Result;
-}
+				// push calculated result
+				calStack.push(1 / sin(a));
+			}
+			// if detect sec
+			else if (this->postFormula[i] == "sec")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-System::String ^ Equation::Steep(std::vector<Parameter> paras)
-{
-	System::String^ Result = "Steep: " + this->getSystemString();
+				// push calculated result
+				calStack.push(1 / cos(a));
+			}
+			// if detect cot
+			else if (this->postFormula[i] == "cot")
+			{
+				// pop value
+				double a = calStack.top();
+				calStack.pop();
 
-	// TODO
+				// push calculated result
+				calStack.push(1 / tan(a));
+			}
+			// not operator push value into stack 
+			else
+			{
+				calStack.push(std::stod(this->postFormula[i]));
+			}
+		}
 
-	return Result;
-}
+		// Avoid empty stack
+		if (calStack.empty()) throw "---Formula is empty---";
 
-System::String ^ Equation::Quasi(std::vector<Parameter> paras)
-{
-	System::String^ Result = "Quasi: " + this->getSystemString();
+		// pop final calculate result vector 
+		double result = calStack.top();
+		calStack.pop();
 
-	// TODO
+		// output
+		return result;
+	}
+	catch (const std::exception&)
+	{
+		std::cout << "ERROR" << std::endl;
+		return 0.0;
+	}
+	catch (const char* ERRMSG)
+	{
+		std::cout << ERRMSG << std::endl;
+		return 0.0;
+	}
 
-	return Result;
-}
-
-System::String ^ Equation::Conjuate(std::vector<Parameter> paras)
-{
-	System::String^ Result = "Conjuate: " + this->getSystemString();
-
-	// TODO
-
-	return Result;
 }
 
 // Use for infix to postfix

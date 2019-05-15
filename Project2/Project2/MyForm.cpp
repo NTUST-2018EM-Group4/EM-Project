@@ -40,52 +40,64 @@ namespace Project2
 	System::Void MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		// Process To Equation to postfix array
+
 		std::string equation;
 		MarshalString(Input->Text, equation);
-		Equation formula(equation);
 
-		// Store Parameter Setting
-		std::vector<Parameter> paras;
+		double initX, beginX, endX, initY, beginY, endY;
+		Equation formula;
 
-		// if x used
-		if (xInitial->Text != "NULL")
+		// if only x used
+		if (xInitial->Text != "NULL" && yInitial->Text == "NULL")
 		{
-			double initX = System::Convert::ToDouble(xInitial->Text);
-			double beginX = System::Convert::ToDouble(xBegin->Text);
-			double endX = System::Convert::ToDouble(xEnd->Text);
-			paras.push_back(Parameter("x", initX, beginX, endX));
+			initX = System::Convert::ToDouble(xInitial->Text);
+			beginX = System::Convert::ToDouble(xBegin->Text);
+			endX = System::Convert::ToDouble(xEnd->Text);
+			formula = Equation(equation, "x", initX, beginX, endX);
 		}
 
-		// if y used
-		if (yInitial->Text != "NULL")
+		// if only y used
+		else if (xInitial->Text == "NULL" && yInitial->Text != "NULL")
 		{
-			double initY = System::Convert::ToDouble(yInitial->Text);
-			double beginY = System::Convert::ToDouble(yBegin->Text);
-			double endY = System::Convert::ToDouble(yEnd->Text);
-			paras.push_back(Parameter("y", initY, beginY, endY));
+			initY = System::Convert::ToDouble(yInitial->Text);
+			beginY = System::Convert::ToDouble(yBegin->Text);
+			endY = System::Convert::ToDouble(yEnd->Text);
+			formula = Equation(equation, "y", initY, beginY, endY);
+		}
+
+		// if x & y used
+		else if (xInitial->Text != "NULL" && yInitial->Text != "NULL")
+		{
+			initX = System::Convert::ToDouble(xInitial->Text);
+			beginX = System::Convert::ToDouble(xBegin->Text);
+			endX = System::Convert::ToDouble(xEnd->Text);
+			initY = System::Convert::ToDouble(yInitial->Text);
+			beginY = System::Convert::ToDouble(yBegin->Text);
+			endY = System::Convert::ToDouble(yEnd->Text);
+			formula = Equation(equation, "x", initX, beginX, endX, "y", initY, beginY, endY);
 		}
 
 		try
 		{
 			if (Powell->Checked)
 			{
-				Output->Text += formula.Powell(paras);
+				Output->Text += formula.Powell();
 			}
 			else if (Newton->Checked)
 			{
-				Output->Text += formula.Newton(paras);
+				Output->Text += formula.Newton();
 			}
 			else if (Step->Checked)
 			{
-				Output->Text += formula.Steep(paras);
+				Output->Text += formula.Steep();
 			}
 			else if (Quasi->Checked)
 			{
-				Output->Text += formula.Quasi(paras);
+				Output->Text += formula.Quasi();
 			}
 			else if (Conjuate->Checked)
 			{
-				Output->Text += formula.Conjuate(paras);
+				Output->Text += formula.Conjuate();
 			}
 
 		}

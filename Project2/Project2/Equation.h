@@ -5,9 +5,9 @@
 #include <sstream>
 #include <stack>
 #include <cmath>
-#define OPSIZE 6
+#include "Matrix.h"
 
-class Parameter;
+#define SYSENDL System::Environment::NewLine
 
 class Equation
 {
@@ -16,8 +16,9 @@ public:
 	// Constructor
 	//
 	Equation();
-	Equation(std::string formula);
-	Equation(std::string formula, std::vector<Parameter> paras);
+	Equation(std::string formula, std::string nameX, double initX, double beginX, double endX);
+	Equation(std::string formula, std::string nameX, double initX, double beginX, double endX,	\
+		std::string nameY, double initY, double beginY, double endY);
 
 	//
 	// Get / Set Function
@@ -30,23 +31,32 @@ public:
 	// Tool Function
 	//
 	std::vector<std::string> inToPostfix();
-	double f(std::vector<Parameter> paras);
+	std::string alterFormula(std::string key, std::string str);
+	std::string alterFormula(std::string customFormula, std::string key, std::string str);
+	double f(Vector vec, std::vector<std::string> name);
+	double f();
 
 	//
 	// Compute Function
 	//
-	System::String^ Powell(std::vector<Parameter> paras);
-	System::String^ Newton(std::vector<Parameter> paras);
-	System::String^ Steep(std::vector<Parameter> paras);
-	System::String^ Quasi(std::vector<Parameter> paras);
-	System::String^ Conjuate(std::vector<Parameter> paras);
+	System::String^ Powell();
+	System::String^ Newton();
+	System::String^ Steep();
+	System::String^ Quasi();
+	System::String^ Conjuate();
 
 private:
 	//
 	// Data Member
 	//
-	std::string formula;
-	std::vector<std::string> postFormula;
+	int dim;				// dimension of this equation
+	Vector init;			// initial Point Vector
+	double xInterval[2];	// x interval ={ begin, end };
+	double yInterval[2];	// y interval
+	std::string formula;	// euquation string
+	std::vector<std::string> name;	// variable name ex.{ x, y };
+	std::vector<std::string> postFormula; // postfix formula
+	
 };
 
 int priority(std::string op);

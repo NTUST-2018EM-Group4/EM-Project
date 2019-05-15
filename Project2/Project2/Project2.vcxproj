@@ -139,9 +139,16 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Equation_Conjuate.cpp" />
+    <ClCompile Include="Equation_Newton.cpp" />
+    <ClCompile Include="Equation_Powell.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Equation_Quasi.cpp" />
+    <ClCompile Include="Equation_Steep.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyForm.cpp" />
-    <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,10 +161,6 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
-    </ClInclude>
-    <ClInclude Include="Parameter.h">
-      <SubType>
-      </SubType>
     </ClInclude>
     <ClInclude Include="Vector.h" />
   </ItemGroup>

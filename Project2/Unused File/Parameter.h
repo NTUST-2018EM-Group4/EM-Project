@@ -13,6 +13,7 @@ struct Parameter
 	Parameter();
 	Parameter(std::string name, double init, double begin, double end);
 	Parameter(std::string name, std::string formula);
+	Parameter(std::string name, double init);
 
 	//
 	// Data Member
@@ -35,6 +36,13 @@ struct Vec
 	// Tool Function
 	//
 	void scalar(std::string variable);
+
+	//
+	//
+	//
+	Vec operator + (Vec& Vb);
+	Vec operator - (Vec& Vb);
+	Vec operator * (std::string variable);
 
 	//
 	// Data Member
