@@ -1,5 +1,6 @@
 #include "Equation.h"
 #include "Parameter.h"
+#include "Matrix.h"
 #define DEBUG
 #define THRESHOLD 1e-6
 #define SYSENDL System::Environment::NewLine
@@ -290,6 +291,35 @@ double Equation::f(const std::vector<Parameter>& paras) const
 	}
 }
 
+//partial derivative
+//input: source formula, parameter values, differential target
+double Equation::derivative(const std::vector<Parameter>& paras, const std::string & diff) const
+{
+	double result, fTemp;
+	std::vector<Parameter> temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init += THRESHOLD;
+			break;
+		}
+	}
+
+	fTemp = this->f(temp);
+	temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init -= THRESHOLD;
+			break;
+		}
+	}
+	result = (fTemp - this->f(temp)) / (2 * THRESHOLD);
+	return result;
+}
+
 System::String ^ Equation::Powell(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Powell: " + this->getSystemString();
@@ -323,14 +353,41 @@ System::String ^ Equation::Newton(std::vector<Parameter>& paras)
 System::String ^ Equation::Steep(std::vector<Parameter>& paras)
 {
 	System::String^ Result = "Steep: " + this->getSystemString();
+
+	std::vector<Parameter> vars = paras;
+	std::vector<double> gradient;
+	Vector Gradient;
+	std::vector<Vector> t;
+	Matrix G;
+	for (int time = 0; time < 100; time++)
+	{
+		//reset
+		gradient.clear();
+		t.clear();
+		//get gradient
+		for (int i = 0; i < vars.size(); i++)
+		{
+			gradient.push_back(this->derivative(vars, vars[i].name));
+		}
+		Gradient = Vector("gradient", gradient);
+		//stopping check
+		if (Gradient.Norm() <= THRESHOLD)
+			break;
+		Gradient = Gradient * -1;
+		t.push_back(Gradient);
+		G = Matrix("gradient", t);
+
+
+	}
 #ifdef DEBUG
+	/*
 	std::vector<Parameter> temp;
 	temp.push_back(Parameter("x", 2));
 	//temp.push_back(Parameter("y", 1));
 	std::cout << "derivative x = " << derivative(*this, temp, "x")  << std::endl;
 	//std::cout << "derivative y = " << derivative(*this, temp, "y") << std::endl;
+	*/
 #endif // DEBUG
-	// TODO
 
 	return Result;
 }
@@ -392,31 +449,3 @@ double cal(double& a, double& b, char& op)
 	}
 }
 
-//partial derivative
-//input: source formula, parameter values, differential target
-double derivative(const Equation & formula, const std::vector<Parameter>& paras, const std::string& diff)
-{
-	double result, fTemp;
-	std::vector<Parameter> temp = paras;
-	for (int i = 0; i < paras.size(); i++)
-	{
-		if (temp[i].name == diff)
-		{
-			temp[i].init += THRESHOLD;
-			break;
-		}
-	}
-	
-	fTemp = formula.f(temp);
-	temp = paras;
-	for (int i = 0; i < paras.size(); i++)
-	{
-		if (temp[i].name == diff)
-		{
-			temp[i].init -= THRESHOLD;
-			break;
-		}
-	}
-	result = (fTemp - formula.f(temp)) / (2 * THRESHOLD);
-	return result;
-}

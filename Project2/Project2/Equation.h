@@ -31,6 +31,7 @@ public:
 	//
 	std::vector<std::string> inToPostfix();
 	double f(const std::vector<Parameter>& paras) const;
+	double derivative(const std::vector<Parameter>& paras, const std::string& diff) const;
 
 	//
 	// Compute Function
@@ -51,4 +52,3 @@ private:
 
 int priority(std::string& op);
 double cal(double& a, double& b, char& op);
-double derivative(const Equation& formula, const std::vector<Parameter>& paras, const std::string& diff);
