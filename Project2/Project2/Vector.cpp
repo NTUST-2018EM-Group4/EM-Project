@@ -187,6 +187,32 @@ System::String ^ Vector::outputStr()
 	return Temp;
 }
 
+std::string Vector::outputStdStr()
+{
+	std::string outputStr;
+	outputStr = Name;
+
+	if (this->size() == 0)
+	{
+		outputStr += "\n";
+		return outputStr;
+	}
+
+	outputStr += " = [";
+
+	for (int i = 0; i < Data.size(); i++)
+	{
+		outputStr += std::to_string(Data[i]);
+		if (i != Data.size() - 1)
+		{
+			outputStr += ",";
+		}
+	}
+	outputStr += "]";
+
+	return outputStr;
+}
+
 int Vector::size()
 {
 	return Data.size();
