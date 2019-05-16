@@ -42,7 +42,7 @@ Equation::Equation(std::string formula, std::string nameX, double initX, double 
 }
 
 // Set Formula and reset postfixArr
-void Equation::setFormula(std::string formula)
+void Equation::setFormula(std::string& formula)
 {
 	this->formula = formula;
 	this->postFormula = inToPostfix();
@@ -239,7 +239,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 	for (int i = 0; i < temp.size(); i++)
 	{
 #ifdef DEBUG
-		std::cout << temp[i] << " ";
+		//std::cout << temp[i] << " ";
 #endif // DEBUG
 
 		for (int j = 0; j < name.size(); j++)
@@ -252,12 +252,12 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 		}
 	}
 #ifdef DEBUG
-	std::cout << std::endl;
+	/*std::cout << std::endl;
 	for (int i = 0; i < temp.size(); i++)
 	{
 		std::cout << temp[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 #endif // DEBUG
 
 	// store temp value
@@ -369,6 +369,94 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 	}
 }
 
+//partial derivative
+//input: parameter values, differential target
+double Equation::derivative(const std::vector<Parameter>& paras, const std::string & diff) const
+{
+	double result, fTemp;
+	std::vector<Parameter> temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init += THRESHOLD;
+			break;
+		}
+	}
+
+	fTemp = this->f(temp);
+	temp = paras;
+	for (int i = 0; i < paras.size(); i++)
+	{
+		if (temp[i].name == diff)
+		{
+			temp[i].init -= THRESHOLD;
+			break;
+		}
+	}
+	result = (fTemp - this->f(temp)) / (2 * THRESHOLD);
+	return result;
+}
+
+Matrix Equation::hessian(const std::vector<Parameter>& paras) const
+{
+	int dim = paras.size();
+	double dataTemp,fTemp;
+	std::vector<Parameter> paraTemp = paras;
+	Matrix result;
+	std::vector<double> v(dim);
+	std::vector<Vector> data;
+	for (int i = 0; i< dim; i++)
+	{
+		data.push_back(v);
+	}
+	result.Name = "hessian";
+	result.Data = data;
+	/* explosion
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[0].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2*THRESHOLD);
+	
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[0].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[1].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[1].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+	*/
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < dim; j++)
+		{
+			paraTemp = paras;	//reset
+			paraTemp[j].init += THRESHOLD;
+			fTemp = this->derivative(paraTemp, paraTemp[i].name);	//lv1 i
+			paraTemp = paras;
+			paraTemp[j].init -= THRESHOLD;
+			result.Data[i].Data[j] = (fTemp - this->derivative(paraTemp, paraTemp[i].name)) / (2 * THRESHOLD);
+
+		}
+	}
+	return result;
+}
+
+System::String ^ Equation::Powell(std::vector<Parameter>& paras)
 // Default Calculate
 double Equation::f()
 {
@@ -482,7 +570,7 @@ double Equation::f()
 }
 
 // Use for infix to postfix
-int priority(std::string op)
+int priority(std::string& op)
 {
 	switch (op[0])
 	{
@@ -498,7 +586,7 @@ int priority(std::string op)
 }
 
 // Easy Calculate function
-double cal(double a, double b, char op)
+double cal(double& a, double& b, char& op)
 {
 	switch (op)
 	{
@@ -519,3 +607,4 @@ double cal(double a, double b, char op)
 		break;
 	}
 }
+

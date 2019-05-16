@@ -23,7 +23,7 @@ public:
 	//
 	// Get / Set Function
 	//
-	void setFormula(std::string formula);
+	void setFormula(std::string& formula);
 	std::string getString();
 	System::String^ getSystemString();
 
@@ -59,6 +59,5 @@ private:
 	
 };
 
-int priority(std::string op);
-double cal(double a, double b, char op);
-
+int priority(std::string& op);
+double cal(double& a, double& b, char& op);
