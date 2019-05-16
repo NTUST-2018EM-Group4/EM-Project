@@ -1,6 +1,6 @@
 #include "Equation.h"
 
-#define DEBUG
+//#define DEBUG
 #define OPSIZE 6
 
 // Supported operator array
@@ -107,6 +107,9 @@ std::vector<std::string> Equation::inToPostfix()
 
 	// store temp node string
 	std::string nodeString;
+
+	// reset postformula
+	postFormula.clear();
 
 	// infix to postfix
 	while (normalFormula >> nodeString)
