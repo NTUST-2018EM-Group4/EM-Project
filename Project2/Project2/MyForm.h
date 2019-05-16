@@ -2,7 +2,7 @@
 //#define DEBUG
 #include "DataManager.h"
 #include "DotNetUtilities.h"
-#include "Parameter.h"
+#include "Equation.h"
 
 
 namespace Project2 {
@@ -45,44 +45,45 @@ namespace Project2 {
 		DataManager* dataManager;
 		String^ userInput;
 		int lastInputLength;
+
 	private: System::Windows::Forms::MenuStrip^  menuStrip1;
-	private: System::Windows::Forms::ToolStripMenuItem^  loadFileToolStripMenuItem;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
-	private: System::Windows::Forms::GroupBox^  groupBox2;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel2;
-	private: System::Windows::Forms::FlowLayoutPanel^  flowLayoutPanel1;
-	private: System::Windows::Forms::RadioButton^  Powell;
-	private: System::Windows::Forms::RadioButton^  Newton;
-	private: System::Windows::Forms::RadioButton^  Step;
-	private: System::Windows::Forms::RadioButton^  Quasi;
-	private: System::Windows::Forms::RadioButton^  Conjuate;
-	private: System::Windows::Forms::GroupBox^  groupBox4;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel3;
-	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::GroupBox^  groupBox6;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::GroupBox^  groupBox5;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel4;
-	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::Label^  label5;
-	private: System::Windows::Forms::Label^  label6;
-	private: System::Windows::Forms::TextBox^  yInitial;
-	private: System::Windows::Forms::TextBox^  yBegin;
-	private: System::Windows::Forms::TextBox^  yEnd;
-	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::TextBox^  xInitial;
-	private: System::Windows::Forms::TextBox^  xBegin;
-	private: System::Windows::Forms::TextBox^  xEnd;
-	private: System::Windows::Forms::GroupBox^  groupBox1;
-	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel5;
-	private: System::Windows::Forms::Button^  EnterBtn;
-	private: System::Windows::Forms::ComboBox^  Input;
-	private: System::Windows::Forms::GroupBox^  groupBox3;
-	private: System::Windows::Forms::TextBox^  Output;
-	private: System::Windows::Forms::ToolStripMenuItem^  clearOutputToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  resetXToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  resetYToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  loadFileToolStripMenuItem;
+			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
+			 System::Windows::Forms::GroupBox^  groupBox2;
+			 System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel2;
+			 System::Windows::Forms::FlowLayoutPanel^  flowLayoutPanel1;
+			 System::Windows::Forms::RadioButton^  Powell;
+			 System::Windows::Forms::RadioButton^  Newton;
+			 System::Windows::Forms::RadioButton^  Step;
+			 System::Windows::Forms::RadioButton^  Quasi;
+			 System::Windows::Forms::RadioButton^  Conjuate;
+			 System::Windows::Forms::GroupBox^  groupBox4;
+			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel3;
+			 System::Windows::Forms::Label^  label1;
+			 System::Windows::Forms::GroupBox^  groupBox6;
+			 System::Windows::Forms::Label^  label2;
+			 System::Windows::Forms::GroupBox^  groupBox5;
+			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel4;
+			 System::Windows::Forms::Label^  label4;
+			 System::Windows::Forms::Label^  label5;
+			 System::Windows::Forms::Label^  label6;
+			 System::Windows::Forms::TextBox^  yInitial;
+			 System::Windows::Forms::TextBox^  yBegin;
+			 System::Windows::Forms::TextBox^  yEnd;
+			 System::Windows::Forms::Label^  label3;
+			 System::Windows::Forms::TextBox^  xInitial;
+			 System::Windows::Forms::TextBox^  xBegin;
+			 System::Windows::Forms::TextBox^  xEnd;
+			 System::Windows::Forms::GroupBox^  groupBox1;
+			 System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel5;
+			 System::Windows::Forms::Button^  EnterBtn;
+			 System::Windows::Forms::ComboBox^  Input;
+			 System::Windows::Forms::GroupBox^  groupBox3;
+			 System::Windows::Forms::TextBox^  Output;
+			 System::Windows::Forms::ToolStripMenuItem^  clearOutputToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  resetXToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  resetYToolStripMenuItem;
 
 	private:
 		/// <summary>
