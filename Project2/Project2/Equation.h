@@ -35,6 +35,7 @@ public:
 	std::string alterFormula(std::string customFormula, std::string key, std::string str);
 	double f(Vector vec, std::vector<std::string> name);
 	double f();
+	double goldenSearch(std::string name, double a, double b, double c, double tau);
 
 	//
 	// Compute Function
