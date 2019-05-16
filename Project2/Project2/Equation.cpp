@@ -292,7 +292,7 @@ double Equation::f(const std::vector<Parameter>& paras) const
 }
 
 //partial derivative
-//input: source formula, parameter values, differential target
+//input: parameter values, differential target
 double Equation::derivative(const std::vector<Parameter>& paras, const std::string & diff) const
 {
 	double result, fTemp;
@@ -317,6 +317,64 @@ double Equation::derivative(const std::vector<Parameter>& paras, const std::stri
 		}
 	}
 	result = (fTemp - this->f(temp)) / (2 * THRESHOLD);
+	return result;
+}
+
+Matrix Equation::hessian(const std::vector<Parameter>& paras) const
+{
+	int dim = paras.size();
+	double dataTemp,fTemp;
+	std::vector<Parameter> paraTemp = paras;
+	Matrix result;
+	std::vector<double> v(dim);
+	std::vector<Vector> data;
+	for (int i = 0; i< dim; i++)
+	{
+		data.push_back(v);
+	}
+	result.Name = "hessian";
+	result.Data = data;
+	/* explosion
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[0].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2*THRESHOLD);
+	
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[0].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[1].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[1].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+	*/
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < dim; j++)
+		{
+			paraTemp = paras;	//reset
+			paraTemp[j].init += THRESHOLD;
+			fTemp = this->derivative(paraTemp, paraTemp[i].name);	//lv1 i
+			paraTemp = paras;
+			paraTemp[j].init -= THRESHOLD;
+			result.Data[i].Data[j] = (fTemp - this->derivative(paraTemp, paraTemp[i].name)) / (2 * THRESHOLD);
+
+		}
+	}
 	return result;
 }
 
@@ -358,7 +416,11 @@ System::String ^ Equation::Steep(std::vector<Parameter>& paras)
 	std::vector<double> gradient;
 	Vector Gradient;
 	std::vector<Vector> t;
-	Matrix G;
+	Matrix G, hessian, matrixT, lamda;
+	for (int i = 0; i< paras.size(); i++)
+	{
+		temp.Data.push_back(paras[i].init);
+	}
 	for (int time = 0; time < 100; time++)
 	{
 		//reset
@@ -376,8 +438,15 @@ System::String ^ Equation::Steep(std::vector<Parameter>& paras)
 		Gradient = Gradient * -1;
 		t.push_back(Gradient);
 		G = Matrix("gradient", t);
-
-
+		hessian = this->hessian(paras);
+		matrixT = G.trans() * hessian * G;
+		lamda = (G.trans() * G) * matrixT.inverse();
+		//*//
+		matrixT = matrixT + lamda * G;
+		for (int i = 0; i < paras.size(); i++)
+		{
+			vars[i].init = matrixT.Data[i];
+		}
 	}
 #ifdef DEBUG
 	/*

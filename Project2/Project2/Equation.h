@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stack>
 #include <cmath>
+#include "Matrix.h"
 #define OPSIZE 6
 
 class Parameter;
@@ -32,6 +33,8 @@ public:
 	std::vector<std::string> inToPostfix();
 	double f(const std::vector<Parameter>& paras) const;
 	double derivative(const std::vector<Parameter>& paras, const std::string& diff) const;
+	Matrix hessian(const std::vector<Parameter>& paras) const;
+
 
 	//
 	// Compute Function
