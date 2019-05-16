@@ -13,6 +13,13 @@ Equation::Equation()
 	postFormula.resize(0);
 }
 
+Equation::Equation(std::string formula, int dim)
+{
+	this->dim = dim;
+	this->formula = formula;
+	this->postFormula = inToPostfix();
+}
+
 // 1D Constructor
 Equation::Equation(std::string formula, std::string nameX, double initX, double beginX, double endX)
 {
@@ -250,6 +257,39 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 			if (temp[i] == name[j])
 			{
 				temp[i] = std::to_string(vec.Data[j]);
+				break;
+			}
+		}
+	}
+#ifdef DEBUG
+	std::cout << std::endl;
+	for (int i = 0; i < temp.size(); i++)
+	{
+		std::cout << temp[i] << " ";
+	}
+	std::cout << std::endl;
+#endif // DEBUG
+
+	Equation tempEqu = *this;
+	tempEqu.postFormula = temp;
+
+	return tempEqu.f();
+}
+
+double Equation::f(double val, std::string name)
+{
+	std::vector<std::string> temp = postFormula;
+	for (int i = 0; i < temp.size(); i++)
+	{
+#ifdef DEBUG
+		std::cout << temp[i] << " ";
+#endif // DEBUG
+
+		for (int j = 0; j < name.size(); j++)
+		{
+			if (temp[i] == name)
+			{
+				temp[i] = std::to_string(val);
 				break;
 			}
 		}
@@ -521,4 +561,16 @@ double cal(double a, double b, char op)
 		throw "Error in cal(double a, double b, char op): Not support op";
 		break;
 	}
+}
+
+System::String ^ ssTo_String(std::stringstream& ss)
+{
+	System::String^ Str = gcnew System::String("");
+	std::string s;
+	while (getline(ss, s))
+	{
+		Str = Str + gcnew System::String(s.c_str()) +System::Environment::NewLine;
+	}
+
+	return Str;
 }
