@@ -187,7 +187,34 @@ System::String ^ Vector::outputStr()
 	return Temp;
 }
 
-int Vector::size()
+std::string Vector::outputStdString()
+{
+	std::string Temp = "";
+	
+
+	if (this->size() == 0)
+	{
+		Temp += "\n";
+		return Temp;
+	}
+
+	Temp += "[";
+
+	std::string temp = "";
+	for (int i = 0; i < Data.size(); i++)
+	{
+		temp += std::to_string(Data[i]);
+		if (i != Data.size() - 1)
+		{
+			temp += ",";
+		}
+	}
+	temp += "]";
+	Temp += temp + "\n";
+	return Temp;
+}
+
+int Vector::size() const
 {
 	return Data.size();
 }
@@ -197,7 +224,7 @@ void Vector::push_back(double & num)
 	Data.push_back(num);
 }
 
-double Vector::operator[](const int & index)
+double& Vector::operator[](const int & index)
 {
 	return Data.at(index);
 }

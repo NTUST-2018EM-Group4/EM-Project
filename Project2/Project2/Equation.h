@@ -35,6 +35,9 @@ public:
 	std::string alterFormula(std::string customFormula, std::string key, std::string str);
 	double f(Vector vec, std::vector<std::string> name);
 	double f();
+	double derivative(const std::string & diff);
+	Matrix hessian() const;
+
 
 	//
 	// Compute Function
@@ -61,3 +64,4 @@ private:
 
 int priority(std::string& op);
 double cal(double& a, double& b, char& op);
+System::String^ printToOutput(std::stringstream & ss);

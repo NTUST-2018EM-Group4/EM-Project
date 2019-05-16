@@ -666,6 +666,32 @@ System::String^ Matrix::outputStr()
 	return Temp;
 }
 
+std::string Matrix::outputStdString()
+{
+	std::string Temp = "";
+
+	if (this->size() == 0)
+	{
+		Temp += "\n";
+		return Temp;
+	}
+
+	for (int i = 0; i < Data.size(); i++)
+	{
+		std::string temp;
+		temp += "[";
+		for (int j = 0; j < Data[i].Data.size(); j++)
+		{
+			temp += std::to_string(Data[i].Data[j]);
+			if (j != Data[i].Data.size() - 1)
+				temp += ",";
+		}
+		temp += "]";
+		Temp += temp + "\n";
+	}
+	return Temp;
+}
+
 bool Matrix::dimCheck(const Matrix Mb, char op) const
 {
 	switch (op)

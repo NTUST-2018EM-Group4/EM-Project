@@ -2,6 +2,7 @@
 
 #define DEBUG
 #define OPSIZE 6
+#define THRESHOLD 1e-6
 
 // Supported operator array
 const std::string op[OPSIZE + 6] = { "+", "-", "*", "^", "(", ")", "sin", "cos" ,"tan", "sec", "csc", "cot"};
@@ -481,6 +482,94 @@ double Equation::f()
 
 }
 
+//partial derivative
+//input: differential target
+double Equation::derivative(const std::string & diff)
+{
+	double result, fTemp;
+	Equation temp = *this;
+	
+	for (int i = 0; i < this->name.size(); i++)
+	{
+		if (this->name[i] == diff)
+		{
+			temp.init[i] += + THRESHOLD;
+			break;
+		}
+	}
+
+	fTemp = temp.f(temp.init, temp.name);
+	temp = *this;
+	for (int i = 0; i < this->name.size(); i++)
+	{
+		if (this->name[i] == diff)
+		{
+			temp.init[i] -= THRESHOLD;
+			break;
+		}
+	}
+	result = (fTemp - this->f(temp.init, temp.name)) / (2 * THRESHOLD);
+	return result;
+}
+
+Matrix Equation::hessian() const
+{
+	int dim = this->name.size();
+	double dataTemp, fTemp;
+	Equation temp = *this;
+	Matrix result;
+	std::vector<double> v(dim);
+	std::vector<Vector> data;
+	for (int i = 0; i < dim; i++)
+	{
+		data.push_back(v);
+	}
+	result.Name = "hessian";
+	result.Data = data;
+	/* explosion
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[0].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2*THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[0].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[0].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[0].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[0].init -= THRESHOLD;
+	result.Data[1].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+
+	paraTemp = paras;	//reset
+	paraTemp[1].init += THRESHOLD;
+	fTemp = this->derivative(paraTemp, paraTemp[1].name);
+	paraTemp = paras;	//reset
+	paraTemp[1].init -= THRESHOLD;
+	result.Data[1].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
+	*/
+	for (int i = 0; i < dim; i++)
+	{
+		for (int j = 0; j < dim; j++)
+		{
+			temp.init = this->init;	//reset
+			temp.init[j] += THRESHOLD;
+			fTemp = temp.derivative(temp.name[i]);	//lv1 i
+			temp.init = this->init;	//reset
+			temp.init[j] -= THRESHOLD;
+			result.Data[i].Data[j] = (fTemp - temp.derivative(temp.name[i])) / (2 * THRESHOLD);
+
+		}
+	}
+	return result;
+}
+
 // Use for infix to postfix
 int priority(std::string& op)
 {
@@ -520,3 +609,13 @@ double cal(double& a, double& b, char& op)
 	}
 }
 
+System::String^ printToOutput(std::stringstream & ss)
+{
+	System::String^ result;
+	std::string s;
+	while (ss >> s)
+	{
+		result += gcnew System::String(s.c_str()) + System::Environment::NewLine;
+	}
+	return result;
+}

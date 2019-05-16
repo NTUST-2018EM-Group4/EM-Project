@@ -58,6 +58,7 @@ struct Matrix
 	// Tool Function
 	//
 	System::String^ outputStr();
+	std::string outputStdString();
 	bool dimCheck(const Matrix Mb, char op) const;
 
 	//

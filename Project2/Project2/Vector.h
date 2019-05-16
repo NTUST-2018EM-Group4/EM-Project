@@ -52,11 +52,12 @@ struct Vector
 	bool zeroCheck();
 	void zeroExpand(int dim);
 	System::String^ outputStr();
+	std::string outputStdString();
 
 	//
 	// Simulate vector function
 	//
-	int size();
+	int size() const;
 	void push_back(double& num);
-	double operator [] (const int& index);
+	double& operator [] (const int& index);
 };
