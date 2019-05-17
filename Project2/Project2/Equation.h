@@ -16,6 +16,7 @@ public:
 	// Constructor
 	//
 	Equation();
+	Equation(std::string formula, int dim);
 	Equation(std::string formula, std::string nameX, double initX, double beginX, double endX);
 	Equation(std::string formula, std::string nameX, double initX, double beginX, double endX,	\
 		std::string nameY, double initY, double beginY, double endY);
@@ -34,7 +35,9 @@ public:
 	std::string alterFormula(std::string key, std::string str);
 	std::string alterFormula(std::string customFormula, std::string key, std::string str);
 	double f(Vector vec, std::vector<std::string> name);
+	double f(double val, std::string name);
 	double f();
+	double goldenSearch(std::string name, double a, double b, double c, double tau);
 
 	//
 	// Compute Function
@@ -56,8 +59,9 @@ private:
 	std::string formula;	// euquation string
 	std::vector<std::string> name;	// variable name ex.{ x, y };
 	std::vector<std::string> postFormula; // postfix formula
-	
+
 };
 
-int priority(std::string& op);
-double cal(double& a, double& b, char& op);
+int priority(std::string op);
+double cal(double a, double b, char op);
+System::String^ ssTo_String(std::stringstream& ss);

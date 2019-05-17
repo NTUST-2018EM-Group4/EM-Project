@@ -1,6 +1,6 @@
 #include "Equation.h"
 
-#define DEBUG
+//#define DEBUG
 #define OPSIZE 6
 
 // Supported operator array
@@ -11,6 +11,13 @@ Equation::Equation()
 {
 	formula = "";
 	postFormula.resize(0);
+}
+
+Equation::Equation(std::string formula, int dim)
+{
+	this->dim = dim;
+	this->formula = formula;
+	this->postFormula = inToPostfix();
 }
 
 // 1D Constructor
@@ -108,6 +115,9 @@ std::vector<std::string> Equation::inToPostfix()
 	// store temp node string
 	std::string nodeString;
 
+	// reset postformula
+	postFormula.clear();
+
 	// infix to postfix
 	while (normalFormula >> nodeString)
 	{
@@ -141,15 +151,15 @@ std::vector<std::string> Equation::inToPostfix()
 		{
 			while (opStack.top() != "(")
 			{
-				// ¹J ) ¿é¥X¦Ü (
+				// ï¿½J ) ï¿½ï¿½ï¿½Xï¿½ï¿½ (
 				postFormula.push_back(opStack.top());
 				opStack.pop();
 			}
-			opStack.pop();  // ¤£¿é¥X (
+			opStack.pop();  // ï¿½ï¿½ï¿½ï¿½ï¿½X (
 		}
 		else
 		{
-			// ¹Bºâ¤¸ª½±µ¿é¥X
+			// ï¿½Bï¿½â¤¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X
 			if (nodeString != " " && nodeString != "")
 			{
 				postFormula.push_back(nodeString);
@@ -260,6 +270,39 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 	std::cout << std::endl;*/
 #endif // DEBUG
 
+	Equation tempEqu = *this;
+	tempEqu.postFormula = temp;
+
+	return tempEqu.f();
+}
+
+double Equation::f(double val, std::string name)
+{
+	std::vector<std::string> temp = postFormula;
+	for (int i = 0; i < temp.size(); i++)
+	{
+#ifdef DEBUG
+		std::cout << temp[i] << " ";
+#endif // DEBUG
+
+		for (int j = 0; j < name.size(); j++)
+		{
+			if (temp[i] == name)
+			{
+				temp[i] = std::to_string(val);
+				break;
+			}
+		}
+	}
+#ifdef DEBUG
+	std::cout << std::endl;
+	for (int i = 0; i < temp.size(); i++)
+	{
+		std::cout << temp[i] << " ";
+	}
+	std::cout << std::endl;
+#endif // DEBUG
+
 	// store temp value
 	std::stack<double> calStack;
 
@@ -340,7 +383,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(temp[i]));
@@ -350,7 +393,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -451,7 +494,7 @@ double Equation::f()
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(this->postFormula[i]));
@@ -461,7 +504,7 @@ double Equation::f()
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -520,3 +563,14 @@ double cal(double& a, double& b, char& op)
 	}
 }
 
+System::String ^ ssTo_String(std::stringstream& ss)
+{
+	System::String^ Str = gcnew System::String("");
+	std::string s;
+	while (getline(ss, s))
+	{
+		Str = Str + gcnew System::String(s.c_str()) +System::Environment::NewLine;
+	}
+
+	return Str;
+}
