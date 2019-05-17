@@ -103,62 +103,6 @@ const double Vector::Norm() const
 	return ans;
 }
 
-const Vector Vector::Normal() const
-{
-	double norm = this->Norm();
-	std::vector<double> ans(this->Data.size());
-	for (int i = 0; i < this->Data.size(); i++)
-	{
-		ans[i] = this->Data[i] / norm;
-	}
-	return Vector("ans", ans);
-}
-
-const double Vector::Angle(const Vector& Vb)
-{
-	double cosTheta, theta = 0;
-	Vector temp = Vector('*', *this, Vb);
-	cosTheta = temp.Data[0] / (this->Norm() * Vb.Norm());
-	theta = acos(cosTheta);
-	theta *= (180 / PI);
-	return theta;
-}
-
-const double Vector::Com(const Vector& Vb)
-{
-	double ans;
-	Vector temp = Vector('*',*this, Vb);
-	ans = temp.Data[0] / Vb.Norm();
-	return ans;
-}
-
-const Vector Vector::Proj(const Vector & Vb)
-{
-	Vector ans, unit;
-	unit = Vb * (1 / Vb.Norm());
-	ans = unit * this->Com(Vb);
-	return ans;
-}
-
-const Vector Vector::Cross(const Vector & Vb) const
-{
-	std::vector<double> ans(3);
-	for (int i = 0; i < 3; i++)
-	{
-		ans[i] = this->Data[(i + 1) % 3] * Vb.Data[(i + 2) % 3] \
-			- Vb.Data[(i + 1) % 3] * this->Data[(i + 2) % 3];
-	}
-	return Vector("ans", ans);
-}
-
-const double Vector::Area(const Vector & Vb)
-{
-	double ans, theta;
-	theta = this->Angle(Vb) * (PI / 180);	//deg to rad
-	ans = this->Norm() * Vb.Norm() * sin(theta) / 2;
-	return ans;
-}
-
 System::String ^ Vector::outputStr()
 {
 	System::String^ Temp;

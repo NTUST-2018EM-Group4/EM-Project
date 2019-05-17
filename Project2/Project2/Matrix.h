@@ -40,19 +40,8 @@ struct Matrix
 	const double rank();
 	const double det() const;
 	const Matrix inverse();
-	const Matrix minor(const int i, const int j) const;
-	const double cofactor(const int i, const int j) const;
-	const Matrix adjoint();
-	const Matrix leastSquare(const Matrix& Mb);
-	const std::vector<double> eigenVal() const;
-	const Matrix eigenVec(const std::vector<double>& val) const;
-	const double pm() const;
 
-	//
-	// Calculate Vector Function
-	//
-	friend const Matrix Ob(const int normal, const std::vector<Vector> ui);
-	friend const bool isLI(const int normal, const std::vector<Vector> ui);
+
 
 	//
 	// Tool Function
