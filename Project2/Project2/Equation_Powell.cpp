@@ -1,7 +1,7 @@
 #include "Equation.h"
 
 // #define DEBUG_TESTDATA
-#define DEBUG
+// #define DEBUG
 
 #define PHI  ((1 + sqrt(5)) / 2)  // 1.618...
 #define RESPHI  (2 - PHI)			// 0.382...
@@ -53,6 +53,11 @@ System::String ^ Equation::Powell()
 		}
 		S.push_back(tempVec);
 	}
+
+#ifdef DEBUG
+	double tempX0 = f(X[0], name);
+#endif // DEBUG
+
 
 	int j = 0;
 	do
@@ -139,6 +144,8 @@ System::String ^ Equation::Powell()
 						break;
 					}
 
+					if (S[i - 1].Data[k] < 0) std::swap(tempBegin, tempEnd);
+
 					if (tempBegin > maxBegin) maxBegin = tempBegin;
 					if (tempEnd < minEnd) minEnd = tempEnd;
 				}
@@ -157,6 +164,10 @@ System::String ^ Equation::Powell()
 				newX.Data.push_back(list[k].f(alpha.Data[0], alpha.Name));
 			}
 			X[i] = newX;
+
+#ifdef DEBUG
+			double tempXi = f(X[i], name);
+#endif // DEBUG
 
 			ss << X[i].outputStdStr() << std::endl;
 		}
@@ -220,7 +231,7 @@ double Equation::goldenSearch(std::string name, double a, double b, double c, do
 	}
 
 	// 判斷是否達到收斂條件
-	if (abs(c - a) < tau * (abs(b) + abs(x)) || this->f(x, name) == this->f(b, name))
+	if (abs(c - a) < tau * (abs(b) + abs(x)))
 	{
 		// 達到收斂條件，取區間長度的一半作為極小值點輸出
 		return (c + a) / 2;
