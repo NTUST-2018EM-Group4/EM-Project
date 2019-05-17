@@ -52,7 +52,7 @@ struct Vector
 	bool zeroCheck();
 	void zeroExpand(int dim);
 	System::String^ outputStr();
-	std::string outputStdString();
+	std::string outputStdStr();
 
 	//
 	// Simulate vector function

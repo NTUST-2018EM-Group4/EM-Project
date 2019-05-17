@@ -1,6 +1,6 @@
 #include "Equation.h"
 
-#define DEBUG
+//#define DEBUG
 #define OPSIZE 6
 #define THRESHOLD 1e-6
 
@@ -12,6 +12,13 @@ Equation::Equation()
 {
 	formula = "";
 	postFormula.resize(0);
+}
+
+Equation::Equation(std::string formula, int dim)
+{
+	this->dim = dim;
+	this->formula = formula;
+	this->postFormula = inToPostfix();
 }
 
 // 1D Constructor
@@ -109,6 +116,9 @@ std::vector<std::string> Equation::inToPostfix()
 	// store temp node string
 	std::string nodeString;
 
+	// reset postformula
+	postFormula.clear();
+
 	// infix to postfix
 	while (normalFormula >> nodeString)
 	{
@@ -142,15 +152,13 @@ std::vector<std::string> Equation::inToPostfix()
 		{
 			while (opStack.top() != "(")
 			{
-				// 遇 ) 輸出至 (
 				postFormula.push_back(opStack.top());
 				opStack.pop();
 			}
-			opStack.pop();  // 不輸出 (
+			opStack.pop();
 		}
 		else
 		{
-			// 運算元直接輸出
 			if (nodeString != " " && nodeString != "")
 			{
 				postFormula.push_back(nodeString);
@@ -261,6 +269,39 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 	std::cout << std::endl;*/
 #endif // DEBUG
 
+	Equation tempEqu = *this;
+	tempEqu.postFormula = temp;
+
+	return tempEqu.f();
+}
+
+double Equation::f(double val, std::string name)
+{
+	std::vector<std::string> temp = postFormula;
+	for (int i = 0; i < temp.size(); i++)
+	{
+#ifdef DEBUG
+		std::cout << temp[i] << " ";
+#endif // DEBUG
+
+		for (int j = 0; j < name.size(); j++)
+		{
+			if (temp[i] == name)
+			{
+				temp[i] = std::to_string(val);
+				break;
+			}
+		}
+	}
+#ifdef DEBUG
+	std::cout << std::endl;
+	for (int i = 0; i < temp.size(); i++)
+	{
+		std::cout << temp[i] << " ";
+	}
+	std::cout << std::endl;
+#endif // DEBUG
+
 	// store temp value
 	std::stack<double> calStack;
 
@@ -341,7 +382,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(temp[i]));
@@ -351,7 +392,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -452,7 +493,7 @@ double Equation::f()
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(this->postFormula[i]));
@@ -462,7 +503,7 @@ double Equation::f()
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -488,7 +529,7 @@ double Equation::derivative(const std::string & diff)
 {
 	double result, fTemp;
 	Equation temp = *this;
-	
+
 	for (int i = 0; i < this->name.size(); i++)
 	{
 		if (this->name[i] == diff)
@@ -515,7 +556,7 @@ double Equation::derivative(const std::string & diff)
 Matrix Equation::hessian() const
 {
 	int dim = this->name.size();
-	double dataTemp, fTemp;
+	double fTemp;
 	Equation temp = *this;
 	Matrix result;
 	std::vector<double> v(dim);
@@ -526,34 +567,7 @@ Matrix Equation::hessian() const
 	}
 	result.Name = "hessian";
 	result.Data = data;
-	/* explosion
-	paraTemp[0].init += THRESHOLD;
-	fTemp = this->derivative(paraTemp, paraTemp[0].name);
-	paraTemp = paras;	//reset
-	paraTemp[0].init -= THRESHOLD;
-	result.Data[0].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2*THRESHOLD);
 
-	paraTemp = paras;	//reset
-	paraTemp[1].init += THRESHOLD;
-	fTemp = this->derivative(paraTemp, paraTemp[0].name);
-	paraTemp = paras;	//reset
-	paraTemp[1].init -= THRESHOLD;
-	result.Data[0].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[0].name)) / (2 * THRESHOLD);
-
-	paraTemp = paras;	//reset
-	paraTemp[0].init += THRESHOLD;
-	fTemp = this->derivative(paraTemp, paraTemp[1].name);
-	paraTemp = paras;	//reset
-	paraTemp[0].init -= THRESHOLD;
-	result.Data[1].Data[0] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
-
-	paraTemp = paras;	//reset
-	paraTemp[1].init += THRESHOLD;
-	fTemp = this->derivative(paraTemp, paraTemp[1].name);
-	paraTemp = paras;	//reset
-	paraTemp[1].init -= THRESHOLD;
-	result.Data[1].Data[1] = (fTemp - this->derivative(paraTemp, paraTemp[1].name)) / (2 * THRESHOLD);
-	*/
 	for (int i = 0; i < dim; i++)
 	{
 		for (int j = 0; j < dim; j++)
@@ -609,13 +623,14 @@ double cal(double& a, double& b, char& op)
 	}
 }
 
-System::String^ printToOutput(std::stringstream & ss)
+System::String ^ ssTo_String(std::stringstream& ss)
 {
-	System::String^ result;
+	System::String^ Str = gcnew System::String("");
 	std::string s;
-	while (ss >> s)
+	while (getline(ss, s))
 	{
-		result += gcnew System::String(s.c_str()) + System::Environment::NewLine;
+		Str = Str + gcnew System::String(s.c_str()) +System::Environment::NewLine;
 	}
-	return result;
+
+	return Str;
 }

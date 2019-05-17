@@ -187,31 +187,30 @@ System::String ^ Vector::outputStr()
 	return Temp;
 }
 
-std::string Vector::outputStdString()
+std::string Vector::outputStdStr()
 {
-	std::string Temp = "";
-	
+	std::string outputStr;
+	outputStr = Name;
 
 	if (this->size() == 0)
 	{
-		Temp += "\n";
-		return Temp;
+		outputStr += "\n";
+		return outputStr;
 	}
 
-	Temp += "[";
+	outputStr += " = [";
 
-	std::string temp = "";
 	for (int i = 0; i < Data.size(); i++)
 	{
-		temp += std::to_string(Data[i]);
+		outputStr += std::to_string(Data[i]);
 		if (i != Data.size() - 1)
 		{
-			temp += ",";
+			outputStr += ",";
 		}
 	}
-	temp += "]";
-	Temp += temp + "\n";
-	return Temp;
+	outputStr += "]";
+
+	return outputStr;
 }
 
 int Vector::size() const
@@ -329,4 +328,3 @@ const Vector Vector::operator/(const double & num)
 	temp.Name = "result";
 	return temp;
 }
-
