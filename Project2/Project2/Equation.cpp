@@ -49,7 +49,7 @@ Equation::Equation(std::string formula, std::string nameX, double initX, double 
 }
 
 // Set Formula and reset postfixArr
-void Equation::setFormula(std::string formula)
+void Equation::setFormula(std::string& formula)
 {
 	this->formula = formula;
 	this->postFormula = inToPostfix();
@@ -151,15 +151,15 @@ std::vector<std::string> Equation::inToPostfix()
 		{
 			while (opStack.top() != "(")
 			{
-				// ¹J ) ¿é¥X¦Ü (
+				// ï¿½J ) ï¿½ï¿½ï¿½Xï¿½ï¿½ (
 				postFormula.push_back(opStack.top());
 				opStack.pop();
 			}
-			opStack.pop();  // ¤£¿é¥X (
+			opStack.pop();  // ï¿½ï¿½ï¿½ï¿½ï¿½X (
 		}
 		else
 		{
-			// ¹Bºâ¤¸ª½±µ¿é¥X
+			// ï¿½Bï¿½â¤¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½X
 			if (nodeString != " " && nodeString != "")
 			{
 				postFormula.push_back(nodeString);
@@ -249,7 +249,7 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 	for (int i = 0; i < temp.size(); i++)
 	{
 #ifdef DEBUG
-		std::cout << temp[i] << " ";
+		//std::cout << temp[i] << " ";
 #endif // DEBUG
 
 		for (int j = 0; j < name.size(); j++)
@@ -262,12 +262,12 @@ double Equation::f(Vector vec, std::vector<std::string> name)
 		}
 	}
 #ifdef DEBUG
-	std::cout << std::endl;
+	/*std::cout << std::endl;
 	for (int i = 0; i < temp.size(); i++)
 	{
 		std::cout << temp[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 #endif // DEBUG
 
 	Equation tempEqu = *this;
@@ -383,7 +383,7 @@ double Equation::f(double val, std::string name)
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(temp[i]));
@@ -393,7 +393,7 @@ double Equation::f(double val, std::string name)
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -494,7 +494,7 @@ double Equation::f()
 				// push calculated result
 				calStack.push(1 / tan(a));
 			}
-			// not operator push value into stack 
+			// not operator push value into stack
 			else
 			{
 				calStack.push(std::stod(this->postFormula[i]));
@@ -504,7 +504,7 @@ double Equation::f()
 		// Avoid empty stack
 		if (calStack.empty()) throw "---Formula is empty---";
 
-		// pop final calculate result vector 
+		// pop final calculate result vector
 		double result = calStack.top();
 		calStack.pop();
 
@@ -525,7 +525,7 @@ double Equation::f()
 }
 
 // Use for infix to postfix
-int priority(std::string op)
+int priority(std::string& op)
 {
 	switch (op[0])
 	{
@@ -541,7 +541,7 @@ int priority(std::string op)
 }
 
 // Easy Calculate function
-double cal(double a, double b, char op)
+double cal(double& a, double& b, char& op)
 {
 	switch (op)
 	{

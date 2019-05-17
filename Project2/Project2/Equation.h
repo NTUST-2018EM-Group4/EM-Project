@@ -24,7 +24,7 @@ public:
 	//
 	// Get / Set Function
 	//
-	void setFormula(std::string formula);
+	void setFormula(std::string& formula);
 	std::string getString();
 	System::String^ getSystemString();
 
@@ -59,10 +59,9 @@ private:
 	std::string formula;	// euquation string
 	std::vector<std::string> name;	// variable name ex.{ x, y };
 	std::vector<std::string> postFormula; // postfix formula
-	
+
 };
 
 int priority(std::string op);
 double cal(double a, double b, char op);
 System::String^ ssTo_String(std::stringstream& ss);
-
