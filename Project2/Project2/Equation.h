@@ -37,6 +37,8 @@ public:
 	double f(Vector vec, std::vector<std::string> name);
 	double f(double val, std::string name);
 	double f();
+	double derivative(const std::string & diff);
+	Matrix hessian() const;
 	double goldenSearch(std::string name, double a, double b, double c, double tau);
 
 	//
@@ -62,6 +64,6 @@ private:
 
 };
 
-int priority(std::string op);
-double cal(double a, double b, char op);
+int priority(std::string& op);
+double cal(double& a, double& b, char& op);
 System::String^ ssTo_String(std::stringstream& ss);

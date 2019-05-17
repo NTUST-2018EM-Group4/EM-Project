@@ -213,7 +213,7 @@ std::string Vector::outputStdStr()
 	return outputStr;
 }
 
-int Vector::size()
+int Vector::size() const
 {
 	return Data.size();
 }
@@ -223,7 +223,7 @@ void Vector::push_back(double & num)
 	Data.push_back(num);
 }
 
-double Vector::operator[](const int & index)
+double& Vector::operator[](const int & index)
 {
 	return Data.at(index);
 }
@@ -328,4 +328,3 @@ const Vector Vector::operator/(const double & num)
 	temp.Name = "result";
 	return temp;
 }
-
