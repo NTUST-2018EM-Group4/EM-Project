@@ -1,7 +1,7 @@
 #include "Equation.h"
 
 #define THRESHOLD 1e-6
-#define DEBUG
+// #define DEBUG
 
 using namespace std;
 
@@ -43,19 +43,22 @@ System::String ^ Equation::Steep()
 		G = G.trans();	//Âà¦^¨Ó
 		matrixT = matrixT + lamda * G;
 		this->init = matrixT.Data[0];
-		ss << " i=" << time << endl
-			<< "h=" << G.outputStdString()
-			<< "lambda=" << lamda.outputStdString()
-			<< "X=" << matrixT.outputStdString() << endl;
+
+		ss << "------------------------------" << endl;
+		ss << "i = " << time << endl
+			<< "h = " << G.outputStdStr() << endl
+			<< "lambda = " << lamda.outputStdStr() << endl
+			<< "X = " << matrixT.outputStdStr() << endl;
 		
 #ifdef DEBUG
-		cout << "i= " << time << endl
-			<< "h" << G.outputStdString()
-			<< "lambda" << lamda.outputStdString()
-			<< "X" << matrixT.outputStdString() << " " <<endl;
+		cout << "i = " << time << endl
+			<< "h" << G.outputStdStr() << endl
+			<< "lambda" << lamda.outputStdStr() << endl
+			<< "X" << matrixT.outputStdStr() << endl;
 #endif // DEBUG
 	}
 
+	ss << "-----------Result-----------" << endl;
 	ss << "[";
 	for (int i = 0; i < this->name.size(); i++)
 	{
@@ -64,10 +67,10 @@ System::String ^ Equation::Steep()
 		else
 			ss << "," << this->name[i];
 	}
-	ss << "]=" << this->init.outputStdString() << endl
-		<< "min=" << this->f(this->init, this->name);
+	ss << "]" << this->init.outputStdStr() << endl
+		<< "min = " << this->f(this->init, this->name);
 
-	Result += printToOutput(ss);
+	Result += ssTo_String(ss);
 	
 	return Result;
 }

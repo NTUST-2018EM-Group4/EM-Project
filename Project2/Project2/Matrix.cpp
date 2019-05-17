@@ -666,30 +666,27 @@ System::String^ Matrix::outputStr()
 	return Temp;
 }
 
-std::string Matrix::outputStdString()
+std::string Matrix::outputStdStr()
 {
-	std::string Temp = "";
+	std::string result = "";
 
 	if (this->size() == 0)
 	{
-		Temp += "\n";
-		return Temp;
+		return result;
 	}
 
 	for (int i = 0; i < Data.size(); i++)
 	{
-		std::string temp;
-		temp += "[";
+		result += "[";
 		for (int j = 0; j < Data[i].Data.size(); j++)
 		{
-			temp += std::to_string(Data[i].Data[j]);
+			result += std::to_string(Data[i].Data[j]);
 			if (j != Data[i].Data.size() - 1)
-				temp += ",";
+				result += ",";
 		}
-		temp += "]";
-		Temp += temp + "\n";
+		result += "]";
 	}
-	return Temp;
+	return result;
 }
 
 bool Matrix::dimCheck(const Matrix Mb, char op) const
