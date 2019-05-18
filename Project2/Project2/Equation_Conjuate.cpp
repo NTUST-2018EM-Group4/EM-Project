@@ -27,17 +27,19 @@ System::String ^ Equation::Conjuate()
 		//get beta
 		Matrix matrixTemp = gradient.trans() * gradient;
 		beta = matrixTemp[0][0];
-		matrixTemp = preGradient.trans() * preGradient;
+		matrixTemp = preGradient.trans() * preGradient;	//TODO preGradient 還沒設定初值
 		beta /= matrixTemp[0][0];
 
-		S = S * -1 + preS * beta;
+		S = this->gradient() * -1 + preS * beta;
 		
 		//step 2 endif
 		//get alpha
 		
-		//todo
+		//TODO
 
 		X = preX + S * alpha;
+
+		init = X;
 
 		//step 3
 		if (abs(this->f(X,this->name) - preFx) <= THRESHOLD)
