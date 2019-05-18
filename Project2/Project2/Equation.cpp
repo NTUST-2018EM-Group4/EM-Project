@@ -450,6 +450,16 @@ double Equation::derivative(const std::string & diff)
 	return result;
 }
 
+Vector Equation::gradient()
+{
+	std::vector<double> gradient;
+	for (int i = 0; i < this->name.size(); i++)
+	{
+		gradient.push_back(this->derivative(this->name[i]));
+	}
+	return Vector("gradient", gradient);
+}
+
 Matrix Equation::hessian() const
 {
 	int dim = this->name.size();

@@ -38,6 +38,7 @@ public:
 	double f(double val, std::string name);
 	double f();
 	double derivative(const std::string & diff);
+	Vector gradient();
 	Matrix hessian() const;
 	double goldenSearch(std::string name, double a, double b, double c, double tau);
 

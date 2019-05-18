@@ -1,5 +1,6 @@
 #include "Equation.h"
 
+#define TIME 50
 #define THRESHOLD 1e-6
 // #define DEBUG
 
@@ -14,20 +15,18 @@ System::String ^ Equation::Steep()
 	vector<Vector> t;
 	Matrix G, hessian, matrixT, lamda;
 	stringstream ss;
-	for (int time = 0; time < 100; time++)
+	for (int time = 0; time < TIME; time++)
 	{
 		//reset
 		gradient.clear();
 		t.clear();
-		//get gradient
-		for (int i = 0; i < this->name.size(); i++)
-		{
-			gradient.push_back(this->derivative(this->name[i]));
-		}
-		Gradient = Vector("gradient", gradient);
+
+		Gradient = this->gradient();	//get gradient
+
 		//stopping check
 		if (Gradient.Norm() <= THRESHOLD)
 			break;
+
 		Gradient = Gradient * -1;	//search direction = - gradient
 		t.push_back(Gradient);
 		G = Matrix("gradient", t);
@@ -35,15 +34,14 @@ System::String ^ Equation::Steep()
 		hessian = this->hessian();	//get hessian
 		matrixT = G.trans() * hessian * G;
 		lamda = (G.trans() * G) * matrixT.inverse();	//get lamda
-
 		t.clear();
 		t.push_back(this->init);
 		matrixT = Matrix("temp", t);
-		//matrixT = matrixT.trans();	//轉直的
 		G = G.trans();	//轉回來
 		matrixT = matrixT + lamda * G;
 		this->init = matrixT.Data[0];
 
+		//output
 		ss << "------------------------------" << endl;
 		ss << "i = " << time << endl
 			<< "h = " << G.outputStdStr() << endl
@@ -58,6 +56,7 @@ System::String ^ Equation::Steep()
 #endif // DEBUG
 	}
 
+	//output
 	ss << "-----------Result-----------" << endl;
 	ss << "[";
 	for (int i = 0; i < this->name.size(); i++)
@@ -69,7 +68,6 @@ System::String ^ Equation::Steep()
 	}
 	ss << "]" << this->init.outputStdStr() << endl
 		<< "min = " << this->f(this->init, this->name);
-
 	Result += ssTo_String(ss);
 	
 	return Result;
