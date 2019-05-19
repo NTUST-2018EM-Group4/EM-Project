@@ -460,6 +460,13 @@ Vector Equation::gradient()
 	return Vector("gradient", gradient);
 }
 
+Vector Equation::gradient(Vector init)
+{
+	Equation tempEqu = *this;
+	tempEqu.init = init;
+	return tempEqu.gradient();
+}
+
 Matrix Equation::hessian() const
 {
 	int dim = this->name.size();

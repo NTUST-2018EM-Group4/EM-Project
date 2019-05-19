@@ -39,6 +39,7 @@ public:
 	double f();
 	double derivative(const std::string & diff);
 	Vector gradient();
+	Vector gradient(Vector init);
 	Matrix hessian() const;
 	double goldenSearch(std::string name, double a, double b, double c, double tau);
 
