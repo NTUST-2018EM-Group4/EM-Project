@@ -55,6 +55,8 @@ private:
 	//
 	// Data Member
 	//
+	bool XhasRadical = false;
+	bool YhasRadical = false;
 	int dim;				// dimension of this equation
 	Vector init;			// initial Point Vector
 	double xInterval[2];	// x interval ={ begin, end };
@@ -62,7 +64,7 @@ private:
 	std::string formula;	// euquation string
 	std::vector<std::string> name;	// variable name ex.{ x, y };
 	std::vector<std::string> postFormula; // postfix formula
-
+	
 };
 
 int priority(std::string& op);
