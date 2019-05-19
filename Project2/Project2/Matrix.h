@@ -55,5 +55,5 @@ struct Matrix
 	//
 	int size() const;
 	void push_back(Vector& num);
-	Vector operator [] (const int& index);
+	Vector& operator [] (const int& index);
 };

@@ -56,7 +56,7 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 		Matrix result;
 		for (int i = 0; i < this->Data.size(); i++)
 		{
-			result.Data.push_back(this->Data[i] + Mb.Data[i]);
+			result.Data.push_back(this->Data[i] - Mb.Data[i]);
 		}
 		return result;
 	}
@@ -494,7 +494,7 @@ void Matrix::push_back(Vector & num)
 	Data.push_back(num);
 }
 
-Vector Matrix::operator[](const int & index)
+Vector& Matrix::operator[](const int & index)
 {
 	return Data.at(index);
 }
