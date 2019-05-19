@@ -19,6 +19,7 @@ Equation::Equation(std::string formula, int dim)
 	this->dim = dim;
 	this->formula = formula;
 	this->postFormula = inToPostfix();
+	
 }
 
 // 1D Constructor
@@ -31,6 +32,14 @@ Equation::Equation(std::string formula, std::string nameX, double initX, double 
 	this->xInterval[0] = beginX;
 	this->xInterval[1] = endX;
 	this->postFormula = inToPostfix();
+	for (int i = postFormula.size() - 1; i > 1; i--)
+	{
+		if (postFormula[i] == "^" && postFormula[i - 1].find('.') != -1)
+		{
+			XhasRadical = true;
+			break;
+		}
+	}
 }
 
 // 2D Constructor
@@ -47,6 +56,13 @@ Equation::Equation(std::string formula, std::string nameX, double initX, double 
 	this->yInterval[0] = beginY;
 	this->yInterval[1] = endY;
 	this->postFormula = inToPostfix();
+	for (int i = postFormula.size() - 1; i > 1; i--)
+	{
+		if (postFormula[i] == "^" && postFormula[i - 1].find('.') != -1 && postFormula[i - 2] == name[0])
+			XhasRadical = true;
+		if (postFormula[i] == "^" && postFormula[i - 1].find('.') != -1 && postFormula[i - 2] == name[1])
+			YhasRadical = true;
+	}
 }
 
 // Set Formula and reset postfixArr
