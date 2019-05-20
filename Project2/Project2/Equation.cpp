@@ -2,7 +2,7 @@
 
 //#define DEBUG
 #define OPSIZE 6
-#define THRESHOLD 1e-6
+#define THRESHOLD 1e-6	//不能小於1-6會出現nan
 
 // Supported operator array
 const std::string op[OPSIZE + 6] = { "+", "-", "*", "^", "(", ")", "sin", "cos" ,"tan", "sec", "csc", "cot"};
@@ -512,6 +512,100 @@ Matrix Equation::hessian() const
 		}
 	}
 	return result;
+}
+
+Matrix Equation::hessian(Vector init) const
+{
+	Equation tempEqu = *this;
+	tempEqu.init = init;
+	return tempEqu.hessian();
+}
+
+double Equation::getMin() const
+{
+	// f(x) = ax^3+bx^2+cx+d
+	Equation tempEqu = *this;
+	Vector tempVector;
+	std::vector<double> tempDouble;
+	tempDouble.push_back(0);
+	tempVector = Vector(tempDouble);
+	tempEqu.init = tempVector;
+	double fTemp;
+	double d, c, b, a;
+	
+	d = tempEqu.f(0, tempEqu.name[0]);
+	c = tempEqu.derivative(tempEqu.name[0]);
+	tempEqu.init[0] = 0;	//reset
+	tempEqu.init[0] += THRESHOLD;
+	fTemp = tempEqu.derivative(tempEqu.name[0]);	//lv1 i
+	tempEqu.init[0] = 0;	//reset
+	tempEqu.init[0] -= THRESHOLD;
+	fTemp = (fTemp - tempEqu.derivative(tempEqu.name[0])) / (2 * THRESHOLD);
+	b = fTemp / 2;
+	tempEqu.init[0] = 1;	//reset
+	tempEqu.init[0] += THRESHOLD;
+	fTemp = tempEqu.derivative(tempEqu.name[0]);	//lv1 i
+	tempEqu.init[0] = 1;	//reset
+	tempEqu.init[0] -= THRESHOLD;
+	fTemp = (fTemp - tempEqu.derivative(tempEqu.name[0])) / (2 * THRESHOLD);
+	a = (fTemp - 2*b) / 6;
+	
+	/*
+	d = tempEqu.f(0,tempEqu.name[0]);
+	tempEqu.init[0] = 0;	//reset
+	c = tempEqu.derivative(tempEqu.name[0]);
+	fTemp = (tempEqu.f(0 + THRESHOLD, tempEqu.name[0]) - 2 * tempEqu.f(0, tempEqu.name[0]) + tempEqu.f(0 - THRESHOLD, tempEqu.name[0])) / 0.001 / 0.001;
+	b = fTemp / 2.0;
+	fTemp = (tempEqu.f(1 + THRESHOLD, tempEqu.name[0]) - 2 * tempEqu.f(1, tempEqu.name[0]) + tempEqu.f(1 - THRESHOLD, tempEqu.name[0])) / 0.001 / 0.001;
+	a = (fTemp - b)/6;
+	*/
+
+	if (abs(a - 0) <= 0.001)
+	{
+		//differential
+		d = c;
+		c = 2 * b;
+		b = 0;
+		a = 0;
+		//solve cx+d = 0
+		return -d / c;
+	}
+	else
+	{
+		//differential
+		d = c;
+		c = 2 * b;
+		b = 3 * a;
+		a = 0;
+
+		// solve bx^2+cx+d = 0
+		double x1 = (-c + sqrt(c*c - 4 * b*d)) / 2 / b;
+		double x2 = (-c - sqrt(c*c - 4 * b*d)) / 2 / b;
+
+		// second differential
+		d = c;
+		c = 2 * b;
+		b = 0;
+		a = 0;
+
+		//大於0 凹向上 等於0 反曲點
+		if (c*x1 + d > 0.001)
+			return x1;
+		else
+		{
+			if (c*x2 + d > 0.001)
+				return x2;
+			else
+			{
+				if (c*x1 + d > -0.001)
+					return x1;
+				else if (c*x2 + d > -0.001)
+					return x2;
+				else
+					return x2;
+			}
+		}
+	}
 }
 
 // Use for infix to postfix

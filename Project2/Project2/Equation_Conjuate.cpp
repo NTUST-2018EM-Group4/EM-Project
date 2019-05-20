@@ -121,10 +121,29 @@ System::String ^ Equation::Conjuate()
 				if (tempEnd < minEnd) minEnd = tempEnd;
 			}
 		}
-
+		
 		// Calculate alpha by Golden Section Search
 		alpha.Data.clear();
-		alpha.Data.push_back(tempEqu.goldenSearch(alpha.Name, maxBegin, (maxBegin + minEnd) / 2, minEnd, THRESHOLD));
+		//alpha.Data.push_back(tempEqu.goldenSearch(alpha.Name, maxBegin, (maxBegin + minEnd) / 2, minEnd, THRESHOLD));
+		//alpha.Data.push_back(tempEqu.getMin());
+		
+		
+	
+		Matrix tempG, tempS, tempM, h;
+		vector<Vector> t;
+		t.push_back(this->gradient(X));
+		tempG = Matrix("G", t);
+		t.clear();
+		t.push_back(S);
+		tempS = Matrix("S", t);
+		tempS = tempS.trans();	//轉直的
+		
+		tempM = tempG * tempS;	//1*2 * 2*1
+		double tempDouble = -tempM[0][0];
+		h = this->hessian(X);
+		tempM = tempS.trans() * h * tempS;
+		tempDouble /= tempM[0][0];
+		alpha.Data.push_back(tempDouble);
 		ss << alpha.outputStdStr() << endl;
 
 		// Calculate newX
