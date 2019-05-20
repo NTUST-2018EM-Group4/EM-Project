@@ -50,6 +50,6 @@ struct Vector
 	// Simulate vector function
 	//
 	int size() const;
-	void push_back(double& num);
+	void push_back(const double& num);
 	double& operator [] (const int& index);
 };

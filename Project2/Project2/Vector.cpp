@@ -162,7 +162,7 @@ int Vector::size() const
 	return Data.size();
 }
 
-void Vector::push_back(double & num)
+void Vector::push_back(const double & num)
 {
 	Data.push_back(num);
 }
