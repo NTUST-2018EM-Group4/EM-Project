@@ -395,24 +395,38 @@ System::String^ Matrix::outputStr()
 
 std::string Matrix::outputStdStr()
 {
-	std::string result = "";
+	std::string result = this->Name + " = ";
 
 	if (this->size() == 0)
 	{
-		return result;
+		return result + "[]";
 	}
-
-	for (int i = 0; i < Data.size(); i++)
+	if (this->size() == 1)
 	{
 		result += "[";
-		for (int j = 0; j < Data[i].Data.size(); j++)
+		for (int j = 0; j < Data[0].Data.size(); j++)
 		{
-			result += std::to_string(Data[i].Data[j]);
-			if (j != Data[i].Data.size() - 1)
+			result += std::to_string(Data[0].Data[j]);
+			if (j != Data[0].Data.size() - 1)
 				result += ",";
 		}
 		result += "]";
 	}
+	else
+	{
+		for (int i = 0; i < Data.size(); i++)
+		{
+			result += "\n[";
+			for (int j = 0; j < Data[i].Data.size(); j++)
+			{
+				result += std::to_string(Data[i].Data[j]);
+				if (j != Data[i].Data.size() - 1)
+					result += ",";
+			}
+			result += "]";
+		}
+	}
+
 	return result;
 }
 

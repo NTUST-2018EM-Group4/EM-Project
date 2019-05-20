@@ -41,6 +41,7 @@ public:
 	Vector gradient();
 	Vector gradient(Vector init);
 	Matrix hessian() const;
+	Matrix hessian(Vector init) const;
 	double goldenSearch(std::string name, double a, double b, double c, double tau);
 
 	//

@@ -514,6 +514,13 @@ Matrix Equation::hessian() const
 	return result;
 }
 
+Matrix Equation::hessian(Vector init) const
+{
+	Equation tempEqu = *this;
+	tempEqu.init = init;
+	return tempEqu.hessian();
+}
+
 // Use for infix to postfix
 int priority(std::string& op)
 {
