@@ -18,8 +18,6 @@ System::String ^ Equation::Conjuate()
 	
 	Matrix gradM, preGradM;
 	
-	// Step 1
-
 	// Choose X0
 	X = this->init;
 	X.Name = "X0";
@@ -29,42 +27,19 @@ System::String ^ Equation::Conjuate()
 	ss << "------------------------------" << endl;
 	ss << X.outputStdStr() << endl;
 
-	// Step 2
+	// initial S
+	S = this->gradient(X) * -1;
+	preS = S;
+	gradM.Data.clear();
+	gradM.Data.push_back(this->gradient(X));
+	gradM.Name = "S0";
+
 	for (int time = 0; time < TIME; time++)
 	{
 		ss << "------------------------------" << endl;
 		ss << "i = " << time << endl;
 
-		// initial S
-		S = this->gradient(X) * -1;
-
-		gradM.Data.clear();
-		gradM.Data.push_back(this->gradient(X));
-		gradM.Name = "S" + to_string(time);
-
-		// if i != 0 need to get beta first
-		if (time != 0)
-		{
-			// get beta -> beta = (𝛻𝑓(Xi)^T * 𝛻𝑓(Xi)) / // (𝛻𝑓(Xi-1)^T * 𝛻𝑓(Xi-1))
-
-			gradM = gradM.trans();	// change direction
-			Matrix matrixTemp = gradM.trans() * gradM;
-			beta = matrixTemp[0][0];
-
-			preGradM = preGradM.trans();
-			matrixTemp = preGradM.trans() * preGradM;
-			beta /= matrixTemp[0][0];
-
-			S = S + preS * beta;
-
-			ss << "beta = [" << beta << "]" << endl;
-		}
-		S.Name = "S" + to_string(time);
-
-		ss << S.outputStdStr() << endl;
-
 		// Find alpha
-
 		Equation tempEqu = *this;
 		double maxBegin = INT16_MIN;
 		double minEnd = INT16_MAX;
@@ -122,19 +97,15 @@ System::String ^ Equation::Conjuate()
 			}
 		}
 		
-		// Calculate alpha by Golden Section Search
+		// Calculate alpha
 		alpha.Data.clear();
-		//alpha.Data.push_back(tempEqu.goldenSearch(alpha.Name, maxBegin, (maxBegin + minEnd) / 2, minEnd, THRESHOLD));
-		//alpha.Data.push_back(tempEqu.getMin());
-		
-		
-	
 		Matrix tempG, tempS, tempM, h;
 		vector<Vector> t;
+		t.clear();
 		t.push_back(this->gradient(X));
 		tempG = Matrix("G", t);
 		t.clear();
-		t.push_back(S);
+		t.push_back(preS);
 		tempS = Matrix("S", t);
 		tempS = tempS.trans();	//轉直的
 		
@@ -144,8 +115,7 @@ System::String ^ Equation::Conjuate()
 		tempM = tempS.trans() * h * tempS;
 		tempDouble /= tempM[0][0];
 		alpha.Data.push_back(tempDouble);
-		ss << alpha.outputStdStr() << endl;
-
+		
 		// Calculate newX
 		Vector newX;
 		newX.Name = "X" + std::to_string(time + 1);
@@ -156,13 +126,37 @@ System::String ^ Equation::Conjuate()
 			newX.Data.push_back(list[k].f(alpha.Data[0], alpha.Name));
 		}
 		
+		//  Calculate beta
+		t.clear();
+		t.push_back(this->gradient(newX));
+		tempG = Matrix("G", t);
+		t.clear();
+		t.push_back(preS);
+		tempS = Matrix("S", t);
+		tempS = tempS.trans();	//轉直的
+
+		tempM = tempG * tempS;	//1*2 * 2*1
+		tempDouble = -tempM[0][0];
+		h = this->hessian(X);
+		tempM = tempS.trans() * h * tempS;
+		tempDouble /= tempM[0][0];
+		beta = tempDouble;
+		
+		S = this->gradient(newX) * -1;
+		S = S + preS * beta;
+		S.Name = "S" + to_string(time);
+
+		//output
+		if (time != 0)
+			ss << "beta = [" << beta << "]" << endl;
+		ss << S.outputStdStr() << endl;
+		ss << alpha.outputStdStr() << endl;
 		ss << newX.outputStdStr() << endl;
 
 		Fx = this->f(X, this->name);
 
-		// Step 3
 		// function not decreasing
-		if (abs(Fx - preFx) <= THRESHOLD) break;
+		if (abs(Fx - preFx) <= THRESHOLD && time != 0) break;
 
 		// continue loop
 		

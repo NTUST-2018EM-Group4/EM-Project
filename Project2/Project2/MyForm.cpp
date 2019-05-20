@@ -1,6 +1,6 @@
 #include "MyForm.h"
 
-#define DEBUG_TESTDATA
+//#define DEBUG_TESTDATA
 
 using namespace System;
 using namespace System::Windows::Forms;
