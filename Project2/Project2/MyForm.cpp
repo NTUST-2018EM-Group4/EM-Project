@@ -1,6 +1,6 @@
 #include "MyForm.h"
 
-#define DEBUG_TESTDATA
+//#define DEBUG_TESTDATA
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -43,17 +43,17 @@ namespace Project2
 	System::Void MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 #ifdef DEBUG_TESTDATA
-		Input->Text = "0.001*x^3-0.07*x^2+0.06*x+0.0002*y^3-0.004*y^2+0.02*y";
+		Input->Text = "7+x^2-3*x*y+3.25*y^2-4*y";
 
-		xInitial->Text = "50";
-		xBegin->Text = "-50";
-		xEnd->Text = "70";
+		xInitial->Text = "6";
+		xBegin->Text = "0";
+		xEnd->Text = "0";
 
-		yInitial->Text = "30";
+		yInitial->Text = "5";
 		yBegin->Text = "-70";
 		yEnd->Text = "70";
 
-		Conjuate->Checked = true;
+		Quasi->Checked = true;
 #endif // DEBUG_TESTDATA
 
 		// Process To Equation to postfix array
