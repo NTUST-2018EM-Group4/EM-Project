@@ -18,6 +18,7 @@ namespace Project2
 {
 	System::Void MyForm::loadFileToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
+		openFileDialog1->Title = "Choose Equation File to Load...";
 		openFileDialog1->ShowDialog();
 	}
 
@@ -157,5 +158,21 @@ namespace Project2
 		yInitial->Text = "NULL";
 		yBegin->Text = "0";
 		yEnd->Text = "0";
+	}
+	System::Void MyForm::outputResultToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		SaveFileDialog^ saveFileDialog1 = gcnew SaveFileDialog();
+		saveFileDialog1->Title = "Save Output Result";
+		saveFileDialog1->Filter = "Text File|*.txt";
+		saveFileDialog1->ShowDialog();
+
+		// If the file name is not an empty string open it for saving.  
+		if (saveFileDialog1->FileName != "")
+		{
+			System::IO::StreamWriter^ outfile = gcnew System::IO::StreamWriter(saveFileDialog1->FileName);
+			outfile->Write(Output->Text);
+			outfile->Close();
+			MessageBox::Show("Saved Output Result");
+		}
 	}
 }
