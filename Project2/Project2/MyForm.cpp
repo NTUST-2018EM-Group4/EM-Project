@@ -39,7 +39,7 @@ namespace Project2
 			}
 		}
 	}
-	
+
 	System::Void MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 #ifdef DEBUG_TESTDATA
@@ -48,11 +48,11 @@ namespace Project2
 		xInitial->Text = "50";
 		xBegin->Text = "-50";
 		xEnd->Text = "70";
-		
+
 		yInitial->Text = "30";
 		yBegin->Text = "-70";
 		yEnd->Text = "70";
-		
+
 		Conjuate->Checked = true;
 #endif // DEBUG_TESTDATA
 

@@ -19,7 +19,7 @@ Equation::Equation(std::string formula, int dim)
 	this->dim = dim;
 	this->formula = formula;
 	this->postFormula = inToPostfix();
-	
+
 }
 
 // 1D Constructor
@@ -532,7 +532,7 @@ double Equation::getMin() const
 	tempEqu.init = tempVector;
 	double fTemp;
 	double d, c, b, a;
-	
+
 	d = tempEqu.f(0, tempEqu.name[0]);
 	c = tempEqu.derivative(tempEqu.name[0]);
 	tempEqu.init[0] = 0;	//reset
@@ -549,7 +549,7 @@ double Equation::getMin() const
 	tempEqu.init[0] -= THRESHOLD;
 	fTemp = (fTemp - tempEqu.derivative(tempEqu.name[0])) / (2 * THRESHOLD);
 	a = (fTemp - 2*b) / 6;
-	
+
 	/*
 	d = tempEqu.f(0,tempEqu.name[0]);
 	tempEqu.init[0] = 0;	//reset
