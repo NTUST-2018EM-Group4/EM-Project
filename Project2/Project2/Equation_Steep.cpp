@@ -40,13 +40,13 @@ System::String ^ Equation::Steep()
 		G = G.trans();	//Âà¦^¨Ó
 		matrixT = matrixT + lamda * G;
 		this->init = matrixT.Data[0];
-
+		G.Name = "";
 		//output
 		ss << "------------------------------" << endl;
-		ss << "i = " << time << endl
-			<< "h = " << G.outputStdStr() << endl
-			<< "lambda = " << lamda.outputStdStr() << endl
-			<< "X = " << matrixT.outputStdStr() << endl;
+		ss << "i" << time << endl
+			<< "h" << G.outputStdStr() << endl
+			<< "lambda" << lamda.outputStdStr() << endl
+			<< "X" << matrixT.outputStdStr() << endl;
 		
 #ifdef DEBUG
 		cout << "i = " << time << endl

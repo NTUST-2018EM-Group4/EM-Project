@@ -180,4 +180,32 @@ namespace Project2
 		Output->SelectionStart = Output->Text->Length;
 		Output->ScrollToCaret();
 	}
+	System::Void MyForm::Input_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		Input->DroppedDown = true;
+	}
+	System::Void MyForm::xInitial_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		xInitial->SelectAll();
+	}
+	System::Void MyForm::xBegin_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		xBegin->SelectAll();
+	}
+	System::Void MyForm::xEnd_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		xEnd->SelectAll();
+	}
+	System::Void MyForm::yInitial_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		yInitial->SelectAll();
+	}
+	System::Void MyForm::yBegin_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		yBegin->SelectAll();
+	}
+	System::Void MyForm::yEnd_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		yEnd->SelectAll();
+	}
 }

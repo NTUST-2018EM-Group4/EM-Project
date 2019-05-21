@@ -28,16 +28,16 @@ System::String ^ Equation::Newton()
 		gradient = gradient.trans();	//轉直的
 
 		hessian = this->hessian();	//get hessian
-
+		hessian.Name = "";
 		//output
 		ss << "------------------------------" << endl;
 		ss << "i = " << time << endl
-			<< "Hessian = " << hessian.outputStdStr() << endl;
+			<< "Hessian" << hessian.outputStdStr() << endl;
 
 		//hessian inverse
 		hessian = hessian.inverse();
-
-		ss << "Hessian inverse = " << hessian.outputStdStr() << endl;	//output
+		hessian.Name = "";
+		ss << "Hessian inverse" << hessian.outputStdStr() << endl;	//output
 
 		nextX = X - hessian * gradient;	//nextX = X + deltaX(- hessian * gradient)
 		nextX = nextX.trans();	//轉橫的
@@ -50,8 +50,8 @@ System::String ^ Equation::Newton()
 
 		X = X.trans();	//轉橫的
 		init = nextX[0];
-
-		ss << "X = " << nextX.outputStdStr() << endl;	//output
+		nextX.Name = "";
+		ss << "X" << nextX.outputStdStr() << endl;	//output
 		//stopping check
 		for (int i = 0; i < dim; i++)
 		{
