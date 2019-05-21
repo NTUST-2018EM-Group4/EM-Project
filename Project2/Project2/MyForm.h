@@ -104,6 +104,7 @@ namespace Project2 {
 			this->clearOutputToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->resetXToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->resetYToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->outputResultToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->tableLayoutPanel5 = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -137,7 +138,6 @@ namespace Project2 {
 			this->Quasi = (gcnew System::Windows::Forms::RadioButton());
 			this->Conjuate = (gcnew System::Windows::Forms::RadioButton());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->outputResultToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			this->tableLayoutPanel1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
@@ -162,7 +162,7 @@ namespace Project2 {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(928, 28);
+			this->menuStrip1->Size = System::Drawing::Size(928, 27);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -195,6 +195,14 @@ namespace Project2 {
 			this->resetYToolStripMenuItem->Text = L"Reset Y";
 			this->resetYToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::resetYToolStripMenuItem_Click);
 			// 
+			// outputResultToolStripMenuItem
+			// 
+			this->outputResultToolStripMenuItem->Name = L"outputResultToolStripMenuItem";
+			this->outputResultToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
+			this->outputResultToolStripMenuItem->Size = System::Drawing::Size(117, 23);
+			this->outputResultToolStripMenuItem->Text = L"Output Result";
+			this->outputResultToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::outputResultToolStripMenuItem_Click);
+			// 
 			// tableLayoutPanel1
 			// 
 			this->tableLayoutPanel1->AutoSize = true;
@@ -205,13 +213,13 @@ namespace Project2 {
 			this->tableLayoutPanel1->Controls->Add(this->groupBox3, 0, 2);
 			this->tableLayoutPanel1->Controls->Add(this->groupBox2, 0, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 28);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 27);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 3;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 10)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 20)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 70)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(928, 684);
+			this->tableLayoutPanel1->Size = System::Drawing::Size(928, 685);
 			this->tableLayoutPanel1->TabIndex = 1;
 			// 
 			// groupBox1
@@ -224,7 +232,7 @@ namespace Project2 {
 			this->groupBox1->Location = System::Drawing::Point(3, 3);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(922, 62);
-			this->groupBox1->TabIndex = 5;
+			this->groupBox1->TabIndex = 0;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Input";
 			// 
@@ -252,7 +260,7 @@ namespace Project2 {
 			this->EnterBtn->Name = L"EnterBtn";
 			this->EnterBtn->RightToLeft = System::Windows::Forms::RightToLeft::No;
 			this->EnterBtn->Size = System::Drawing::Size(86, 27);
-			this->EnterBtn->TabIndex = 1;
+			this->EnterBtn->TabIndex = 9;
 			this->EnterBtn->Text = L"Enter";
 			this->EnterBtn->UseVisualStyleBackColor = true;
 			this->EnterBtn->Click += gcnew System::EventHandler(this, &MyForm::EnterBtn_Click);
@@ -264,7 +272,7 @@ namespace Project2 {
 			this->Input->Location = System::Drawing::Point(3, 3);
 			this->Input->Name = L"Input";
 			this->Input->Size = System::Drawing::Size(818, 27);
-			this->Input->TabIndex = 2;
+			this->Input->TabIndex = 1;
 			// 
 			// groupBox3
 			// 
@@ -273,10 +281,10 @@ namespace Project2 {
 			this->groupBox3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox3->Font = (gcnew System::Drawing::Font(L"·L³n¥¿¶ÂÅé", 9, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(136)));
-			this->groupBox3->Location = System::Drawing::Point(3, 207);
+			this->groupBox3->Location = System::Drawing::Point(3, 208);
 			this->groupBox3->Name = L"groupBox3";
 			this->groupBox3->Size = System::Drawing::Size(922, 474);
-			this->groupBox3->TabIndex = 3;
+			this->groupBox3->TabIndex = 2;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Output";
 			// 
@@ -289,7 +297,8 @@ namespace Project2 {
 			this->Output->Name = L"Output";
 			this->Output->ScrollBars = System::Windows::Forms::ScrollBars::Both;
 			this->Output->Size = System::Drawing::Size(916, 448);
-			this->Output->TabIndex = 2;
+			this->Output->TabIndex = 10;
+			this->Output->TextChanged += gcnew System::EventHandler(this, &MyForm::Output_TextChanged);
 			// 
 			// groupBox2
 			// 
@@ -300,7 +309,7 @@ namespace Project2 {
 				static_cast<System::Byte>(136)));
 			this->groupBox2->Location = System::Drawing::Point(3, 71);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(922, 130);
+			this->groupBox2->Size = System::Drawing::Size(922, 131);
 			this->groupBox2->TabIndex = 1;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Setting";
@@ -322,7 +331,7 @@ namespace Project2 {
 			this->tableLayoutPanel2->Name = L"tableLayoutPanel2";
 			this->tableLayoutPanel2->RowCount = 1;
 			this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-			this->tableLayoutPanel2->Size = System::Drawing::Size(916, 104);
+			this->tableLayoutPanel2->Size = System::Drawing::Size(916, 105);
 			this->tableLayoutPanel2->TabIndex = 0;
 			// 
 			// groupBox5
@@ -332,8 +341,8 @@ namespace Project2 {
 			this->groupBox5->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox5->Location = System::Drawing::Point(277, 3);
 			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(268, 98);
-			this->groupBox5->TabIndex = 3;
+			this->groupBox5->Size = System::Drawing::Size(268, 99);
+			this->groupBox5->TabIndex = 1;
 			this->groupBox5->TabStop = false;
 			this->groupBox5->Text = L"Y side";
 			// 
@@ -360,7 +369,7 @@ namespace Project2 {
 			this->tableLayoutPanel4->RowCount = 2;
 			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
 			this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel4->Size = System::Drawing::Size(262, 72);
+			this->tableLayoutPanel4->Size = System::Drawing::Size(262, 73);
 			this->tableLayoutPanel4->TabIndex = 0;
 			// 
 			// label4
@@ -369,7 +378,7 @@ namespace Project2 {
 			this->label4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->label4->Location = System::Drawing::Point(172, 36);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(20, 36);
+			this->label4->Size = System::Drawing::Size(20, 37);
 			this->label4->TabIndex = 6;
 			this->label4->Text = L"~";
 			this->label4->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -391,7 +400,7 @@ namespace Project2 {
 			this->label6->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->label6->Location = System::Drawing::Point(3, 36);
 			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(98, 36);
+			this->label6->Size = System::Drawing::Size(98, 37);
 			this->label6->TabIndex = 2;
 			this->label6->Text = L"Interval";
 			this->label6->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -412,7 +421,7 @@ namespace Project2 {
 			this->yBegin->Location = System::Drawing::Point(107, 39);
 			this->yBegin->Name = L"yBegin";
 			this->yBegin->Size = System::Drawing::Size(59, 27);
-			this->yBegin->TabIndex = 4;
+			this->yBegin->TabIndex = 6;
 			this->yBegin->Text = L"0";
 			// 
 			// yEnd
@@ -421,7 +430,7 @@ namespace Project2 {
 			this->yEnd->Location = System::Drawing::Point(198, 39);
 			this->yEnd->Name = L"yEnd";
 			this->yEnd->Size = System::Drawing::Size(61, 27);
-			this->yEnd->TabIndex = 5;
+			this->yEnd->TabIndex = 7;
 			this->yEnd->Text = L"0";
 			// 
 			// groupBox4
@@ -431,7 +440,7 @@ namespace Project2 {
 			this->groupBox4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox4->Location = System::Drawing::Point(3, 3);
 			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(268, 98);
+			this->groupBox4->Size = System::Drawing::Size(268, 99);
 			this->groupBox4->TabIndex = 0;
 			this->groupBox4->TabStop = false;
 			this->groupBox4->Text = L"X side";
@@ -459,7 +468,7 @@ namespace Project2 {
 			this->tableLayoutPanel3->RowCount = 2;
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
 			this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
-			this->tableLayoutPanel3->Size = System::Drawing::Size(262, 72);
+			this->tableLayoutPanel3->Size = System::Drawing::Size(262, 73);
 			this->tableLayoutPanel3->TabIndex = 0;
 			// 
 			// label3
@@ -468,7 +477,7 @@ namespace Project2 {
 			this->label3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->label3->Location = System::Drawing::Point(172, 36);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(20, 36);
+			this->label3->Size = System::Drawing::Size(20, 37);
 			this->label3->TabIndex = 6;
 			this->label3->Text = L"~";
 			this->label3->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -490,7 +499,7 @@ namespace Project2 {
 			this->label2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->label2->Location = System::Drawing::Point(3, 36);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(98, 36);
+			this->label2->Size = System::Drawing::Size(98, 37);
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Interval";
 			this->label2->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -502,7 +511,7 @@ namespace Project2 {
 			this->xInitial->Location = System::Drawing::Point(107, 3);
 			this->xInitial->Name = L"xInitial";
 			this->xInitial->Size = System::Drawing::Size(152, 27);
-			this->xInitial->TabIndex = 3;
+			this->xInitial->TabIndex = 2;
 			this->xInitial->Text = L"NULL";
 			// 
 			// xBegin
@@ -530,7 +539,7 @@ namespace Project2 {
 			this->groupBox6->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox6->Location = System::Drawing::Point(551, 3);
 			this->groupBox6->Name = L"groupBox6";
-			this->groupBox6->Size = System::Drawing::Size(362, 98);
+			this->groupBox6->Size = System::Drawing::Size(362, 99);
 			this->groupBox6->TabIndex = 2;
 			this->groupBox6->TabStop = false;
 			this->groupBox6->Text = L"Method";
@@ -547,8 +556,8 @@ namespace Project2 {
 			this->flowLayoutPanel1->Location = System::Drawing::Point(3, 23);
 			this->flowLayoutPanel1->Name = L"flowLayoutPanel1";
 			this->flowLayoutPanel1->Padding = System::Windows::Forms::Padding(2);
-			this->flowLayoutPanel1->Size = System::Drawing::Size(356, 72);
-			this->flowLayoutPanel1->TabIndex = 0;
+			this->flowLayoutPanel1->Size = System::Drawing::Size(356, 73);
+			this->flowLayoutPanel1->TabIndex = 8;
 			// 
 			// Powell
 			// 
@@ -607,14 +616,6 @@ namespace Project2 {
 			this->openFileDialog1->FileName = L"openFileDialog1";
 			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &MyForm::openFileDialog1_FileOk);
 			// 
-			// outputResultToolStripMenuItem
-			// 
-			this->outputResultToolStripMenuItem->Name = L"outputResultToolStripMenuItem";
-			this->outputResultToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
-			this->outputResultToolStripMenuItem->Size = System::Drawing::Size(117, 24);
-			this->outputResultToolStripMenuItem->Text = L"Output Result";
-			this->outputResultToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::outputResultToolStripMenuItem_Click);
-			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
@@ -658,5 +659,6 @@ namespace Project2 {
 			 System::Void resetXToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void resetYToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void outputResultToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void Output_TextChanged(System::Object^  sender, System::EventArgs^  e);
 };
 }

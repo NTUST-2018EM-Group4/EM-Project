@@ -175,4 +175,9 @@ namespace Project2
 			MessageBox::Show("Saved Output Result");
 		}
 	}
+	System::Void MyForm::Output_TextChanged(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		Output->SelectionStart = Output->Text->Length;
+		Output->ScrollToCaret();
+	}
 }
