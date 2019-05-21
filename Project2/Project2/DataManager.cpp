@@ -17,9 +17,8 @@ bool DataManager::LoadEquationData()
 	else
 	{
 		std::string tempSring;
-		while (!fin.eof())
+		while (fin >> tempSring)
 		{
-			fin >> tempSring;
 			Equations.push_back(tempSring);
 			EquationIndex++;
 		}

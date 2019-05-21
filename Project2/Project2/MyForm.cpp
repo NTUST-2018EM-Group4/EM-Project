@@ -32,11 +32,14 @@ namespace Project2
 		{
 			std::vector<std::string> equations = dataManager->GetEquations();
 
+			Input->Items->Clear();
+
 			for (int i = 0; i < equations.size(); i++)
 			{
 				String^ StringTemp = gcnew String(equations[i].c_str());
 				Input->Items->Add(StringTemp);
 			}
+			Output->Text += "---Equation File Loaded---" + Environment::NewLine;
 		}
 	}
 
@@ -107,25 +110,24 @@ namespace Project2
 
 			if (Powell->Checked)
 			{
-				Output->Text += formula.Powell();
+				Output->Text += formula.Powell() + Environment::NewLine;
 			}
 			else if (Newton->Checked)
 			{
-				Output->Text += formula.Newton();
+				Output->Text += formula.Newton() + Environment::NewLine;
 			}
 			else if (Step->Checked)
 			{
-				Output->Text += formula.Steep();
+				Output->Text += formula.Steep() + Environment::NewLine;
 			}
 			else if (Quasi->Checked)
 			{
-				Output->Text += formula.Quasi();
+				Output->Text += formula.Quasi() + Environment::NewLine;
 			}
 			else if (Conjuate->Checked)
 			{
-				Output->Text += formula.Conjuate();
+				Output->Text += formula.Conjuate() + Environment::NewLine;
 			}
-
 		}
 		catch (const std::exception&)
 		{
