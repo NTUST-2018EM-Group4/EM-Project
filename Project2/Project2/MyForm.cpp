@@ -64,38 +64,47 @@ namespace Project2
 		double initX, beginX, endX, initY, beginY, endY;
 		Equation formula;
 
-		// if only x used
-		if (xInitial->Text != "NULL" && yInitial->Text == "NULL")
-		{
-			initX = System::Convert::ToDouble(xInitial->Text);
-			beginX = System::Convert::ToDouble(xBegin->Text);
-			endX = System::Convert::ToDouble(xEnd->Text);
-			formula = Equation(equation, "x", initX, beginX, endX);
-		}
-
-		// if only y used
-		else if (xInitial->Text == "NULL" && yInitial->Text != "NULL")
-		{
-			initY = System::Convert::ToDouble(yInitial->Text);
-			beginY = System::Convert::ToDouble(yBegin->Text);
-			endY = System::Convert::ToDouble(yEnd->Text);
-			formula = Equation(equation, "y", initY, beginY, endY);
-		}
-
-		// if x & y used
-		else if (xInitial->Text != "NULL" && yInitial->Text != "NULL")
-		{
-			initX = System::Convert::ToDouble(xInitial->Text);
-			beginX = System::Convert::ToDouble(xBegin->Text);
-			endX = System::Convert::ToDouble(xEnd->Text);
-			initY = System::Convert::ToDouble(yInitial->Text);
-			beginY = System::Convert::ToDouble(yBegin->Text);
-			endY = System::Convert::ToDouble(yEnd->Text);
-			formula = Equation(equation, "x", initX, beginX, endX, "y", initY, beginY, endY);
-		}
-
 		try
 		{
+			if (equation == "")
+			{
+				throw "---ERROR in MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e): Empty Equation---";
+			}
+			// if only x used
+			if (xInitial->Text != "NULL" && yInitial->Text == "NULL")
+			{
+				initX = System::Convert::ToDouble(xInitial->Text);
+				beginX = System::Convert::ToDouble(xBegin->Text);
+				endX = System::Convert::ToDouble(xEnd->Text);
+				formula = Equation(equation, "x", initX, beginX, endX);
+			}
+
+			// if only y used
+			else if (xInitial->Text == "NULL" && yInitial->Text != "NULL")
+			{
+				initY = System::Convert::ToDouble(yInitial->Text);
+				beginY = System::Convert::ToDouble(yBegin->Text);
+				endY = System::Convert::ToDouble(yEnd->Text);
+				formula = Equation(equation, "y", initY, beginY, endY);
+			}
+
+			// if x & y used
+			else if (xInitial->Text != "NULL" && yInitial->Text != "NULL")
+			{
+				initX = System::Convert::ToDouble(xInitial->Text);
+				beginX = System::Convert::ToDouble(xBegin->Text);
+				endX = System::Convert::ToDouble(xEnd->Text);
+				initY = System::Convert::ToDouble(yInitial->Text);
+				beginY = System::Convert::ToDouble(yBegin->Text);
+				endY = System::Convert::ToDouble(yEnd->Text);
+				formula = Equation(equation, "x", initX, beginX, endX, "y", initY, beginY, endY);
+			}
+			else
+			{
+				throw "---ERROR in MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e): No initial setting---";
+			}
+
+
 			if (Powell->Checked)
 			{
 				Output->Text += formula.Powell();
@@ -120,7 +129,10 @@ namespace Project2
 		}
 		catch (const std::exception&)
 		{
-			std::cout << "ERROR" << std::endl;
+			std::cout << "---Something ERROR---" << std::endl;
+			std::cout << "---Using Debug Mode to find the fxxk bug---" << std::endl;
+			Output->Text += "---Something ERROR---" + Environment::NewLine;
+			Output->Text += "---Using Debug Mode to find the fxxk bug---" + Environment::NewLine;
 		}
 		catch (const char* ERRMSG)
 		{
@@ -135,13 +147,13 @@ namespace Project2
 	System::Void MyForm::resetXToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		xInitial->Text = "NULL";
-		xBegin->Text = "NULL";
-		xEnd->Text = "NULL";
+		xBegin->Text = "0";
+		xEnd->Text = "0";
 	}
 	System::Void MyForm::resetYToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 		yInitial->Text = "NULL";
-		yBegin->Text = "NULL";
-		yEnd->Text = "NULL";
+		yBegin->Text = "0";
+		yEnd->Text = "0";
 	}
 }

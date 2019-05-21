@@ -49,7 +49,7 @@ bool Vector::dimCheck(const Vector & Vb, char op) const
 	case '+': case '-':
 		if (this->Data.size() != Vb.Data.size())
 		{
-			throw "---Dimension not same---";
+			throw "---ERROR in Vector::dimCheck(const Vector & Vb, char op): Dimension not same---";
 			return false;
 		}
 		return true;
@@ -58,13 +58,13 @@ bool Vector::dimCheck(const Vector & Vb, char op) const
 		if (this->Data.size() != Vb.Data.size() && \
 			Vb.Data.size() != 1 && this->Data.size() != 1)
 		{
-			throw "---Dimension not same---";
+			throw "---ERROR in Vector::dimCheck(const Vector & Vb, char op): Dimension not same---";
 			return false;
 		}
 		return true;
 		break;
 	default:
-		throw "---Operator Check ERROR---";
+		throw "---ERROR in Vector::dimCheck(const Vector & Vb, char op): Operator Check ERROR---";
 		return false;
 		break;
 	}
@@ -190,7 +190,7 @@ const Vector Vector::operator+(const Vector& Vb) const
 	}
 	else
 	{
-		throw "---Operator + process ERROR!---";
+		throw "---ERROR in Vector::operator+(const Vector& Vb): process ERROR---";
 	}
 }
 
@@ -212,7 +212,7 @@ const Vector Vector::operator-(const Vector & Vb) const
 	}
 	else
 	{
-		throw "---Operator - process ERROR!---";
+		throw "---ERROR in Vector::operator-(const Vector& Vb): process ERROR---";
 	}
 }
 
@@ -247,7 +247,7 @@ const Vector Vector::operator*(const Vector & Vb) const
 	}
 	else
 	{
-		throw "---Operator * process ERROR!---";
+		throw "---ERROR in Vector::operator*(const Vector& Vb): process ERROR---";
 	}
 }
 

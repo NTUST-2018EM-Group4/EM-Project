@@ -414,7 +414,7 @@ double Equation::f()
 		}
 
 		// Avoid empty stack
-		if (calStack.empty()) throw "---Formula is empty---";
+		if (calStack.empty()) throw "---ERROR in Equation::f(): Formula is empty---";
 
 		// pop final calculate result vector
 		double result = calStack.top();
@@ -642,7 +642,7 @@ double cal(double& a, double& b, char& op)
 		return pow(a, b);
 		break;
 	default:
-		throw "Error in cal(double a, double b, char op): Not support op";
+		throw "---Error in cal(double a, double b, char op): Not support op---";
 		break;
 	}
 }

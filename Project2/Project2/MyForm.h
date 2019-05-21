@@ -410,7 +410,7 @@ namespace Project2 {
 			this->yBegin->Name = L"yBegin";
 			this->yBegin->Size = System::Drawing::Size(59, 27);
 			this->yBegin->TabIndex = 4;
-			this->yBegin->Text = L"NULL";
+			this->yBegin->Text = L"0";
 			// 
 			// yEnd
 			// 
@@ -419,7 +419,7 @@ namespace Project2 {
 			this->yEnd->Name = L"yEnd";
 			this->yEnd->Size = System::Drawing::Size(61, 27);
 			this->yEnd->TabIndex = 5;
-			this->yEnd->Text = L"NULL";
+			this->yEnd->Text = L"0";
 			// 
 			// groupBox4
 			// 
@@ -509,7 +509,7 @@ namespace Project2 {
 			this->xBegin->Name = L"xBegin";
 			this->xBegin->Size = System::Drawing::Size(59, 27);
 			this->xBegin->TabIndex = 4;
-			this->xBegin->Text = L"NULL";
+			this->xBegin->Text = L"0";
 			// 
 			// xEnd
 			// 
@@ -518,7 +518,7 @@ namespace Project2 {
 			this->xEnd->Name = L"xEnd";
 			this->xEnd->Size = System::Drawing::Size(61, 27);
 			this->xEnd->TabIndex = 5;
-			this->xEnd->Text = L"NULL";
+			this->xEnd->Text = L"0";
 			// 
 			// groupBox6
 			// 

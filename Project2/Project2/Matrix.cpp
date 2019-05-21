@@ -28,6 +28,7 @@ Matrix::Matrix(char op, Matrix Ma, Matrix Mb)
 		*this = Ma / Mb;
 		break;
 	default:
+		throw "---ERROR in Matrix::Matrix(char op, Matrix Ma, Matrix Mb): operator not defined---";
 		break;
 	}
 }
@@ -45,7 +46,7 @@ const Matrix Matrix::operator+(const Matrix & Mb)
 	}
 	else
 	{
-		throw "---Operator + process ERROR!---";
+		throw "---ERROR in Matrix::operator+(const Matrix & Mb): process ERROR---";
 	}
 }
 
@@ -60,7 +61,7 @@ const Matrix Matrix::operator-(const Matrix & Mb)
 		}
 		return result;
 	}
-	else throw "---Operator - process ERROR!---";
+	else throw "---ERROR in Matrix::operator-(const Matrix & Mb): process ERROR---";
 }
 
 const Matrix Matrix::operator*(const Matrix & Mb) const
@@ -83,21 +84,21 @@ const Matrix Matrix::operator*(const Matrix & Mb) const
 		}
 		return result;
 	}
-	else throw "---Operator * process ERROR!---";
+	else throw "---ERROR in Matrix::operator*(const Matrix & Mb): process ERROR---";
 }
 
 const Matrix Matrix::operator*(const double & num)
 {
 	Matrix temp = *this;
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (temp.Data.empty()) throw "---ERROR in Matrix::operator*(const double & num): Empty Matrix---";
 
 	for (int i = 0; i < temp.Data.size(); i++)
 	{
 		temp.Data[i] = temp.Data[i] * num;
 	}
 	return temp;
-	throw "---Operator * process ERROR!---";
+	throw "---ERROR in Matrix::operator*(const double & num): process ERROR---";
 }
 
 const Matrix Matrix::operator/(const Matrix & Mb)
@@ -109,13 +110,13 @@ const Matrix Matrix::operator/(const Matrix & Mb)
 		result.Name = this->Name + " \\ " + Mb.Name;
 		return result;
 	}
-	else throw "---Operator \\ process ERROR!---";
+	else throw "---ERROR in Matrix::operator/(const Matrix & Mb): process ERROR---";
 }
 
 const Matrix Matrix::trans()
 {
 	Matrix temp;
-	if (Data.empty()) throw "---Empty Matrix---";
+	if (Data.empty()) throw "---ERROR in Matrix::trans(): Empty Matrix---";
 
 	temp.Data.resize(Data[0].Data.size());
 	for (int i = 0; i < Data.size(); i++)
@@ -133,7 +134,7 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 {
 	Matrix temp = *this;
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (temp.Data.empty()) throw "---ERROR in Matrix::gaussian(int sign, bool mode): Empty Matrix---";
 
 	// set dim
 	int dim = temp.Data.size();
@@ -219,13 +220,13 @@ const Matrix Matrix::gaussian(int sign, bool mode) const
 
 
 	return temp;
-	throw "---Gaussian process error---";
+	throw "---ERROR in Matrix::gaussian(int sign, bool mode): process ERROR---";
 }
 
 const double Matrix::rank()
 {
 	// error handling
-	if (this->Data.empty()) throw "---Empty Matrix---";
+	if (this->Data.empty()) throw "---ERROR in Matrix::rank(): Empty Matrix---";
 	double rankValue = 0;
 	Matrix gauss = this->gaussian(1, true);
 	for (int i = 0; i < gauss.Data.size(); i++)
@@ -246,7 +247,7 @@ const double Matrix::det() const
 {
 	Matrix temp = this->gaussian(-1, true);
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (temp.Data.empty()) throw "---ERROR in Matrix::det(): Empty Matrix---";
 
 	// set dim
 	int dim = temp.Data.size();
@@ -267,7 +268,7 @@ const Matrix Matrix::inverse()
 {
 	Matrix temp = *this;
 	// error handling
-	if (temp.Data.empty()) throw "---Empty Matrix---";
+	if (temp.Data.empty()) throw "---ERROR in Matrix::inverse(): Empty Matrix---";
 
 	if (this->Data.size() != this->Data[0].Data.size())
 	{
@@ -315,7 +316,7 @@ const Matrix Matrix::inverse()
 			}
 		}
 		// 反矩陣不存在
-		if (temp.Data[i].Data[i] == 0) throw "---Inverse Matrix not exist---";
+		if (temp.Data[i].Data[i] == 0) throw "---ERROR in Matrix::inverse(): Inverse Matrix not exist---";
 
 		// 將橫條首項變成1
 		double t = temp.Data[i].Data[i];
@@ -334,7 +335,7 @@ const Matrix Matrix::inverse()
 	}
 	inver.Name = "Inverse (" + this->Name + ")";
 	return inver;
-	throw "---Inverse process error---";
+	throw "---ERROR in Matrix::inverse(): process ERROR---";
 }
 
 // Ref: https://dotblogs.com.tw/forloop/2016/07/31/rounding
@@ -441,14 +442,14 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 			{
 				if (this->Data[i].Data.size() != Mb.Data[i].Data.size())
 				{
-					throw "---Dimension not same---";
+					throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Dimension not same---";
 					return false;
 				}
 			}
 		}
 		else
 		{
-			throw "---Dimension not same---";
+			throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Dimension not same---";
 			return false;
 		}
 		return true;
@@ -458,7 +459,7 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 		{
 			if (this->Data[i].Data.size() != Mb.Data.size())
 			{
-				throw "---Dimension not same---";
+				throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Dimension not same---";
 				return false;
 			}
 		}
@@ -469,7 +470,7 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 		{
 			if (this->Data[i].Data.size() != this->Data.size())
 			{
-				throw "---Fisrt Matrix not square---";
+				throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Fisrt Matrix not square---";
 				return false;
 			}
 		}
@@ -479,20 +480,20 @@ bool Matrix::dimCheck(const Matrix Mb, char op) const
 			{
 				if (Mb.Data[i].Data.size() != 1)
 				{
-					throw "---Second Matrix not n*1---";
+					throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Second Matrix not n*1---";
 					return false;
 				}
 			}
 		}
 		else
 		{
-			throw "---Second Matrix dimension not same as First's---";
+			throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Second Matrix dimension not same as First's---";
 			return false;
 		}
 		return true;
 		break;
 	default:
-		throw "---Operator Check ERROR---";
+		throw "---ERROR in Matrix::dimCheck(const Matrix Mb, char op): Check ERROR---";
 		return false;
 		break;
 	}
