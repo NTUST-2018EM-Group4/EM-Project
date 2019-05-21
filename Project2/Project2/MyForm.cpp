@@ -39,21 +39,21 @@ namespace Project2
 			}
 		}
 	}
-	
+
 	System::Void MyForm::EnterBtn_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
 #ifdef DEBUG_TESTDATA
 		Input->Text = "7+x^2-3*x*y+3.25*y^2-4*y";
 
-		xInitial->Text = "6";
-		xBegin->Text = "0";
-		xEnd->Text = "0";
+		xInitial->Text = "50";
+		xBegin->Text = "-50";
+		xEnd->Text = "70";
 
-		yInitial->Text = "5";
+		yInitial->Text = "30";
 		yBegin->Text = "-70";
 		yEnd->Text = "70";
 
-		Quasi->Checked = true;
+		Conjuate->Checked = true;
 #endif // DEBUG_TESTDATA
 
 		// Process To Equation to postfix array

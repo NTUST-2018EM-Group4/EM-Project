@@ -43,6 +43,7 @@ public:
 	Matrix hessian() const;
 	Matrix hessian(Vector init) const;
 	double goldenSearch(std::string name, double a, double b, double c, double tau);
+	double getMin() const;
 
 	//
 	// Compute Function
