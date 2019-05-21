@@ -52,7 +52,7 @@ public:
 	System::String^ Newton();
 	System::String^ Steep();
 	System::String^ Quasi();
-	System::String^ Conjuate();
+	System::String^ Conjugate();
 
 private:
 	//

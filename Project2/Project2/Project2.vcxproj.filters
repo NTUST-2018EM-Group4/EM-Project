@@ -45,7 +45,7 @@
     <ClCompile Include="Equation_Quasi.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="Equation_Conjuate.cpp">
+    <ClCompile Include="Equation_Conjugate.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>

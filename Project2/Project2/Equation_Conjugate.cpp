@@ -5,9 +5,9 @@
 
 using namespace std;
 
-System::String ^ Equation::Conjuate()
+System::String ^ Equation::Conjugate()
 {
-	System::String^ Result = "Conjuate: " + this->getSystemString();
+	System::String^ Result = "Conjugate: " + this->getSystemString();
 
 	stringstream ss;
 

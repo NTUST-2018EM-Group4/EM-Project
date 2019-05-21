@@ -139,7 +139,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Equation_Conjuate.cpp" />
+    <ClCompile Include="Equation_Conjugate.cpp" />
     <ClCompile Include="Equation_Newton.cpp" />
     <ClCompile Include="Equation_Powell.cpp">
       <SubType>

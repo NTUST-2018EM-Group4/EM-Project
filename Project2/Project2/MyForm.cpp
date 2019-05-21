@@ -57,7 +57,7 @@ namespace Project2
 		yBegin->Text = "-70";
 		yEnd->Text = "70";
 
-		Conjuate->Checked = true;
+		Conjugate->Checked = true;
 #endif // DEBUG_TESTDATA
 
 		// Process To Equation to postfix array
@@ -117,7 +117,7 @@ namespace Project2
 			{
 				Output->Text += formula.Newton() + Environment::NewLine;
 			}
-			else if (Step->Checked)
+			else if (Steep->Checked)
 			{
 				Output->Text += formula.Steep() + Environment::NewLine;
 			}
@@ -125,9 +125,9 @@ namespace Project2
 			{
 				Output->Text += formula.Quasi() + Environment::NewLine;
 			}
-			else if (Conjuate->Checked)
+			else if (Conjugate->Checked)
 			{
-				Output->Text += formula.Conjuate() + Environment::NewLine;
+				Output->Text += formula.Conjugate() + Environment::NewLine;
 			}
 		}
 		catch (const std::exception&)
@@ -207,5 +207,32 @@ namespace Project2
 	System::Void MyForm::yEnd_Click(System::Object^  sender, System::EventArgs^  e)
 	{
 		yEnd->SelectAll();
+	}
+	System::Void MyForm::MyForm_KeyDown(System::Object ^ sender, System::Windows::Forms::KeyEventArgs ^ e)
+	{
+		if (e->KeyCode == Keys::Enter)
+		{
+			this->EnterBtn_Click(sender, e);
+		}
+		else if (e->Control && e->Shift && e->KeyCode == Keys::P)
+		{
+			this->Powell->Checked = true;
+		}
+		else if (e->Control && e->Shift && e->KeyCode == Keys::N)
+		{
+			this->Newton->Checked = true;
+		}
+		else if (e->Control && e->Shift && e->KeyCode == Keys::S)
+		{
+			this->Steep->Checked = true;
+		}
+		else if (e->Control && e->Shift && e->KeyCode == Keys::Q)
+		{
+			this->Quasi->Checked = true;
+		}
+		else if (e->Control && e->Shift && e->KeyCode == Keys::C)
+		{
+			this->Conjugate->Checked = true;
+		}
 	}
 }
