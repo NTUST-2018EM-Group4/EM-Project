@@ -21,7 +21,7 @@ public:
 	void InverseFastFourierTransform(int** InputImage, int** OutputImage, double ** FreqReal, double ** FreqImag, int h, int w);
 	void InverseFFT(std::vector<std::complex<double>>& x, int h, int w);
 
-	void LowpassFilter(double** Real, double** Img, double** filter);
+	void LowpassFilter(double** Real, double** Img, int** OutputImage, int h, int w);
 	void HighpassFilter(double** Real, double** Img, double** filter);
 
 private:
