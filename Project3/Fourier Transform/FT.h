@@ -19,7 +19,7 @@ public:
 	void FFT(std::vector<std::complex<double>>& x, int h, int w);
 
 	void InverseFastFourierTransform(int** InputImage, int** OutputImage, double ** FreqReal, double ** FreqImag, int h, int w);
-	void InverseFFT(double ** InverseReal, double ** InverseImag, double ** pFreqReal, double ** pFreqImag, int h, int w, int x, int y);
+	void InverseFFT(std::vector<std::complex<double>>& x, int h, int w);
 
 	void LowpassFilter(double** Real, double** Img, double** filter);
 	void HighpassFilter(double** Real, double** Img, double** filter);
