@@ -255,7 +255,39 @@ namespace FourierTransform
 	}
 	System::Void MyForm::highpassFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 	{
-		// TODO
-		return System::Void();
+		int w = dataManager->GetImageWidth();
+		int h = dataManager->GetImageHeight();
+
+		// 利用傅立葉之平移性，平移頻率
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = dataManager->GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				dataManager->SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->HighpassFilter(dataManager->GetFreqReal(), dataManager->GetFreqImag(), dataManager->GetOutputImage(), h, w);
+		Bitmap^ HighpassImage = gcnew Bitmap(w, h);
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = dataManager->GetOutputImage()[i][j];
+				if (valuePixeli > 255)
+				{
+					valuePixeli = 255;
+				}
+				else if (valuePixeli < 0)
+				{
+					valuePixeli = 0;
+				}
+				HighpassImage->SetPixel(j, i, Color::FromArgb(valuePixeli, valuePixeli, valuePixeli));
+			}
+		}
+		pictureBox_OutputImage->Image = HighpassImage;
 	}
 }

@@ -22,7 +22,7 @@ public:
 	void InverseFFT(std::vector<std::complex<double>>& x, int h, int w);
 
 	void LowpassFilter(double** Real, double** Img, int** OutputImage, int h, int w);
-	void HighpassFilter(double** Real, double** Img, double** filter);
+	void HighpassFilter(double** Real, double** Img, int** OutputImage, int h, int w);
 
 private:
 
