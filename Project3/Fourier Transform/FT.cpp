@@ -1,5 +1,8 @@
 #include "FT.h"
 
+#define  PI  3.14159265358979363846
+using namespace std;
+
 FT::FT()
 {
 }
@@ -159,19 +162,179 @@ void FT::InverseDFT(double ** InverseReal, double ** InverseImag, double ** pFre
 
 void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** FreqReal, double ** FreqImag, int h, int w)
 {
+	int M = h;
+	int N = w;
+	
+	vector<complex<double>> x;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			complex<double> temp(InputImage[i][j], 0);
+			x.push_back(temp);
+		}
+		//FFT
+		FFT(x, M, N);
+		for (int j = 0; j < N; j++)
+		{
+			FreqReal[i][j] = x[j].real();
+			FreqImag[i][j] = x[j].imag();
+
+		}
+		x.clear();
+	}
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			complex<double> temp(FreqReal[j][i], FreqImag[j][i]);
+			x.push_back(temp);
+		}
+		//FFT
+		FFT(x, M, N);
+		for (int j = 0; j < N; j++)
+		{
+			FreqReal[j][i] = x[j].real();
+			FreqImag[j][i] = x[j].imag();
+		}
+		x.clear();
+	}
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			// 將計算好的傅立葉實數與虛數部分作結合 
+			
+			// 結合後之頻率域丟入影像陣列中顯示 
+			OutputImage[j][i] = sqrt(pow(FreqReal[i][j] / N, (double)2.0) + pow(FreqImag[i][j] / N, (double)2.0));
+		}
+	}
+	
 }
 
-void FT::FFT(double ** pFreqReal, double ** pFreqImag, int ** InputImage, int h, int w, int u, int v)
+void FT::FFT(vector<complex<double>>& x, int h, int w)
 {
+	//M=N square
+	int N = w;
+
+	/* bit-reversal permutation */
+	for (int i = 1, j = 0; i < N; ++i)
+	{
+		for (int k = N >> 1; !((j ^= k) & k); k >>= 1);
+		if (i > j) swap(x[i], x[j]);
+	}
+
+	/* dynamic programming */
+	for (int k = 2; k <= N; k <<= 1)
+	{
+		double omega = -2.0 * PI / k;
+		complex<double> dTheta(cos(omega), sin(omega));
+		
+		// 每k個做一次FFT
+		for (int j = 0; j < N; j += k)
+		{
+			// 前k/2個與後k/2的三角函數值恰好對稱，
+			// 因此兩兩對稱的一起做。
+			complex<double> theta(1, 0);
+			for (int i = j; i < j + k / 2; i++)
+			{
+				complex<double> a = x[i];
+				complex<double> b = x[i + k / 2] * theta;
+				x[i] = a + b;
+				x[i + k / 2] = a - b;
+				theta *= dTheta;
+			}
+		}
+	}
 }
 
-void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, double ** FreqReal, double ** FreqImag, int h, int w)
+void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double** FreqReal, double** FreqImag, int h, int w)
 {
+	int M = h;
+	int N = w;
+	
+	vector<complex<double>> x;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			complex<double> temp(FreqReal[i][j], FreqImag[i][j]);
+			x.push_back(temp);
+		}
+		//InverseFFT
+		InverseFFT(x, M, N);
+		for (int j = 0; j < N; j++)
+		{
+			FreqReal[i][j] = x[j].real();
+			FreqImag[i][j] = x[j].imag();
+
+		}
+		x.clear();
+	}
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			complex<double> temp(FreqReal[j][i], FreqImag[j][i]);
+			x.push_back(temp);
+		}
+		//InverseFFT
+		InverseFFT(x, M, N);
+		for (int j = 0; j < N; j++)
+		{
+			FreqReal[j][i] = x[j].real();
+			FreqImag[j][i] = x[j].imag();
+		}
+		x.clear();
+	}
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			// 將計算好的傅立葉實數與虛數部分作結合 
+
+			// 結合後之頻率域丟入影像陣列中顯示 
+			OutputImage[i][j] = sqrt(pow(FreqReal[i][j] / N, (double)2.0) + pow(FreqImag[i][j] / N, (double)2.0));
+		}
+	}
 }
 
-void FT::InverseFFT(double ** InverseReal, double ** InverseImag, double ** pFreqReal, double ** pFreqImag, int h, int w, int x, int y)
+void FT::InverseFFT(vector<complex<double>>& x, int h, int w)
 {
+	//M=N square
+	int N = w;
+
+	/* bit-reversal permutation */
+	for (int i = 1, j = 0; i < N; ++i)
+	{
+		for (int k = N >> 1; !((j ^= k) & k); k >>= 1);
+		if (i > j) swap(x[i], x[j]);
+	}
+
+	/* dynamic programming */
+	for (int k = 2; k <= N; k <<= 1)
+	{
+		double omega = 2.0 * PI / k;
+		complex<double> dTheta(cos(omega), sin(omega));
+
+		// 每k個做一次FFT
+		for (int j = 0; j < N; j += k)
+		{
+			// 前k/2個與後k/2的三角函數值恰好對稱，
+			// 因此兩兩對稱的一起做。
+			complex<double> theta(1, 0);
+			for (int i = j; i < j + k / 2; i++)
+			{
+				complex<double> a = x[i];
+				complex<double> b = x[i + k / 2] * theta;
+				x[i] = a + b;
+				x[i + k / 2] = a - b;
+				theta *= dTheta;
+			}
+		}
+	}
 }
+
 
 
 void FT::LowpassFilter(double** Real, double** Img, double** filter)
