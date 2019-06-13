@@ -166,7 +166,7 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 	int N = w;
 	
 	vector<complex<double>> x;
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < M; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
@@ -174,28 +174,28 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 			x.push_back(temp);
 		}
 		//FFT
-		FFT(x, M, N);
+		FFT(x, N);
 		for (int j = 0; j < N; j++)
 		{
-			FreqReal[i][j] = x[j].real();
-			FreqImag[i][j] = x[j].imag();
+			FreqReal[i][j] = x[j].real() / sqrt(N);
+			FreqImag[i][j] = x[j].imag() / sqrt(N);
 
 		}
 		x.clear();
 	}
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < M; j++)
 		{
 			complex<double> temp(FreqReal[j][i], FreqImag[j][i]);
 			x.push_back(temp);
 		}
 		//FFT
-		FFT(x, M, N);
-		for (int j = 0; j < N; j++)
+		FFT(x, M);
+		for (int j = 0; j < M; j++)
 		{
-			FreqReal[j][i] = x[j].real();
-			FreqImag[j][i] = x[j].imag();
+			FreqReal[j][i] = x[j].real() / sqrt(M);
+			FreqImag[j][i] = x[j].imag() / sqrt(M);
 		}
 		x.clear();
 	}
@@ -206,16 +206,16 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 		{
 			// 將計算好的傅立葉實數與虛數部分作結合 
 			// 結合後之頻率域丟入影像陣列中顯示 
-			OutputImage[j][i] = sqrt(pow(FreqReal[i][j] / N, (double)2.0) + pow(FreqImag[i][j] / N, (double)2.0));
+			OutputImage[j][i] = sqrt(pow(FreqReal[i][j], (double)2.0) + pow(FreqImag[i][j], (double)2.0) / sqrt(M * N));
 		}
 	}
 	
 }
 
-void FT::FFT(vector<complex<double>>& x, int h, int w)
+void FT::FFT(vector<complex<double>>& x, int n)
 {
 	//M=N square
-	int N = w;
+	int N = n;
 
 	/* bit-reversal permutation */
 	for (int i = 1, j = 0; i < N; ++i)
@@ -254,7 +254,7 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 	int N = w;
 	
 	vector<complex<double>> x;
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < M; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
@@ -262,16 +262,16 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 			x.push_back(temp);
 		}
 		//InverseFFT
-		InverseFFT(x, M, N);
+		InverseFFT(x, N);
 		for (int j = 0; j < N; j++)
 		{
-			FreqReal[i][j] = x[j].real() / N;
-			FreqImag[i][j] = x[j].imag() / N;
+			FreqReal[i][j] = x[j].real() / sqrt(N);
+			FreqImag[i][j] = x[j].imag() / sqrt(N);
 
 		}
 		x.clear();
 	}
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < M; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
@@ -279,11 +279,11 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 			x.push_back(temp);
 		}
 		//InverseFFT
-		InverseFFT(x, M, N);
+		InverseFFT(x, M);
 		for (int j = 0; j < N; j++)
 		{
-			FreqReal[j][i] = x[j].real() / N;
-			FreqImag[j][i] = x[j].imag() / N;
+			FreqReal[j][i] = x[j].real() / sqrt(M);
+			FreqImag[j][i] = x[j].imag() / sqrt(M);
 		}
 		x.clear();
 	}
@@ -298,10 +298,10 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 	}
 }
 
-void FT::InverseFFT(vector<complex<double>>& x, int h, int w)
+void FT::InverseFFT(vector<complex<double>>& x, int n)
 {
 	//M=N square
-	int N = w;
+	int N = n;
 
 	/* bit-reversal permutation */
 	for (int i = 1, j = 0; i < N; ++i)
@@ -350,7 +350,7 @@ void FT::LowpassFilter(double** Real, double** Img, int** OutputImage, int h, in
 			Img[v][u] = temp.imag();
 			// 將計算好的傅立葉實數與虛數部分作結合 
 			// 結合後之頻率域丟入影像陣列中顯示 
-			OutputImage[u][v] = sqrt(pow(temp.real() / h, (double)2.0) + pow(temp.imag() / h, (double)2.0));
+			OutputImage[u][v] = sqrt(pow(temp.real(), (double)2.0) + pow(temp.imag(), (double)2.0));
 		}
 	}	
 }
@@ -370,7 +370,7 @@ void FT::HighpassFilter(double** Real, double** Img, int** OutputImage, int h, i
 			Img[v][u] = temp.imag();
 			// 將計算好的傅立葉實數與虛數部分作結合 
 			// 結合後之頻率域丟入影像陣列中顯示 
-			OutputImage[u][v] = sqrt(pow(temp.real() / h, (double)2.0) + pow(temp.imag() / h, (double)2.0));
+			OutputImage[u][v] = sqrt(pow(temp.real(), (double)2.0) + pow(temp.imag(), (double)2.0));
 		}
 	}
 }
