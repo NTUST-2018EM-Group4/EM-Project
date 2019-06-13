@@ -22,9 +22,6 @@ namespace FourierTransform {
 		{
 			InitializeComponent();
 			fourierTransformMethod = new FT();
-			//
-			//TODO:  在此加入建構函式程式碼
-			//
 		}
 
 	protected:
@@ -40,22 +37,35 @@ namespace FourierTransform {
 		}
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 			 System::Windows::Forms::MenuStrip^  menuStrip1;
-			 System::Windows::Forms::ToolStripMenuItem^  fileToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  loadImageToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  methodToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  fastFourierTransformToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  inverseFastFourierTransformToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  lowpassFilterToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  highpassFilterToolStripMenuItem;
-			 System::Windows::Forms::FlowLayoutPanel^  flowLayoutPanel1;
-			 System::Windows::Forms::Label^  SourceImageLabel;
-			 System::Windows::Forms::Label^  ResultImageLabel;
+
+			 System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+
+			 System::Windows::Forms::GroupBox^  groupBox1;
+			 System::Windows::Forms::GroupBox^  groupBox2;
+			 System::Windows::Forms::GroupBox^  groupBox3;
+			 System::Windows::Forms::GroupBox^  groupBox4;
+			 System::Windows::Forms::GroupBox^  groupBox5;
+			 System::Windows::Forms::GroupBox^  groupBox6;
+			 System::Windows::Forms::GroupBox^  groupBox7;
+			 System::Windows::Forms::GroupBox^  groupBox8;
+
 			 System::Windows::Forms::PictureBox^  pictureBox_SourceImage;
 			 System::Windows::Forms::PictureBox^  pictureBox_OutputImage;
-			 System::Windows::Forms::OpenFileDialog^  openFileDialog1;
-			 System::Windows::Forms::ToolStripMenuItem^  discreteFourierTransformToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  inverseDiscreteFourierTransformToolStripMenuItem;
-			 System::Windows::Forms::ToolStripMenuItem^  setResultImageAsSourceImageToolStripMenuItem;
+			 System::Windows::Forms::PictureBox^  pictureBox_FFT;
+			 System::Windows::Forms::PictureBox^  pictureBox_IFFT;
+			 System::Windows::Forms::PictureBox^  pictureBox_Lowpass;
+			 System::Windows::Forms::PictureBox^  pictureBox_InvLowpass;
+			 System::Windows::Forms::PictureBox^  pictureBox_Highpass;
+			 System::Windows::Forms::PictureBox^  pictureBox_InvHighpass;
+
+			 System::Windows::Forms::ToolStripMenuItem^  loadFileToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  setResultAsInputToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  fastFourierTransformToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  inverseFastFourierTransformToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  lowpassFilterToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  highpassFilterToolStripMenuItem1;
+			 System::Windows::Forms::ToolStripMenuItem^  discreteFTToolStripMenuItem;
+			 System::Windows::Forms::ToolStripMenuItem^  inverseDiscreteFTToolStripMenuItem;
 
 	private:
 		/// <summary>
@@ -73,203 +83,341 @@ namespace FourierTransform {
 		void InitializeComponent(void)
 		{
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->loadImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->setResultImageAsSourceImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->methodToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->fastFourierTransformToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->inverseFastFourierTransformToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->lowpassFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->highpassFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->discreteFourierTransformToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->inverseDiscreteFourierTransformToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->flowLayoutPanel1 = (gcnew System::Windows::Forms::FlowLayoutPanel());
-			this->SourceImageLabel = (gcnew System::Windows::Forms::Label());
-			this->ResultImageLabel = (gcnew System::Windows::Forms::Label());
-			this->pictureBox_SourceImage = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_Lowpass = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_InvLowpass = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->pictureBox_OutputImage = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_SourceImage = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_FFT = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_IFFT = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_Highpass = (gcnew System::Windows::Forms::PictureBox());
+			this->groupBox8 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox_InvHighpass = (gcnew System::Windows::Forms::PictureBox());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->loadFileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->setResultAsInputToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->fastFourierTransformToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->inverseFastFourierTransformToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->lowpassFilterToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->highpassFilterToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->discreteFTToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->inverseDiscreteFTToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->tableLayoutPanel1->SuspendLayout();
-			this->menuStrip1->SuspendLayout();
-			this->flowLayoutPanel1->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_SourceImage))->BeginInit();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_Lowpass))->BeginInit();
+			this->groupBox6->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_InvLowpass))->BeginInit();
+			this->groupBox2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_OutputImage))->BeginInit();
+			this->groupBox1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_SourceImage))->BeginInit();
+			this->groupBox3->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_FFT))->BeginInit();
+			this->groupBox4->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_IFFT))->BeginInit();
+			this->groupBox7->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_Highpass))->BeginInit();
+			this->groupBox8->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_InvHighpass))->BeginInit();
+			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tableLayoutPanel1
 			// 
-			this->tableLayoutPanel1->ColumnCount = 1;
+			this->tableLayoutPanel1->AutoSize = true;
+			this->tableLayoutPanel1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->tableLayoutPanel1->ColumnCount = 4;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
-				100)));
+				25)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				25)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				25)));
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
+				25)));
+			this->tableLayoutPanel1->Controls->Add(this->groupBox5, 0, 2);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox6, 0, 2);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox2, 1, 1);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox1, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox3, 2, 1);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox4, 3, 1);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox7, 2, 2);
+			this->tableLayoutPanel1->Controls->Add(this->groupBox8, 3, 2);
 			this->tableLayoutPanel1->Controls->Add(this->menuStrip1, 0, 0);
-			this->tableLayoutPanel1->Controls->Add(this->flowLayoutPanel1, 0, 1);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanel1->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(136)));
 			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
-			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(4);
+			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(2);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
-			this->tableLayoutPanel1->RowCount = 2;
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 5)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 95)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(1344, 912);
+			this->tableLayoutPanel1->RowCount = 3;
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 50)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(1179, 644);
 			this->tableLayoutPanel1->TabIndex = 0;
 			// 
-			// menuStrip1
+			// groupBox5
 			// 
-			this->menuStrip1->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->fileToolStripMenuItem,
-					this->methodToolStripMenuItem
-			});
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Padding = System::Windows::Forms::Padding(8, 2, 0, 2);
-			this->menuStrip1->Size = System::Drawing::Size(1344, 27);
-			this->menuStrip1->TabIndex = 0;
-			this->menuStrip1->Text = L"menuStrip1";
+			this->groupBox5->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox5->AutoSize = true;
+			this->groupBox5->Controls->Add(this->pictureBox_Lowpass);
+			this->groupBox5->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox5->Location = System::Drawing::Point(3, 337);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(288, 304);
+			this->groupBox5->TabIndex = 9;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Lowpass Filter Image";
 			// 
-			// fileToolStripMenuItem
+			// pictureBox_Lowpass
 			// 
-			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->loadImageToolStripMenuItem,
-					this->setResultImageAsSourceImageToolStripMenuItem
-			});
-			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
-			this->fileToolStripMenuItem->Size = System::Drawing::Size(45, 23);
-			this->fileToolStripMenuItem->Text = L"File";
+			this->pictureBox_Lowpass->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_Lowpass->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_Lowpass->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_Lowpass->Name = L"pictureBox_Lowpass";
+			this->pictureBox_Lowpass->Size = System::Drawing::Size(282, 282);
+			this->pictureBox_Lowpass->TabIndex = 4;
+			this->pictureBox_Lowpass->TabStop = false;
 			// 
-			// loadImageToolStripMenuItem
+			// groupBox6
 			// 
-			this->loadImageToolStripMenuItem->Name = L"loadImageToolStripMenuItem";
-			this->loadImageToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->loadImageToolStripMenuItem->Text = L"Load Image";
-			this->loadImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::loadImageToolStripMenuItem_Click);
+			this->groupBox6->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox6->AutoSize = true;
+			this->groupBox6->Controls->Add(this->pictureBox_InvLowpass);
+			this->groupBox6->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox6->Location = System::Drawing::Point(297, 337);
+			this->groupBox6->Name = L"groupBox6";
+			this->groupBox6->Size = System::Drawing::Size(288, 304);
+			this->groupBox6->TabIndex = 8;
+			this->groupBox6->TabStop = false;
+			this->groupBox6->Text = L"Inverse Lowpass Filter Image";
 			// 
-			// setResultImageAsSourceImageToolStripMenuItem
+			// pictureBox_InvLowpass
 			// 
-			this->setResultImageAsSourceImageToolStripMenuItem->Name = L"setResultImageAsSourceImageToolStripMenuItem";
-			this->setResultImageAsSourceImageToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->setResultImageAsSourceImageToolStripMenuItem->Text = L"Set Result Image as Source Image ";
-			this->setResultImageAsSourceImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::setResultImageAsSourceImageToolStripMenuItem_Click);
+			this->pictureBox_InvLowpass->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_InvLowpass->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_InvLowpass->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_InvLowpass->Name = L"pictureBox_InvLowpass";
+			this->pictureBox_InvLowpass->Size = System::Drawing::Size(282, 282);
+			this->pictureBox_InvLowpass->TabIndex = 4;
+			this->pictureBox_InvLowpass->TabStop = false;
 			// 
-			// methodToolStripMenuItem
+			// groupBox2
 			// 
-			this->methodToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
-				this->fastFourierTransformToolStripMenuItem,
-					this->inverseFastFourierTransformToolStripMenuItem, this->lowpassFilterToolStripMenuItem, this->highpassFilterToolStripMenuItem,
-					this->discreteFourierTransformToolStripMenuItem, this->inverseDiscreteFourierTransformToolStripMenuItem
-			});
-			this->methodToolStripMenuItem->Name = L"methodToolStripMenuItem";
-			this->methodToolStripMenuItem->Size = System::Drawing::Size(76, 23);
-			this->methodToolStripMenuItem->Text = L"Method";
-			// 
-			// fastFourierTransformToolStripMenuItem
-			// 
-			this->fastFourierTransformToolStripMenuItem->BackColor = System::Drawing::SystemColors::Info;
-			this->fastFourierTransformToolStripMenuItem->Name = L"fastFourierTransformToolStripMenuItem";
-			this->fastFourierTransformToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->fastFourierTransformToolStripMenuItem->Text = L"Fast Fourier Transform";
-			this->fastFourierTransformToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::fastFourierTransformToolStripMenuItem_Click);
-			// 
-			// inverseFastFourierTransformToolStripMenuItem
-			// 
-			this->inverseFastFourierTransformToolStripMenuItem->BackColor = System::Drawing::SystemColors::Info;
-			this->inverseFastFourierTransformToolStripMenuItem->Name = L"inverseFastFourierTransformToolStripMenuItem";
-			this->inverseFastFourierTransformToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->inverseFastFourierTransformToolStripMenuItem->Text = L"Inverse Fast Fourier Transform";
-			this->inverseFastFourierTransformToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::inverseFastFourierTransformToolStripMenuItem_Click);
-			// 
-			// lowpassFilterToolStripMenuItem
-			// 
-			this->lowpassFilterToolStripMenuItem->BackColor = System::Drawing::SystemColors::Info;
-			this->lowpassFilterToolStripMenuItem->Name = L"lowpassFilterToolStripMenuItem";
-			this->lowpassFilterToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->lowpassFilterToolStripMenuItem->Text = L"Lowpass Filter";
-			this->lowpassFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::lowpassFilterToolStripMenuItem_Click);
-			// 
-			// highpassFilterToolStripMenuItem
-			// 
-			this->highpassFilterToolStripMenuItem->BackColor = System::Drawing::SystemColors::Info;
-			this->highpassFilterToolStripMenuItem->Name = L"highpassFilterToolStripMenuItem";
-			this->highpassFilterToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->highpassFilterToolStripMenuItem->Text = L"Highpass Filter";
-			this->highpassFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::highpassFilterToolStripMenuItem_Click);
-			// 
-			// discreteFourierTransformToolStripMenuItem
-			// 
-			this->discreteFourierTransformToolStripMenuItem->Name = L"discreteFourierTransformToolStripMenuItem";
-			this->discreteFourierTransformToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->discreteFourierTransformToolStripMenuItem->Text = L"Discrete Fourier Transform";
-			this->discreteFourierTransformToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::discreteFourierTransformToolStripMenuItem_Click);
-			// 
-			// inverseDiscreteFourierTransformToolStripMenuItem
-			// 
-			this->inverseDiscreteFourierTransformToolStripMenuItem->Name = L"inverseDiscreteFourierTransformToolStripMenuItem";
-			this->inverseDiscreteFourierTransformToolStripMenuItem->Size = System::Drawing::Size(324, 26);
-			this->inverseDiscreteFourierTransformToolStripMenuItem->Text = L"Inverse Discrete Fourier Transform";
-			this->inverseDiscreteFourierTransformToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::inverseDiscreteFourierTransformToolStripMenuItem_Click);
-			// 
-			// flowLayoutPanel1
-			// 
-			this->flowLayoutPanel1->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->flowLayoutPanel1->Controls->Add(this->SourceImageLabel);
-			this->flowLayoutPanel1->Controls->Add(this->ResultImageLabel);
-			this->flowLayoutPanel1->Controls->Add(this->pictureBox_SourceImage);
-			this->flowLayoutPanel1->Controls->Add(this->pictureBox_OutputImage);
-			this->flowLayoutPanel1->Font = (gcnew System::Drawing::Font(L"新細明體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->flowLayoutPanel1->Location = System::Drawing::Point(4, 49);
-			this->flowLayoutPanel1->Margin = System::Windows::Forms::Padding(4);
-			this->flowLayoutPanel1->Name = L"flowLayoutPanel1";
-			this->flowLayoutPanel1->Size = System::Drawing::Size(1336, 859);
-			this->flowLayoutPanel1->TabIndex = 1;
-			// 
-			// SourceImageLabel
-			// 
-			this->SourceImageLabel->AutoSize = true;
-			this->SourceImageLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->SourceImageLabel->Location = System::Drawing::Point(4, 0);
-			this->SourceImageLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
-			this->SourceImageLabel->Name = L"SourceImageLabel";
-			this->SourceImageLabel->Size = System::Drawing::Size(633, 19);
-			this->SourceImageLabel->TabIndex = 0;
-			this->SourceImageLabel->Text = L"Source Image                                                                     "
-				L"                                                               ";
-			// 
-			// ResultImageLabel
-			// 
-			this->ResultImageLabel->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->ResultImageLabel->AutoSize = true;
-			this->ResultImageLabel->Font = (gcnew System::Drawing::Font(L"微軟正黑體", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(136)));
-			this->ResultImageLabel->Location = System::Drawing::Point(645, 0);
-			this->ResultImageLabel->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
-			this->ResultImageLabel->Name = L"ResultImageLabel";
-			this->ResultImageLabel->Size = System::Drawing::Size(560, 19);
-			this->ResultImageLabel->TabIndex = 1;
-			this->ResultImageLabel->Text = L"Result Image                                                                     "
-				L"                                              ";
-			// 
-			// pictureBox_SourceImage
-			// 
-			this->pictureBox_SourceImage->BackColor = System::Drawing::SystemColors::InactiveCaption;
-			this->pictureBox_SourceImage->Location = System::Drawing::Point(4, 23);
-			this->pictureBox_SourceImage->Margin = System::Windows::Forms::Padding(4);
-			this->pictureBox_SourceImage->Name = L"pictureBox_SourceImage";
-			this->pictureBox_SourceImage->Size = System::Drawing::Size(645, 845);
-			this->pictureBox_SourceImage->TabIndex = 2;
-			this->pictureBox_SourceImage->TabStop = false;
+			this->groupBox2->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox2->AutoSize = true;
+			this->groupBox2->Controls->Add(this->pictureBox_OutputImage);
+			this->groupBox2->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox2->Location = System::Drawing::Point(297, 27);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(288, 304);
+			this->groupBox2->TabIndex = 5;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"Result Image";
 			// 
 			// pictureBox_OutputImage
 			// 
 			this->pictureBox_OutputImage->BackColor = System::Drawing::SystemColors::InactiveCaption;
-			this->pictureBox_OutputImage->Location = System::Drawing::Point(657, 23);
-			this->pictureBox_OutputImage->Margin = System::Windows::Forms::Padding(4);
+			this->pictureBox_OutputImage->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_OutputImage->Location = System::Drawing::Point(3, 19);
 			this->pictureBox_OutputImage->Name = L"pictureBox_OutputImage";
-			this->pictureBox_OutputImage->Size = System::Drawing::Size(667, 836);
+			this->pictureBox_OutputImage->Size = System::Drawing::Size(282, 282);
 			this->pictureBox_OutputImage->TabIndex = 3;
 			this->pictureBox_OutputImage->TabStop = false;
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox1->AutoSize = true;
+			this->groupBox1->Controls->Add(this->pictureBox_SourceImage);
+			this->groupBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox1->Location = System::Drawing::Point(3, 27);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(288, 304);
+			this->groupBox1->TabIndex = 4;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Source Image";
+			// 
+			// pictureBox_SourceImage
+			// 
+			this->pictureBox_SourceImage->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_SourceImage->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_SourceImage->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_SourceImage->Name = L"pictureBox_SourceImage";
+			this->pictureBox_SourceImage->Size = System::Drawing::Size(282, 282);
+			this->pictureBox_SourceImage->TabIndex = 2;
+			this->pictureBox_SourceImage->TabStop = false;
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox3->AutoSize = true;
+			this->groupBox3->Controls->Add(this->pictureBox_FFT);
+			this->groupBox3->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox3->Location = System::Drawing::Point(591, 27);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(288, 304);
+			this->groupBox3->TabIndex = 6;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"FFT Image";
+			// 
+			// pictureBox_FFT
+			// 
+			this->pictureBox_FFT->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_FFT->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_FFT->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_FFT->Name = L"pictureBox_FFT";
+			this->pictureBox_FFT->Size = System::Drawing::Size(282, 282);
+			this->pictureBox_FFT->TabIndex = 3;
+			this->pictureBox_FFT->TabStop = false;
+			// 
+			// groupBox4
+			// 
+			this->groupBox4->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox4->AutoSize = true;
+			this->groupBox4->Controls->Add(this->pictureBox_IFFT);
+			this->groupBox4->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox4->Location = System::Drawing::Point(885, 27);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(291, 304);
+			this->groupBox4->TabIndex = 7;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"Inverse FFT Image";
+			// 
+			// pictureBox_IFFT
+			// 
+			this->pictureBox_IFFT->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_IFFT->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_IFFT->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_IFFT->Name = L"pictureBox_IFFT";
+			this->pictureBox_IFFT->Size = System::Drawing::Size(285, 282);
+			this->pictureBox_IFFT->TabIndex = 3;
+			this->pictureBox_IFFT->TabStop = false;
+			// 
+			// groupBox7
+			// 
+			this->groupBox7->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox7->Controls->Add(this->pictureBox_Highpass);
+			this->groupBox7->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox7->Location = System::Drawing::Point(591, 337);
+			this->groupBox7->Name = L"groupBox7";
+			this->groupBox7->Size = System::Drawing::Size(288, 304);
+			this->groupBox7->TabIndex = 6;
+			this->groupBox7->TabStop = false;
+			this->groupBox7->Text = L"Highpass Filter Image";
+			// 
+			// pictureBox_Highpass
+			// 
+			this->pictureBox_Highpass->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_Highpass->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_Highpass->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_Highpass->Name = L"pictureBox_Highpass";
+			this->pictureBox_Highpass->Size = System::Drawing::Size(282, 282);
+			this->pictureBox_Highpass->TabIndex = 3;
+			this->pictureBox_Highpass->TabStop = false;
+			// 
+			// groupBox8
+			// 
+			this->groupBox8->AccessibleRole = System::Windows::Forms::AccessibleRole::None;
+			this->groupBox8->AutoSize = true;
+			this->groupBox8->Controls->Add(this->pictureBox_InvHighpass);
+			this->groupBox8->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->groupBox8->Location = System::Drawing::Point(885, 337);
+			this->groupBox8->Name = L"groupBox8";
+			this->groupBox8->Size = System::Drawing::Size(291, 304);
+			this->groupBox8->TabIndex = 10;
+			this->groupBox8->TabStop = false;
+			this->groupBox8->Text = L"Inverse Highpass Filter Image";
+			// 
+			// pictureBox_InvHighpass
+			// 
+			this->pictureBox_InvHighpass->BackColor = System::Drawing::SystemColors::InactiveCaption;
+			this->pictureBox_InvHighpass->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBox_InvHighpass->Location = System::Drawing::Point(3, 19);
+			this->pictureBox_InvHighpass->Name = L"pictureBox_InvHighpass";
+			this->pictureBox_InvHighpass->Size = System::Drawing::Size(285, 282);
+			this->pictureBox_InvHighpass->TabIndex = 3;
+			this->pictureBox_InvHighpass->TabStop = false;
+			// 
+			// menuStrip1
+			// 
+			this->tableLayoutPanel1->SetColumnSpan(this->menuStrip1, 4);
+			this->menuStrip1->ImageScalingSize = System::Drawing::Size(20, 20);
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {
+				this->loadFileToolStripMenuItem,
+					this->setResultAsInputToolStripMenuItem, this->fastFourierTransformToolStripMenuItem1, this->inverseFastFourierTransformToolStripMenuItem1,
+					this->lowpassFilterToolStripMenuItem1, this->highpassFilterToolStripMenuItem1, this->discreteFTToolStripMenuItem, this->inverseDiscreteFTToolStripMenuItem
+			});
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Padding = System::Windows::Forms::Padding(4, 2, 0, 2);
+			this->menuStrip1->Size = System::Drawing::Size(1179, 24);
+			this->menuStrip1->TabIndex = 0;
+			this->menuStrip1->Text = L"menuStrip1";
+			// 
+			// loadFileToolStripMenuItem
+			// 
+			this->loadFileToolStripMenuItem->Name = L"loadFileToolStripMenuItem";
+			this->loadFileToolStripMenuItem->Size = System::Drawing::Size(70, 20);
+			this->loadFileToolStripMenuItem->Text = L"Load File";
+			this->loadFileToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::loadFileToolStripMenuItem_Click);
+			// 
+			// setResultAsInputToolStripMenuItem
+			// 
+			this->setResultAsInputToolStripMenuItem->Name = L"setResultAsInputToolStripMenuItem";
+			this->setResultAsInputToolStripMenuItem->Size = System::Drawing::Size(132, 20);
+			this->setResultAsInputToolStripMenuItem->Text = L"Set Result As Source";
+			this->setResultAsInputToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::setResultAsInputToolStripMenuItem_Click);
+			// 
+			// fastFourierTransformToolStripMenuItem1
+			// 
+			this->fastFourierTransformToolStripMenuItem1->Name = L"fastFourierTransformToolStripMenuItem1";
+			this->fastFourierTransformToolStripMenuItem1->Size = System::Drawing::Size(38, 20);
+			this->fastFourierTransformToolStripMenuItem1->Text = L"FFT";
+			this->fastFourierTransformToolStripMenuItem1->Click += gcnew System::EventHandler(this, &MyForm::fastFourierTransformToolStripMenuItem1_Click);
+			// 
+			// inverseFastFourierTransformToolStripMenuItem1
+			// 
+			this->inverseFastFourierTransformToolStripMenuItem1->Name = L"inverseFastFourierTransformToolStripMenuItem1";
+			this->inverseFastFourierTransformToolStripMenuItem1->Size = System::Drawing::Size(80, 20);
+			this->inverseFastFourierTransformToolStripMenuItem1->Text = L"Inverse FFT";
+			this->inverseFastFourierTransformToolStripMenuItem1->Click += gcnew System::EventHandler(this, &MyForm::inverseFastFourierTransformToolStripMenuItem1_Click);
+			// 
+			// lowpassFilterToolStripMenuItem1
+			// 
+			this->lowpassFilterToolStripMenuItem1->Name = L"lowpassFilterToolStripMenuItem1";
+			this->lowpassFilterToolStripMenuItem1->Size = System::Drawing::Size(97, 20);
+			this->lowpassFilterToolStripMenuItem1->Text = L"Lowpass Filter";
+			this->lowpassFilterToolStripMenuItem1->Click += gcnew System::EventHandler(this, &MyForm::lowpassFilterToolStripMenuItem1_Click);
+			// 
+			// highpassFilterToolStripMenuItem1
+			// 
+			this->highpassFilterToolStripMenuItem1->Name = L"highpassFilterToolStripMenuItem1";
+			this->highpassFilterToolStripMenuItem1->Size = System::Drawing::Size(101, 20);
+			this->highpassFilterToolStripMenuItem1->Text = L"Highpass Filter";
+			this->highpassFilterToolStripMenuItem1->Click += gcnew System::EventHandler(this, &MyForm::highpassFilterToolStripMenuItem1_Click);
+			// 
+			// discreteFTToolStripMenuItem
+			// 
+			this->discreteFTToolStripMenuItem->Name = L"discreteFTToolStripMenuItem";
+			this->discreteFTToolStripMenuItem->Size = System::Drawing::Size(80, 20);
+			this->discreteFTToolStripMenuItem->Text = L"Discrete FT";
+			this->discreteFTToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::discreteFTToolStripMenuItem_Click);
+			// 
+			// inverseDiscreteFTToolStripMenuItem
+			// 
+			this->inverseDiscreteFTToolStripMenuItem->Name = L"inverseDiscreteFTToolStripMenuItem";
+			this->inverseDiscreteFTToolStripMenuItem->Size = System::Drawing::Size(122, 20);
+			this->inverseDiscreteFTToolStripMenuItem->Text = L"Inverse Discrete FT";
+			this->inverseDiscreteFTToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::inverseDiscreteFTToolStripMenuItem_Click);
 			// 
 			// openFileDialog1
 			// 
@@ -278,35 +426,47 @@ namespace FourierTransform {
 			// 
 			// MyForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1344, 912);
+			this->ClientSize = System::Drawing::Size(1179, 644);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->MainMenuStrip = this->menuStrip1;
-			this->Margin = System::Windows::Forms::Padding(4);
 			this->Name = L"MyForm";
 			this->Text = L"FourierTransform";
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->tableLayoutPanel1->PerformLayout();
+			this->groupBox5->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_Lowpass))->EndInit();
+			this->groupBox6->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_InvLowpass))->EndInit();
+			this->groupBox2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_OutputImage))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_SourceImage))->EndInit();
+			this->groupBox3->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_FFT))->EndInit();
+			this->groupBox4->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_IFFT))->EndInit();
+			this->groupBox7->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_Highpass))->EndInit();
+			this->groupBox8->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_InvHighpass))->EndInit();
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
-			this->flowLayoutPanel1->ResumeLayout(false);
-			this->flowLayoutPanel1->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_SourceImage))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox_OutputImage))->EndInit();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
 
-	private: System::Void loadImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
-			 System::Void discreteFourierTransformToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void inverseDiscreteFourierTransformToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void setResultImageAsSourceImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void fastFourierTransformToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void inverseFastFourierTransformToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void lowpassFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-			 System::Void highpassFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e);
+			 System::Void loadFileToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void setResultAsInputToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void fastFourierTransformToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void inverseFastFourierTransformToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void lowpassFilterToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void highpassFilterToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void discreteFTToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void inverseDiscreteFTToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }
