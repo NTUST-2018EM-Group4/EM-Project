@@ -265,8 +265,8 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 		InverseFFT(x, M, N);
 		for (int j = 0; j < N; j++)
 		{
-			FreqReal[i][j] = x[j].real();
-			FreqImag[i][j] = x[j].imag();
+			FreqReal[i][j] = x[j].real() / N;
+			FreqImag[i][j] = x[j].imag() / N;
 
 		}
 		x.clear();
@@ -282,8 +282,8 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 		InverseFFT(x, M, N);
 		for (int j = 0; j < N; j++)
 		{
-			FreqReal[j][i] = x[j].real();
-			FreqImag[j][i] = x[j].imag();
+			FreqReal[j][i] = x[j].real() / N;
+			FreqImag[j][i] = x[j].imag() / N;
 		}
 		x.clear();
 	}
@@ -293,7 +293,7 @@ void FT::InverseFastFourierTransform(int** InputImage, int** OutputImage, double
 		{
 			// 將計算好的傅立葉實數與虛數部分作結合
 			// 結合後之頻率域丟入影像陣列中顯示 
-			OutputImage[i][j] = sqrt(pow(FreqReal[i][j] / N, (double)2.0) + pow(FreqImag[i][j] / N, (double)2.0));
+			OutputImage[i][j] = sqrt(pow(FreqReal[i][j], (double)2.0) + pow(FreqImag[i][j], (double)2.0));
 		}
 	}
 }
@@ -344,9 +344,10 @@ void FT::LowpassFilter(double** Real, double** Img, int** OutputImage, int h, in
 		for (int u = 0; u < w; u++)
 		{
 			complex<double> temp(Real[v][u], Img[v][u]);
-			temp *= 1 / (1 + pow(sqrt(pow(u - midX, 2.0) + pow(v - midY, 2.0)) / cutoff, 2.0 * n));
-			Real[v][u] = temp.real() / h;
-			Img[v][u] = temp.imag() / h;
+			double filter = 1 / (1 + pow(sqrt(pow(u - midX, 2.0) + pow(v - midY, 2.0)) / cutoff, 2.0 * n));
+			temp *= filter;
+			Real[v][u] = temp.real();
+			Img[v][u] = temp.imag();
 			// 將計算好的傅立葉實數與虛數部分作結合 
 			// 結合後之頻率域丟入影像陣列中顯示 
 			OutputImage[u][v] = sqrt(pow(temp.real() / h, (double)2.0) + pow(temp.imag() / h, (double)2.0));
@@ -365,8 +366,8 @@ void FT::HighpassFilter(double** Real, double** Img, int** OutputImage, int h, i
 		{
 			complex<double> temp(Real[v][u], Img[v][u]);
 			temp *= 1 - 1 / (1 + pow(sqrt(pow(u - midX, 2.0) + pow(v - midY, 2.0)) / cutoff, 2.0 * n));
-			Real[v][u] = temp.real() / h;
-			Img[v][u] = temp.imag() / h;
+			Real[v][u] = temp.real();
+			Img[v][u] = temp.imag();
 			// 將計算好的傅立葉實數與虛數部分作結合 
 			// 結合後之頻率域丟入影像陣列中顯示 
 			OutputImage[u][v] = sqrt(pow(temp.real() / h, (double)2.0) + pow(temp.imag() / h, (double)2.0));
