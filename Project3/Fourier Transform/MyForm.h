@@ -69,10 +69,13 @@ namespace FourierTransform {
 
 	private:
 		/// <summary>
+		/// </summary>
 		DataManager* dataManager;
 		FT*	fourierTransformMethod;
 
-			 /// </summary>
+	private: System::Windows::Forms::ToolStripMenuItem^  clickHereToolStripMenuItem;
+
+		
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
@@ -108,6 +111,7 @@ namespace FourierTransform {
 			this->highpassFilterToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->discreteFTToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->inverseDiscreteFTToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->clickHereToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->tableLayoutPanel1->SuspendLayout();
 			this->groupBox5->SuspendLayout();
@@ -351,10 +355,11 @@ namespace FourierTransform {
 			// 
 			this->tableLayoutPanel1->SetColumnSpan(this->menuStrip1, 4);
 			this->menuStrip1->ImageScalingSize = System::Drawing::Size(20, 20);
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {
 				this->loadFileToolStripMenuItem,
 					this->setResultAsInputToolStripMenuItem, this->fastFourierTransformToolStripMenuItem1, this->inverseFastFourierTransformToolStripMenuItem1,
-					this->lowpassFilterToolStripMenuItem1, this->highpassFilterToolStripMenuItem1, this->discreteFTToolStripMenuItem, this->inverseDiscreteFTToolStripMenuItem
+					this->lowpassFilterToolStripMenuItem1, this->highpassFilterToolStripMenuItem1, this->discreteFTToolStripMenuItem, this->inverseDiscreteFTToolStripMenuItem,
+					this->clickHereToolStripMenuItem
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
@@ -366,6 +371,7 @@ namespace FourierTransform {
 			// loadFileToolStripMenuItem
 			// 
 			this->loadFileToolStripMenuItem->Name = L"loadFileToolStripMenuItem";
+			this->loadFileToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::L));
 			this->loadFileToolStripMenuItem->Size = System::Drawing::Size(70, 20);
 			this->loadFileToolStripMenuItem->Text = L"Load File";
 			this->loadFileToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::loadFileToolStripMenuItem_Click);
@@ -379,6 +385,7 @@ namespace FourierTransform {
 			// 
 			// fastFourierTransformToolStripMenuItem1
 			// 
+			this->fastFourierTransformToolStripMenuItem1->BackColor = System::Drawing::SystemColors::Info;
 			this->fastFourierTransformToolStripMenuItem1->Name = L"fastFourierTransformToolStripMenuItem1";
 			this->fastFourierTransformToolStripMenuItem1->Size = System::Drawing::Size(38, 20);
 			this->fastFourierTransformToolStripMenuItem1->Text = L"FFT";
@@ -386,6 +393,7 @@ namespace FourierTransform {
 			// 
 			// inverseFastFourierTransformToolStripMenuItem1
 			// 
+			this->inverseFastFourierTransformToolStripMenuItem1->BackColor = System::Drawing::SystemColors::Info;
 			this->inverseFastFourierTransformToolStripMenuItem1->Name = L"inverseFastFourierTransformToolStripMenuItem1";
 			this->inverseFastFourierTransformToolStripMenuItem1->Size = System::Drawing::Size(80, 20);
 			this->inverseFastFourierTransformToolStripMenuItem1->Text = L"Inverse FFT";
@@ -393,6 +401,7 @@ namespace FourierTransform {
 			// 
 			// lowpassFilterToolStripMenuItem1
 			// 
+			this->lowpassFilterToolStripMenuItem1->BackColor = System::Drawing::SystemColors::Info;
 			this->lowpassFilterToolStripMenuItem1->Name = L"lowpassFilterToolStripMenuItem1";
 			this->lowpassFilterToolStripMenuItem1->Size = System::Drawing::Size(97, 20);
 			this->lowpassFilterToolStripMenuItem1->Text = L"Lowpass Filter";
@@ -400,6 +409,7 @@ namespace FourierTransform {
 			// 
 			// highpassFilterToolStripMenuItem1
 			// 
+			this->highpassFilterToolStripMenuItem1->BackColor = System::Drawing::SystemColors::Info;
 			this->highpassFilterToolStripMenuItem1->Name = L"highpassFilterToolStripMenuItem1";
 			this->highpassFilterToolStripMenuItem1->Size = System::Drawing::Size(101, 20);
 			this->highpassFilterToolStripMenuItem1->Text = L"Highpass Filter";
@@ -419,6 +429,15 @@ namespace FourierTransform {
 			this->inverseDiscreteFTToolStripMenuItem->Text = L"Inverse Discrete FT";
 			this->inverseDiscreteFTToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::inverseDiscreteFTToolStripMenuItem_Click);
 			// 
+			// clickHereToolStripMenuItem
+			// 
+			this->clickHereToolStripMenuItem->BackColor = System::Drawing::SystemColors::GradientActiveCaption;
+			this->clickHereToolStripMenuItem->Name = L"clickHereToolStripMenuItem";
+			this->clickHereToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F1;
+			this->clickHereToolStripMenuItem->Size = System::Drawing::Size(79, 20);
+			this->clickHereToolStripMenuItem->Text = L"Click Here!";
+			this->clickHereToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::clickHereToolStripMenuItem_Click);
+			// 
 			// openFileDialog1
 			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
@@ -432,7 +451,7 @@ namespace FourierTransform {
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MyForm";
-			this->Text = L"FourierTransform";
+			this->Text = L"Fourier Transform";
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->tableLayoutPanel1->PerformLayout();
 			this->groupBox5->ResumeLayout(false);
@@ -468,5 +487,8 @@ namespace FourierTransform {
 			 System::Void highpassFilterToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void discreteFTToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 			 System::Void inverseDiscreteFTToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+			 System::Void clickHereToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+
+			 Bitmap^ printToBox(DataManager& data);
 };
 }

@@ -290,4 +290,139 @@ namespace FourierTransform
 
 		pictureBox_OutputImage->Image = IDFTImage;
 	}
+	System::Void MyForm::clickHereToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+	{
+		// dataManager >> origin image file
+
+		int w = dataManager->GetImageWidth();
+		int h = dataManager->GetImageHeight();
+
+		// -- Compute FFT image 
+		DataManager FFT = *dataManager;
+
+		// 利用傅立葉之平移性，平移頻率
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = FFT.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				FFT.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->FastFourierTransform(FFT.GetInputImage(), FFT.GetOutputImage(), FFT.GetFreqReal(), FFT.GetFreqImag(), h, w);
+		pictureBox_FFT->Image = printToBox(FFT);
+		// -- Finish FFT
+
+		// Compute Lowpass 
+		DataManager lowpass = FFT;
+
+		// 利用傅立葉之平移性，平移頻率
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = lowpass.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				lowpass.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->LowpassFilter(lowpass.GetFreqReal(), lowpass.GetFreqImag(), lowpass.GetOutputImage(), h, w);
+		pictureBox_Lowpass->Image = printToBox(lowpass);
+
+		// Compute Inverse Lowpass Image
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = lowpass.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				lowpass.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->InverseFastFourierTransform(lowpass.GetInputImage(), lowpass.GetOutputImage(), lowpass.GetFreqReal(), lowpass.GetFreqImag(), h, w);
+		pictureBox_InvLowpass->Image = printToBox(lowpass);
+
+		// -- Finish Lowpass Filter
+
+		// -- Compute Highpass Filter
+		DataManager highpass = FFT;
+
+		// 利用傅立葉之平移性，平移頻率
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = highpass.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				highpass.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->HighpassFilter(highpass.GetFreqReal(), highpass.GetFreqImag(), highpass.GetOutputImage(), h, w);
+		pictureBox_Highpass->Image = printToBox(highpass);
+
+		// Compute Inverse Highpass Image
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = highpass.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				highpass.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->InverseFastFourierTransform(highpass.GetInputImage(), highpass.GetOutputImage(), highpass.GetFreqReal(), highpass.GetFreqImag(), h, w);
+		pictureBox_InvHighpass->Image = printToBox(highpass);
+
+		// -- Compute Inverse FFT
+
+		// 利用傅立葉之平移性，平移頻率
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = FFT.GetInputImage()[i][j];
+				valuePixeli = valuePixeli * pow((float)-1, (float)(i + j));
+				FFT.SetPixel(j, i, valuePixeli);
+			}
+		}
+
+		//將算出頻率資訊傳入輸出影像
+		fourierTransformMethod->InverseFastFourierTransform(FFT.GetInputImage(), FFT.GetOutputImage(), FFT.GetFreqReal(), FFT.GetFreqImag(), h, w);
+		pictureBox_IFFT->Image = printToBox(FFT);
+		// -- Finish Inverse FFT
+	}
+	Bitmap ^ MyForm::printToBox(DataManager & data)
+	{
+		int w = data.GetImageWidth();
+		int h = data.GetImageHeight();
+		Bitmap^ result = gcnew Bitmap(w, h);
+		for (int i = 0; i < h; i++)
+		{
+			for (int j = 0; j < w; j++)
+			{
+				int valuePixeli = data.GetOutputImage()[i][j];
+				if (valuePixeli > 255)
+				{
+					valuePixeli = 255;
+				}
+				else if (valuePixeli < 0)
+				{
+					valuePixeli = 0;
+				}
+				result->SetPixel(j, i, Color::FromArgb(valuePixeli, valuePixeli, valuePixeli));
+			}
+		}
+		return result;
+	}
 }
