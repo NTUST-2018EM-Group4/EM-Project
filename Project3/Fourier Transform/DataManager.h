@@ -12,6 +12,7 @@ private:
 
 public:
 	DataManager(int h, int w);
+	DataManager(const DataManager& dataManager);
 
 	//設定頻率資訊
 	void SetPixel(int x, int y, int pixelValue);
@@ -26,6 +27,10 @@ public:
 	int** GetOutputImage();
 	double** GetFreqReal();
 	double** GetFreqImag();
+
+	DataManager& operator=(const DataManager& dataManager);
+
+	~DataManager();
 };
 
 
